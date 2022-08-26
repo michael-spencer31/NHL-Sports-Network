@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title> NHL </title>
+
+	<link type = "text/css" rel="stylesheet" href="assests/css/style.css" />
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"> </script>  
+    </head>
+    <!--- Tab Links --->
+    <div class="tab">
+        <button class="tablinks" onclick="openTabs(event, 'Home')">Home</button>
+        <button class="tablinks" onclick="openTabs(event, 'Teams')">Teams</button>
+        <button class="tablinks" onclick="openTabs(event, 'Drafts')">Draft Records</button>
+    </div>
+    <!--- Tab Content --->
+    <div id="Teams" class="tabcontent">
+        <h3>Teams</h3>
+
+            <ul id="team-list" class="numbered-list"></ul>
+            <ul id="team" class="non-list"></ul>
+            <ul id="player-list" class="numbered-list"></ul>
+            <ul id="player" class="non-list"></ul>
+
+            <script type = "text/javascript" src="assests/javascript/javascript.js"></script>
+    </div>
+    <div id="Drafts" class="tabcontent">
+        <h3>Draft Records</h3>
+        <label>Enter year and a round number(1-7):</label><br>
+        <input type=text id="draftin">
+        <input type="text" id="roundin">
+        <input type=submit value="Search" onclick="getDraft()"><br>
+        <input type=submit value="Reset" onclick="resetDraft()"><br>
+
+        <label id="draftrecords"></label>
+    </div>
+    <div id="Home" class="tabcontent">
+        <h3>Home</h3>
+        <label>This site uses the public NHL API to get various stats. Made to practice with JavaScript, API calls and HTML.</label>
+</html>
+
