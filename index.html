@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8" />
-	<title> NHL </title>
+<meta charset="UTF-8" />
+<title> NHL </title>
 
-	<link type = "text/css" rel="stylesheet" href="assests/css/style.css" />
+<link type = "text/css" rel="stylesheet" href="assests/css/style.css" />
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"> </script>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"> </script>  
     </head>
     <!--- Tab Links --->
     <div class="tab">
-        <button class="tablinks" onclick="openTabs(event, 'Home')">Home</button>
+        <button class="tablinks" onclick="openTabs(event, 'Home')" id="defaultOpen">Home</button>
         <button class="tablinks" onclick="openTabs(event, 'Teams')">Teams</button>
         <button class="tablinks" onclick="openTabs(event, 'Drafts')">Draft Records</button>
+        <button class="tablinks" onclick="openTabs(event, 'Records')">Records</button>
+        <button class="tablinks" onclick="openTabs(event, 'Standings')">Standings</button>
     </div>
     <!--- Tab Content --->
     <div id="Teams" class="tabcontent">
@@ -25,6 +27,7 @@
 
             <script type = "text/javascript" src="assests/javascript/javascript.js"></script>
     </div>
+    <!--- Content for showing NHL Draft Records --->
     <div id="Drafts" class="tabcontent">
         <h3>Draft Records</h3>
         <label>Enter year and a round number(1-7):</label><br>
@@ -35,8 +38,64 @@
 
         <label id="draftrecords"></label>
     </div>
-    <div id="Home" class="tabcontent">
+    <!--- Content for the Home page --->
+    <div id="Home" class="tabcontent" style="display:block">
         <h3>Home</h3>
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/05_NHL_Shield.svg/1200px-05_NHL_Shield.svg.png" alt="NHL Shield" style="width: 100px; height: 100px"><br>
         <label>This site uses the public NHL API to get various stats. Made to practice with JavaScript, API calls and HTML.</label>
-</html>
+    </div>
+    <!--- Content for showing the results of games --->
+    <div id="Records" class="tabcontent">
+        <h3>Results</h3>
+        <input type="text" id="teamin">
+        <input type=submit value="Search" onclick="getResults()"><br>
+        <label id="resultrecords"></label>
+    </div>
+    <!--- Content for the league standings --->
+    <div id="Standings" class="tabcontent">
+        <h3>Standings</h3>
+        <h4>Metro Standings</h4>
+        <label id="metrostandings"></label>
+        <h4>Atlantic Standings</h4>
+        <label id="atlanticstandings"></label>
+        <h4>Central Standings</h4>
+        <label id="centralstandings"></label>
+        <h4>Pacific Standings</h4>
+        <label id="pacificstandings"></label>
+        <script>
 
+            var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
+
+            $.ajax({
+                url: standingsURL,
+                method: "GET"
+            }).done(function(standingsData){
+
+                for(var i = 0; i < 8; i++){
+
+                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].team.name + " ";
+                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.wins + " ";
+                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.losses + " ";
+                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.ot + "<br>";
+                }
+                for(var i = 0; i < 8; i++){
+                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].team.name + " ";
+                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].leagueRecord.wins + " ";
+                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].leagueRecord.losses + " ";
+                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].leagueRecord.ot + "<br>";
+                }
+                for(var i = 0; i < 8; i++){
+                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].team.name + " ";
+                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].leagueRecord.wins + " ";
+                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].leagueRecord.losses + " ";
+                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].leagueRecord.ot + "<br>";
+                }
+                for(var i = 0; i < 8; i++){
+                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].team.name + " ";
+                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.wins + " ";
+                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.losses + " ";
+                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.ot + "<br>";
+                }
+            });
+        </script>
+</html>
