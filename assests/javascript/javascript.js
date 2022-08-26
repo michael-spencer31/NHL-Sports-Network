@@ -184,8 +184,66 @@ function getDraft(){
         for(var i = 0; i < 32; i++){
             document.getElementById('draftrecords').innerHTML +=  draftData.drafts[0].rounds[round].picks[i].team.name;
             document.getElementById('draftrecords').innerHTML += " " + draftData.drafts[0].rounds[round].picks[i].prospect.fullName + "<br />";
-        }   
+        }  
     });
+}
+function getResults(){
+
+    //create a map with team name -> team id
+    const teamNames = new Map([
+        ["New Jersery Devils", 1],
+        ["New York Islanders", 2],
+        ["New York Rangers", 3],
+        ["Philadelphia Flyers", 4],
+        ["Pittsburgh Penguins", 5],
+        ["Boston Bruins", 6],
+        ["Buffalo Sabres", 7],
+        ["Montreal Canadiens", 8],
+        ["Ottawa Senators", 9],
+        ["Toronto Maple Leafs", 10],
+        ["Carolina Hurricanes", 12],
+        ["Florida Panthers", 13],
+        ["Tampa Bay Lightning", 14],
+        ["Washington Capitals", 15],
+        ["Chicago Blackhawks", 16],
+        ["Detroit Red Wings", 17],
+        ["Nashville Predators", 18],
+        ["St. Louis Blues", 19],
+        ["Calgary Flames", 20],
+        ["Colorado Avalanche", 21],
+        ["Edmonton Oilers", 22],
+        ["Vancouver Canucks", 23],
+        ["Anaheim Ducks", 24],
+        ["Dallas Stars", 25],
+        ["Los Angeles Kings", 26],
+        ["Phoenix Coyotes", 27],
+        ["San Jose Sharks", 28],
+        ["Columbus Blue Jackets", 29],
+        ["Minnesota Wild", 30],
+        ["Winnipeg Jets", 52],
+        ["Vegas Golden Knights", 54],
+        ["Seattle Kraken", 55]
+    ]);
+    //get the team name from input
+    var teamName = document.getElementById('teamin').value;
+    //use the map to get the teams id
+    var teamID = teamNames.get(teamName);
+    //then call the api using the id number
+    var resultURL = "https://statsapi.web.nhl.com/api/v1/schedule?teamId=" + teamID + "&startDate=2018-10-01&endDate=2019-05-02";
+
+    $.ajax({
+        url: resultURL,
+        method: "GET"
+    }).done(function(results){
+
+        for(var i = 0; i < 82; i++){
+            document.getElementById('resultrecords').innerHTML += results.dates[i].games[0].teams.home.team.name + " ";    
+            document.getElementById('resultrecords').innerHTML += results.dates[i].games[0].teams.home.score + " vs. ";
+            document.getElementById('resultrecords').innerHTML += results.dates[i].games[0].teams.away.score + " ";
+            document.getElementById('resultrecords').innerHTML += results.dates[i].games[0].teams.away.team.name + "<br>";    
+        }
+    });
+    document.getElementById('resultrecords').innerHTML = " ";
 }
 function openTabs(evt, tabName){
 
@@ -207,5 +265,4 @@ function openTabs(evt, tabName){
 function resetDraft(){
     document.getElementById('draftrecords').innerHTML = " ";
 }
-
 
