@@ -1,70 +1,80 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8" />
-<title> NHL </title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <meta charset="UTF-8" />
 
-<link type = "text/css" rel="stylesheet" href="assests/css/style.css" />
+    <title> NHL </title>
+
+    <link type = "text/css" rel="stylesheet" href="assests/css/style.css" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"> </script>  
-    </head>
-    <!--- Tab Links --->
-    <div class="tab">
-        <button class="tablinks" onclick="openTabs(event, 'Home')" id="defaultOpen">Home</button>
-        <button class="tablinks" onclick="openTabs(event, 'Teams')">Teams</button>
-        <button class="tablinks" onclick="openTabs(event, 'Drafts')">Draft Records</button>
-        <button class="tablinks" onclick="openTabs(event, 'Records')">Records</button>
-        <button class="tablinks" onclick="openTabs(event, 'Standings')">Standings</button>
-    </div>
-    <!--- Tab Content --->
-    <div id="Teams" class="tabcontent">
-        <h3>Teams</h3>
+</head>
 
-            <ul id="team-list" class="numbered-list"></ul>
-            <ul id="team" class="non-list"></ul>
-            <ul id="player-list" class="numbered-list"></ul>
-            <ul id="player" class="non-list"></ul>
+<!--- Tab Links --->
+<div class="tab">
+    <button class="tablinks" onclick="openTabs(event, 'Home')" id="defaultOpen">Home</button>
+    <button class="tablinks" onclick="openTabs(event, 'Teams')">Team Roster</button>
+    <button class="tablinks" onclick="openTabs(event, 'Drafts')">Draft Records</button>
+    <button class="tablinks" onclick="openTabs(event, 'Records')">Game Results</button>
+    <button class="tablinks" onclick="openTabs(event, 'Standings')">Standings</button>
+</div>
 
-            <script type = "text/javascript" src="assests/javascript/javascript.js"></script>
-    </div>
-    <!--- Content for showing NHL Draft Records --->
-    <div id="Drafts" class="tabcontent">
-        <h3>Draft Records</h3>
-        <label>Enter year and a round number(1-7):</label><br>
-        <input type=text id="draftin">
-        <input type="text" id="roundin">
-        <input type=submit value="Search" onclick="getDraft()"><br>
-        <input type=submit value="Reset" onclick="resetDraft()"><br>
+<!--- Tab Content --->
+<div id="Teams" class="tabcontent">
+    <h3>Teams</h3>
 
-        <label id="draftrecords"></label>
-    </div>
-    <!--- Content for the Home page --->
-    <div id="Home" class="tabcontent" style="display:block">
-        <h3>Home</h3>
-        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/05_NHL_Shield.svg/1200px-05_NHL_Shield.svg.png" alt="NHL Shield" style="width: 100px; height: 100px"><br>
-        <label>This site uses the public NHL API to get various stats. Made to practice with JavaScript, API calls and HTML.</label>
-    </div>
-    <!--- Content for showing the results of games --->
-    <div id="Records" class="tabcontent">
-        <h3>Results</h3>
-        <input type="text" id="teamin">
-        <input type=submit value="Search" onclick="getResults()"><br>
-        <label id="resultrecords"></label>
-    </div>
-    <!--- Content for the league standings --->
-    <div id="Standings" class="tabcontent">
-        <h3>Standings</h3>
-        <h4>Metro Standings</h4>
-        <label id="metrostandings"></label>
-        <h4>Atlantic Standings</h4>
-        <label id="atlanticstandings"></label>
-        <h4>Central Standings</h4>
-        <label id="centralstandings"></label>
-        <h4>Pacific Standings</h4>
-        <label id="pacificstandings"></label>
-        <script>
+        <ul id="team-list" class="numbered-list"></ul>
+        <ul id="team" class="non-list"></ul>
+        <ul id="player-list" class="numbered-list"></ul>
+        <ul id="player" class="non-list"></ul>
 
-            var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
+        <script type = "text/javascript" src="assests/javascript/javascript.js"></script>
+</div>
+
+<!--- Content for showing NHL Draft Records --->
+<div id="Drafts" class="tabcontent">
+    <h3>Draft Records</h3>
+    <label>Enter year and a round number(1-7):</label><br>
+    <input type=text id="draftin">
+    <input type="text" id="roundin">
+    <input type=submit value="Search" onclick="getDraft()"><br>
+    <input type=submit value="Reset" onclick="resetDraft()"><br>
+
+    <label id="draftrecords"></label>
+</div>
+
+<!--- Content for the Home page --->
+<div id="Home" class="tabcontent" style="display:block">
+    <h3>Home</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/05_NHL_Shield.svg/1200px-05_NHL_Shield.svg.png" alt="NHL Shield" style="width: 100px; height: 100px"><br>
+    <label>This site uses the public NHL API to get various stats. Made to practice with JavaScript, API calls and HTML.</label>
+</div>
+
+<!--- Content for showing the results of games --->
+<div id="Records" class="tabcontent">
+    <h3>Game Results</h3>
+    <input type="text" id="teamin">
+    <input type=submit value="Search" onclick="getResults()"><br>
+    <label id="resultrecords"></label>
+</div>
+
+<!--- Content for the league standings --->
+<div id="Standings" class="tabcontent">
+
+    <h3>Standings</h3>
+    <h4>Metro Standings</h4>
+    <label id="metrostandings"></label>
+    <h4>Atlantic Standings</h4>
+    <label id="atlanticstandings"></label>
+    <h4>Central Standings</h4>
+    <label id="centralstandings"></label>
+    <h4>Pacific Standings</h4>
+    <label id="pacificstandings"></label>
+
+    <script>
+
+        var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
 
             $.ajax({
                 url: standingsURL,
@@ -72,7 +82,6 @@
             }).done(function(standingsData){
 
                 for(var i = 0; i < 8; i++){
-
                     document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].team.name + " ";
                     document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.wins + " ";
                     document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.losses + " ";
@@ -97,5 +106,5 @@
                     document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.ot + "<br>";
                 }
             });
-        </script>
+    </script>
 </html>
