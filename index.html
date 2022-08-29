@@ -18,6 +18,7 @@
     <button class="tablinks" onclick="openTabs(event, 'Drafts')">Draft Records</button>
     <button class="tablinks" onclick="openTabs(event, 'Records')">Game Results</button>
     <button class="tablinks" onclick="openTabs(event, 'Standings')">Standings</button>
+    <button class="tablinks" onclick="openTabs(event, 'Players')">Player Data</button>
 </div>
 
 <!--- Tab Content --->
@@ -57,6 +58,15 @@
     <input type="text" id="teamin">
     <input type=submit value="Search" onclick="getResults()"><br>
     <label id="resultrecords"></label>
+</div>
+
+<!--- Content for player data tab --->
+
+<div id="Players" class="tabcontent">
+    <h3>Player Data</h3>
+    <input type="text" id="playerin">
+    <input type=submit value="Search" onclick="getPlayers()"><br>
+    <label id="playerrecords"></label>
 </div>
 
 <!--- Content for the league standings --->
