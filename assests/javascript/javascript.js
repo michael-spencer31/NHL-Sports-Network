@@ -1455,14 +1455,32 @@ function getPlayers(){
         [ "Pontus Andreasson", 8483608 ]
     ]);
     var playerIDNum = PlayerMap.get(input);
-    var playerURL = "https://statsapi.web.nhl.com/api/v1/people/" + playerIDNum + "/";
+    var playerURL = "https://statsapi.web.nhl.com/api/v1/people/" + playerIDNum + "?hydrate=stats(splits=statsSingleSeason)/";
 
     $.ajax({
         url: playerURL,
         method: "GET"
     }).done(function(playerData){
 
-        document.getElementById('playerrecords').innerHTML = playerData.people[0].fullName;
+        document.getElementById('playerrecords').innerHTML = playerData.people[0].fullName + " #" + playerData.people[0].primaryNumber + "<br>";
+        document.getElementById('playerrecords').innerHTML += "Age: " + playerData.people[0].currentAge + "<br>";
+        document.getElementById('playerrecords').innerHTML += "Nationality: " + playerData.people[0].birthCountry + "<br>";
+        document.getElementById('playerrecords').innerHTML += "Hometown: " + playerData.people[0].birthCity + "<br>";
+        document.getElementById('playerrecords').innerHTML += "Height: " + playerData.people[0].height + "<br>";
+        document.getElementById('playerrecords').innerHTML += "Weight: " + playerData.people[0].weight + "lbs" + "<br>";
+        document.getElementById('playerrecords').innerHTML += "Team: " + playerData.people[0].currentTeam.name + "<br>";
+
+
+        document.getElementById('playerrecords').innerHTML += "Goals: " + playerData.people[0].stats[0].splits[0].stat.goals + "<br>";
+        document.getElementById('playerrecords').innerHTML += "Assists: " + playerData.people[0].stats[0].splits[0].stat.assists + "<br>";
+        document.getElementById('playerrecords').innerHTML += "Penalty Minutes: " + playerData.people[0].stats[0].splits[0].stat.pim + "<br>";
+        document.getElementById('playerrecords').innerHTML += "Games Played: " + playerData.people[0].stats[0].splits[0].stat.games + "<br>";
+        document.getElementById('playerrecords').innerHTML += "Plus/Minus: " + playerData.people[0].stats[0].splits[0].stat.plusMinus + "<br>";
+        document.getElementById('playerrecords').innerHTML += "Hits: " + playerData.people[0].stats[0].splits[0].stat.goals + "<br>";
+
+
+
+
 
     });
 }
@@ -1544,4 +1562,3 @@ function openTabs(evt, tabName){
 function resetDraft(){
     document.getElementById('draftrecords').innerHTML = " ";
 }
-
