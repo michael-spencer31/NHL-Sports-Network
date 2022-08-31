@@ -1455,6 +1455,11 @@ function getPlayers(){
         [ "Pontus Andreasson", 8483608 ]
     ]);
     var playerIDNum = PlayerMap.get(input);
+
+    //check if the player ID does not exist
+    if(playerIDNum == undefined){
+        document.getElementById('playerrecords').innerHTML = "Player not found - please try again";
+    }
     var playerURL = "https://statsapi.web.nhl.com/api/v1/people/" + playerIDNum + "?hydrate=stats(splits=statsSingleSeason)/";
 
     $.ajax({
@@ -1470,18 +1475,33 @@ function getPlayers(){
         document.getElementById('playerrecords').innerHTML += "Weight: " + playerData.people[0].weight + "lbs" + "<br>";
         document.getElementById('playerrecords').innerHTML += "Team: " + playerData.people[0].currentTeam.name + "<br>";
 
-
-        document.getElementById('playerrecords').innerHTML += "Goals: " + playerData.people[0].stats[0].splits[0].stat.goals + "<br>";
-        document.getElementById('playerrecords').innerHTML += "Assists: " + playerData.people[0].stats[0].splits[0].stat.assists + "<br>";
-        document.getElementById('playerrecords').innerHTML += "Penalty Minutes: " + playerData.people[0].stats[0].splits[0].stat.pim + "<br>";
+        if(playerData.people[0].stats[0].splits[0].stat.goals == undefined){
+            document.getElementById('playerrecords').innerHTML += "Goals: " + 0 + "<br>";
+        }else{
+            document.getElementById('playerrecords').innerHTML += "Goals: " + playerData.people[0].stats[0].splits[0].stat.goals + "<br>";      
+        }
+        if(playerData.people[0].stats[0].splits[0].stat.assists == undefined){
+            document.getElementById('playerrecords').innerHTML += "Assists: " + 0 + "<br>";      
+        }else{
+            document.getElementById('playerrecords').innerHTML += "Assists: " + playerData.people[0].stats[0].splits[0].stat.assists + "<br>";
+        }
+        if(playerData.people[0].stats[0].splits[0].stat.pim == undefined){
+            document.getElementById('playerrecords').innerHTML += "Penalty Minutes: " + 0 + "<br>";      
+        }else{
+            document.getElementById('playerrecords').innerHTML += "Penalty Minutes: " + playerData.people[0].stats[0].splits[0].stat.pim + "<br>"; 
+        }
         document.getElementById('playerrecords').innerHTML += "Games Played: " + playerData.people[0].stats[0].splits[0].stat.games + "<br>";
-        document.getElementById('playerrecords').innerHTML += "Plus/Minus: " + playerData.people[0].stats[0].splits[0].stat.plusMinus + "<br>";
-        document.getElementById('playerrecords').innerHTML += "Hits: " + playerData.people[0].stats[0].splits[0].stat.goals + "<br>";
 
-
-
-
-
+        if(playerData.people[0].stats[0].splits[0].stat.plusMinus == undefined){
+            document.getElementById('playerrecords').innerHTML += "Plus/Minus: Player is a goalie" + "<br>";         
+        }else{
+            document.getElementById('playerrecords').innerHTML += "Plus/Minus: " + playerData.people[0].stats[0].splits[0].stat.plusMinus + "<br>";
+        }
+        if(playerData.people[0].stats[0].splits[0].stat.hits == undefined){
+            document.getElementById('playerrecords').innerHTML += "Hits: Player is a goalie" + "<br>";         
+        }else{
+            document.getElementById('playerrecords').innerHTML += "Hits: " + playerData.people[0].stats[0].splits[0].stat.hits + "<br>";
+        }
     });
 }
 function getResults(){
@@ -1542,6 +1562,10 @@ function getResults(){
     });
     document.getElementById('resultrecords').innerHTML = " ";
 }
+/**
+ * this class controls the tab class and the controls
+ * between them
+*/
 function openTabs(evt, tabName){
 
     var i, tabcontent, tablinks;
