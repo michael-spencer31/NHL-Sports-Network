@@ -14,11 +14,11 @@
 <!--- Tab Links --->
 <div class="tab">
     <button class="tablinks" onclick="openTabs(event, 'Home')" id="defaultOpen">Home</button>
+    <button class="tablinks" onclick="openTabs(event, 'Players')">Player Data</button>
     <button class="tablinks" onclick="openTabs(event, 'Teams')">Team Roster</button>
     <button class="tablinks" onclick="openTabs(event, 'Drafts')">Draft Records</button>
     <button class="tablinks" onclick="openTabs(event, 'Records')">Game Results</button>
     <button class="tablinks" onclick="openTabs(event, 'Standings')">Standings</button>
-    <button class="tablinks" onclick="openTabs(event, 'Players')">Player Data</button>
 </div>
 
 <!--- Tab Content --->
@@ -43,13 +43,14 @@
     <input type=submit value="Reset" onclick="resetDraft()"><br>
 
     <label id="draftrecords"></label>
+
 </div>
 
 <!--- Content for the Home page --->
 <div id="Home" class="tabcontent" style="display:block">
     <h3>Home</h3>
-    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/05_NHL_Shield.svg/1200px-05_NHL_Shield.svg.png" alt="NHL Shield" style="width: 100px; height: 100px"><br>
-    <label>This site uses the public NHL API to get various stats. Made to practice with JavaScript, API calls and HTML.</label>
+    <label>Hello! This site uses the NHL API to obtain data about NHL players and teams. </label><br><br>
+    <img src="https://cms.nhl.bamgrid.com/images/photos/325781146/1024x576/cut.jpg" alt="NHL Teams" style="width: 100; height: 20000"><<br>
 </div>
 
 <!--- Content for showing the results of games --->
@@ -64,6 +65,7 @@
 
 <div id="Players" class="tabcontent">
     <h3>Player Data</h3>
+    <label>Enter a player name below: </label><br>
     <input type="text" id="playerin">
     <input type=submit value="Search" onclick="getPlayers()"><br>
     <label id="playerrecords"></label>
@@ -76,6 +78,7 @@
     <h4>Metro Standings</h4>
     <label id="metrostandings"></label>
     <h4>Atlantic Standings</h4>
+    <img src="https://content.sportslogos.net/news/2022/01/2022-nhl-all-star-game-atlantic-division-logo-sportslogosnet-750x518.png" style="width: 100px; height: 100px"><br>
     <label id="atlanticstandings"></label>
     <h4>Central Standings</h4>
     <label id="centralstandings"></label>
