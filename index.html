@@ -1,123 +1,54 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-    <meta charset="UTF-8" />
 
-    <title> NHL </title>
+<html lang="en">
 
-    <link type = "text/css" rel="stylesheet" href="assests/css/style.css" />
+	<head>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"> </script>  
-</head>
+		<title>NHL Stats</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="main.css">
 
-<!--- Tab Links --->
-<div class="tab">
-    <button class="tablinks" onclick="openTabs(event, 'Home')" id="defaultOpen">Home</button>
-    <button class="tablinks" onclick="openTabs(event, 'Players')">Player Data</button>
-    <button class="tablinks" onclick="openTabs(event, 'Teams')">Team Roster</button>
-    <button class="tablinks" onclick="openTabs(event, 'Drafts')">Draft Records</button>
-    <!---<button class="tablinks" onclick="openTabs(event, 'Records')">Game Results</button>--->
-    <button class="tablinks" onclick="openTabs(event, 'Standings')">Standings</button>
-</div>
+	</head>
+	
+	<body>
+	
+		<nav class="navbar navbar-expand-md">
+			<a class="navbar-brand" href="#">Logo</a>
+			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="main-navigation">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" href="index.html">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="about.html">Player Data</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="standings.html">Standings</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="players.html">Player Data</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
 
-<!--- Tab Content --->
-<div id="Teams" class="tabcontent">
-    <h3>Teams</h3>
-
-        <ul id="team-list" class="numbered-list"></ul>
-        <ul id="team" class="non-list"></ul>
-        <ul id="player-list" class="numbered-list"></ul>
-        <ul id="player" class="non-list"></ul>
-
-        <script type = "text/javascript" src="assests/javascript/javascript.js"></script>
-</div>
-
-<!--- Content for showing NHL Draft Records --->
-<div id="Drafts" class="tabcontent">
-    <h3>Draft Records</h3>
-    <label>Enter year and a round number(1-7):</label><br>
-    <input type=text id="draftin">
-    <input type="text" id="roundin">
-    <input type=submit value="Search" onclick="getDraft()"><br>
-    <input type=submit value="Reset" onclick="resetDraft()"><br>
-
-    <label id="draftrecords"></label>
-
-</div>
-
-<!--- Content for the Home page --->
-<div id="Home" class="tabcontent" style="display:block">
-    <h3>Home</h3>
-    <label>Hello! This site uses the NHL API to obtain data about NHL players and teams. </label><br><br>
-    <img src="https://cms.nhl.bamgrid.com/images/photos/325781146/1024x576/cut.jpg" alt="NHL Teams" style="width: 100%; height: 100%; object-fit: 'contain'"><br>
-</div>
-
-<!--- Content for showing the results of games
-<div id="Records" class="tabcontent">
-    <h3>Game Results</h3>
-    <input type="text" id="teamin">
-    <input type=submit value="Search" onclick="getResults()"><br>
-    <label id="resultrecords"></label>
-</div> --->
-
-<!--- Content for player data tab --->
-
-<div id="Players" class="tabcontent">
-    <h3>Player Data</h3>
-    <label>Enter a player name below: </label><br>
-    <input type="text" id="playerin">
-    <input type=submit value="Search" onclick="getPlayers()"><br>
-    <label id="playerrecords"></label>
-</div>
-
-<!--- Content for the league standings --->
-<div id="Standings" class="tabcontent">
-
-    <h3>Standings</h3>
-    <h4>Metro Standings</h4>
-    <label id="metrostandings"></label>
-    <h4>Atlantic Standings</h4>
-    <img src="https://content.sportslogos.net/news/2022/01/2022-nhl-all-star-game-atlantic-division-logo-sportslogosnet-750x518.png" style="width: 100px; height: 100px"><br>
-    <label id="atlanticstandings"></label>
-    <h4>Central Standings</h4>
-    <label id="centralstandings"></label>
-    <h4>Pacific Standings</h4>
-    <label id="pacificstandings"></label>
-
-    <script>
-
-        var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
-
-            $.ajax({
-                url: standingsURL,
-                method: "GET"
-            }).done(function(standingsData){
-
-                for(var i = 0; i < 8; i++){
-                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].team.name + " ";
-                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.wins + " ";
-                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.losses + " ";
-                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.ot + "<br>";
-                }
-                for(var i = 0; i < 8; i++){
-                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].team.name + " ";
-                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].leagueRecord.wins + " ";
-                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].leagueRecord.losses + " ";
-                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].leagueRecord.ot + "<br>";
-                }
-                for(var i = 0; i < 8; i++){
-                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].team.name + " ";
-                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].leagueRecord.wins + " ";
-                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].leagueRecord.losses + " ";
-                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].leagueRecord.ot + "<br>";
-                }
-                for(var i = 0; i < 8; i++){
-                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].team.name + " ";
-                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.wins + " ";
-                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.losses + " ";
-                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.ot + "<br>";
-                }
-            });
-    </script>
+		<header class="page-header header container-fluid">
+			<div class="overlay"></div>
+			<div class="description">
+				<h1>Welcome to NHL Stats</h1>
+				<p>Enjoy your stay!</p>
+			</div>
+		</header>
+	
+		
+		<script src="jquery-3.5.1.min.js"></script>
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<script src="main.js"></script>
+	</body>
+	
 </html>
