@@ -1,0 +1,29 @@
+// resize header to size of browser window
+
+var ready = (callback) => {
+	if (document.readyState != "loading") callback();
+	else document.addEventListener("DOMContentLoaded", callback);
+}
+
+ready(() => { 
+	document.querySelector(".header").style.height = window.innerHeight + "px";
+})
+
+// set modal time delay before loading
+
+setTimeout(function() {
+	$('#demo-modal').modal();
+}, 500);
+
+function testFunc(){
+
+	var playerURL = "https://statsapi.web.nhl.com/api/v1/people/8475158?hydrate=stats(splits=statsSingleSeason)/";
+
+	$.ajax({
+		url: playerURL,
+		method: "GET"
+	}).done(function(playerData){
+
+		document.getElementById("playerdata").innerHTML = playerData.people[0].fullName + " #" + playerData.people[0].primaryNumber + "<br>";
+	})
+}

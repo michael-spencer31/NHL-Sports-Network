@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+	<head>
+
+		<title>Bootstrap Tutorial Sample Page</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="main.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	</head>
+	
+	<body>
+	
+		<nav class="navbar navbar-expand-md">
+			<a class="navbar-brand" href="#">Logo</a>
+			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="main-navigation">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" href="index.html">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="about.html">Player Data</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="standings.html">Standings</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="players.html">Player Data</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<div class="background">
+			<div class="container team">
+				<h1>NHL Standings</h1>
+				
+				<h3>Standings</h3>
+				<p>Format is Wins/Losses/OT Losses</p>
+    			<h4>Metro Standings</h4>
+    			<label id="metrostandings"></label>
+    			<h4>Atlantic Standings</h4>
+    			<label id="atlanticstandings"></label>
+    			<h4>Central Standings</h4>
+    			<label id="centralstandings"></label>
+    			<h4>Pacific Standings</h4>
+    			<label id="pacificstandings"></label>
+
+    			<script>
+
+			        var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
+			            $.ajax({
+			                url: standingsURL,
+			                method: "GET"
+			            }).done(function(standingsData){
+
+			                for(var i = 0; i < 8; i++){
+			                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].team.name + " ";
+			                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.wins + " ";
+			                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.losses + " ";
+			                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.ot + "<br>";
+			                }
+			                for(var i = 0; i < 8; i++){
+			                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].team.name + " ";
+			                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].leagueRecord.wins + " ";
+			                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].leagueRecord.losses + " ";
+			                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].leagueRecord.ot + "<br>";
+			                }
+			                for(var i = 0; i < 8; i++){
+			                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].team.name + " ";
+			                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].leagueRecord.wins + " ";
+			                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].leagueRecord.losses + " ";
+			                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].leagueRecord.ot + "<br>";
+			                }
+			                for(var i = 0; i < 8; i++){
+			                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].team.name + " ";
+			                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.wins + " ";
+			                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.losses + " ";
+			                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.ot + "<br>";
+			                }
+			        });
+		    	</script>
+			</div>
+		</div>
+	
+		
+		<script src="jquery-3.5.1.min.js"></script>
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<script src="main.js"></script>
+	</body>
+	
+</html>
