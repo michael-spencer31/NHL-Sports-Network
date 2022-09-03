@@ -15,6 +15,8 @@ setTimeout(function() {
 	$('#demo-modal').modal();
 }, 500);
 
+
+// this function uses the ajax jquery method to obtain data about a player
 function testFunc(){
 
 	var playerURL = "https://statsapi.web.nhl.com/api/v1/people/8475158?hydrate=stats(splits=statsSingleSeason)/";
@@ -29,9 +31,19 @@ function testFunc(){
 }
 function getDraft(){
 
+	document.getElementById('draftdata').innerHTML = " ";
+
 	var year = document.getElementById('yearin').value;
 	var round = document.getElementById('roundin').value;
+
+    if(round > 7 || round <= 0){
+        document.getElementById('draftdata').innerHTML += "Invalid round number";
+    }
+	var roundNumber = round++;
+
 	round--;
+	round--;
+	var pickNumber = 1;
 
 	var draftURL = "https://statsapi.web.nhl.com/api/v1/draft/" + year;
 
@@ -41,10 +53,50 @@ function getDraft(){
     }).done(function(draftData){
 
         for(var i = 0; i < 32; i++){
-            document.getElementById('draftdata').innerHTML +=  draftData.drafts[0].rounds[round].picks[i].team.name;
-            document.getElementById('draftdata').innerHTML += " " + draftData.drafts[0].rounds[round].picks[i].prospect.fullName + "<br />";
+            document.getElementById('draftdata').innerHTML += "Round " + roundNumber + " pick" + " " + pickNumber + ": "+ draftData.drafts[0].rounds[round].picks[i].team.name + " " + draftData.drafts[0].rounds[round].picks[i].prospect.fullName + "<br />";
+            pickNumber++;
         }  
     });
+}
+//this function uses the ajax jquery method to get data about the playoffs
+function getPlayoffs(){
+
+    //each time the button is pressed, reset the html element to be empty
+    document.getElementById('playoffrecords').innerHTML = " ";
+
+    //get the year the user wants to search for from the html page
+	var playoffYear = document.getElementById('playoffin').value;
+	var endYear = playoffYear;
+    endYear++;
+    var year = playoffYear + "" + endYear;
+	var playoffURL = "https://statsapi.web.nhl.com/api/v1/tournaments/playoffs?expand=round.series,schedule.game.seriesSummary&season=" + playoffYear + "" + endYear;
+	
+    //call the api with the url using the GET method 
+    $.ajax({
+		url: playoffURL,
+		method: "GET"
+	}).done(function(playoffData){
+
+        document.getElementById('playoffrecords').innerHTML += "Quarter Finals" + "<br>";
+
+		for(var i = 0; i < 8; i++){
+
+			document.getElementById('playoffrecords').innerHTML += playoffData.rounds[0].series[i].names.matchupName + "<br>";
+		}
+        document.getElementById('playoffrecords').innerHTML += "Semi Finals" + "<br>";
+        for(var i = 0; i < 4; i++){
+
+            document.getElementById('playoffrecords').innerHTML += playoffData.rounds[1].series[i].names.matchupName + "<br>";
+        }
+        document.getElementById('playoffrecords').innerHTML += "Conference Finals" + "<br>";
+        for(var i = 0; i < 2; i++){
+            document.getElementById('playoffrecords').innerHTML += playoffData.rounds[2].series[i].names.matchupName + "<br>";
+        }
+        document.getElementById('playoffrecords').innerHTML += "Stanley Cup Finals" + "<br>";
+        //since the last round only has 2 teams we don't need a loop
+        document.getElementById('playoffrecords').innerHTML += playoffData.rounds[3].series[0].names.matchupName + "<br>";
+
+	});
 }
 function getPlayer(){
 
