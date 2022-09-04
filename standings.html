@@ -4,7 +4,7 @@
 
 	<head>
 
-		<title>Bootstrap Tutorial Sample Page</title>
+		<title>Standings</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
@@ -26,13 +26,19 @@
 						<a class="nav-link" href="index.html">Home</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="about.html">Player Data</a>
+						<a class="nav-link" href="about.html">Draft Data</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="standings.html">Standings</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="players.html">Player Data</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="playoffs.html">Playoffs</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="schedule.html">Schedule</a>
 					</li>
 				</ul>
 			</div>
@@ -56,34 +62,52 @@
     			<script>
 
 			        var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
+			        var points = 0;
 			            $.ajax({
 			                url: standingsURL,
 			                method: "GET"
 			            }).done(function(standingsData){
 
+			            	/* METRO STANDINGS */
 			                for(var i = 0; i < 8; i++){
 			                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].team.name + " ";
 			                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.wins + " ";
+			                    points = standingsData.records[0].teamRecords[i].leagueRecord.wins * 2;
 			                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.losses + " ";
-			                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.ot + "<br>";
+			                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.ot + " ";
+			                    points += standingsData.records[0].teamRecords[i].leagueRecord.ot;
+			                    document.getElementById('metrostandings').innerHTML += "Total points: " + points + "<br>";
 			                }
+			                /* ATLANTIC STANDINGS */
 			                for(var i = 0; i < 8; i++){
 			                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].team.name + " ";
 			                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].leagueRecord.wins + " ";
+			                    points = standingsData.records[1].teamRecords[i].leagueRecord.wins * 2;
 			                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].leagueRecord.losses + " ";
-			                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].leagueRecord.ot + "<br>";
+			                    points += standingsData.records[1].teamRecords[i].leagueRecord.ot;
+			                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].leagueRecord.ot + " ";
+			                    document.getElementById('atlanticstandings').innerHTML += "Total points: " + points + "<br>";
 			                }
+			                /* CENTRAL STANDINGS */
 			                for(var i = 0; i < 8; i++){
 			                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].team.name + " ";
 			                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].leagueRecord.wins + " ";
+			                   	points = standingsData.records[2].teamRecords[i].leagueRecord.wins * 2;
 			                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].leagueRecord.losses + " ";
-			                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].leagueRecord.ot + "<br>";
+			                	points += standingsData.records[2].teamRecords[i].leagueRecord.ot;
+			                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].leagueRecord.ot + " ";
+			               		document.getElementById('centralstandings').innerHTML += "Total points: " + points + "<br>";
 			                }
+			                /* PACIFIC STANDINGS */
 			                for(var i = 0; i < 8; i++){
 			                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].team.name + " ";
 			                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.wins + " ";
 			                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.losses + " ";
-			                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.ot + "<br>";
+			                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.ot + " ";
+			                  	points = standingsData.records[3].teamRecords[i].leagueRecord.wins * 2;
+			                	points += standingsData.records[3].teamRecords[i].leagueRecord.ot;
+			               		document.getElementById('pacificstandings').innerHTML += "Total points: " + points + "<br>";
+
 			                }
 			        });
 		    	</script>
