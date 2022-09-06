@@ -47,70 +47,178 @@
 		<div class="background">
 			<div class="container team">
 				<h1>NHL Standings</h1>
-				
-				<h3>Standings</h3>
-				<p>Format is Wins/Losses/OT Losses</p>
-    			<h4>Metro Standings</h4>
-    			<label id="metrostandings"></label>
-    			<h4>Atlantic Standings</h4>
-    			<label id="atlanticstandings"></label>
-    			<h4>Central Standings</h4>
-    			<label id="centralstandings"></label>
-    			<h4>Pacific Standings</h4>
-    			<label id="pacificstandings"></label>
+				<h4>Atlantic Standings</h4>
+
+				<table id="test-table-1"></table>
+
 
     			<script>
 
-			        var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
-			        var points = 0;
-			            $.ajax({
-			                url: standingsURL,
-			                method: "GET"
-			            }).done(function(standingsData){
+				    			// First create a table to be used as an example.
+				const table = document.getElementById('test-table-1')
+				const head = document.createElement('thead')
 
-			            	/* METRO STANDINGS */
-			                for(var i = 0; i < 8; i++){
-			                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].team.name + " ";
-			                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.wins + " ";
-			                    points = standingsData.records[0].teamRecords[i].leagueRecord.wins * 2;
-			                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.losses + " ";
-			                    document.getElementById('metrostandings').innerHTML += standingsData.records[0].teamRecords[i].leagueRecord.ot + " ";
-			                    points += standingsData.records[0].teamRecords[i].leagueRecord.ot;
-			                    document.getElementById('metrostandings').innerHTML += "Total points: " + points + "<br>";
-			                }
-			                /* ATLANTIC STANDINGS */
-			                for(var i = 0; i < 8; i++){
-			                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].team.name + " ";
-			                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].leagueRecord.wins + " ";
-			                    points = standingsData.records[1].teamRecords[i].leagueRecord.wins * 2;
-			                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].leagueRecord.losses + " ";
-			                    points += standingsData.records[1].teamRecords[i].leagueRecord.ot;
-			                    document.getElementById('atlanticstandings').innerHTML += standingsData.records[1].teamRecords[i].leagueRecord.ot + " ";
-			                    document.getElementById('atlanticstandings').innerHTML += "Total points: " + points + "<br>";
-			                }
-			                /* CENTRAL STANDINGS */
-			                for(var i = 0; i < 8; i++){
-			                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].team.name + " ";
-			                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].leagueRecord.wins + " ";
-			                   	points = standingsData.records[2].teamRecords[i].leagueRecord.wins * 2;
-			                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].leagueRecord.losses + " ";
-			                	points += standingsData.records[2].teamRecords[i].leagueRecord.ot;
-			                    document.getElementById('centralstandings').innerHTML += standingsData.records[2].teamRecords[i].leagueRecord.ot + " ";
-			               		document.getElementById('centralstandings').innerHTML += "Total points: " + points + "<br>";
-			                }
-			                /* PACIFIC STANDINGS */
-			                for(var i = 0; i < 8; i++){
-			                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].team.name + " ";
-			                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.wins + " ";
-			                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.losses + " ";
-			                    document.getElementById('pacificstandings').innerHTML += standingsData.records[3].teamRecords[i].leagueRecord.ot + " ";
-			                  	points = standingsData.records[3].teamRecords[i].leagueRecord.wins * 2;
-			                	points += standingsData.records[3].teamRecords[i].leagueRecord.ot;
-			               		document.getElementById('pacificstandings').innerHTML += "Total points: " + points + "<br>";
+				// Create 3 th tags for an example.
 
-			                }
-			        });
-		    	</script>
+				const th1 = document.createElement('th')
+				th1.appendChild(document.createTextNode('Team Name'))
+
+				const th2 = document.createElement('th')
+				th2.appendChild(document.createTextNode('Wins'))
+
+				const th3 = document.createElement('th')
+				th3.appendChild(document.createTextNode('Losses'))
+
+				const th4 = document.createElement('th')
+				th4.appendChild(document.createTextNode('OTL'))
+
+				// Add the th tags to the thead
+				head.appendChild(th1)
+				head.appendChild(th2)
+				head.appendChild(th3)
+				head.appendChild(th4)
+
+				// Give the table the thead.
+				table.appendChild(head)
+
+				// Now we have a table to work with.
+
+				// Create a tbody.
+				const tbody = document.createElement('tbody')
+
+				// Add a couple of rows.
+				const tr1 = tbody.insertRow()
+				const tr2 = tbody.insertRow()
+				const tr3 = tbody.insertRow();
+				const tr4 = tbody.insertRow();
+				const tr5 = tbody.insertRow();
+				const tr6 = tbody.insertRow();
+				const tr7 = tbody.insertRow();
+				const tr8 = tbody.insertRow();
+
+				var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
+
+				$.ajax({
+					url: standingsURL,
+					method: "GET"
+				}).done(function(standingsData){
+
+					// Add td tags to to rows.
+
+
+					var tr = tr1;
+					var td = tr.insertCell(0);
+					td.innerText = standingsData.records[1].teamRecords[0].leagueRecord.ot;
+
+					var td = tr.insertCell(0);
+					td.innerText = standingsData.records[1].teamRecords[0].leagueRecord.losses;
+					var td = tr.insertCell(0);
+					td.innerText = standingsData.records[1].teamRecords[0].leagueRecord.wins;
+					
+					var td = tr.insertCell(0);
+					td.innerText = standingsData.records[1].teamRecords[0].team.name
+
+					var td2 = tr2.insertCell(0);
+					td2.innerText = standingsData.records[1].teamRecords[1].leagueRecord.ot;
+
+					var td2 = tr2.insertCell(0);
+					td2.innerText = standingsData.records[1].teamRecords[1].leagueRecord.losses;
+					var td2 = tr2.insertCell(0);
+					td2.innerText = standingsData.records[1].teamRecords[1].leagueRecord.wins;
+					
+					var td2 = tr2.insertCell(0);
+					td2.innerText = standingsData.records[1].teamRecords[1].team.name
+
+					var td3 = tr3.insertCell(0);
+					td3.innerText = standingsData.records[1].teamRecords[2].leagueRecord.ot;
+
+					var td3 = tr3.insertCell(0);
+					td3.innerText = standingsData.records[1].teamRecords[2].leagueRecord.losses;
+					var td3 = tr3.insertCell(0);
+					td3.innerText = standingsData.records[1].teamRecords[2].leagueRecord.wins;
+					
+					var td3 = tr3.insertCell(0);
+					td3.innerText = standingsData.records[1].teamRecords[2].team.name
+
+
+					var td4 = tr4.insertCell(0);
+					td4.innerText = standingsData.records[1].teamRecords[3].leagueRecord.ot;
+
+					var td4 = tr4.insertCell(0);
+					td4.innerText = standingsData.records[1].teamRecords[3].leagueRecord.losses;
+					var td4 = tr4.insertCell(0);
+					td4.innerText = standingsData.records[1].teamRecords[3].leagueRecord.wins;
+					
+					var td4 = tr4.insertCell(0);
+					td4.innerText = standingsData.records[1].teamRecords[3].team.name
+					
+
+					var td5 = tr5.insertCell(0);
+					td5.innerText = standingsData.records[1].teamRecords[4].leagueRecord.ot;
+
+					var td5 = tr5.insertCell(0);
+					td5.innerText = standingsData.records[1].teamRecords[4].leagueRecord.losses;
+					var td5 = tr5.insertCell(0);
+					td5.innerText = standingsData.records[1].teamRecords[4].leagueRecord.wins;
+					
+					var td5 = tr5.insertCell(0);
+					td5.innerText = standingsData.records[1].teamRecords[4].team.name
+					
+					var td6 = tr6.insertCell(0);
+					td6.innerText = standingsData.records[1].teamRecords[5].leagueRecord.ot;
+
+					var td6 = tr6.insertCell(0);
+					td6.innerText = standingsData.records[1].teamRecords[5].leagueRecord.losses;
+					var td6 = tr6.insertCell(0);
+					td6.innerText = standingsData.records[1].teamRecords[5].leagueRecord.wins;
+					
+					var td6 = tr6.insertCell(0);
+					td6.innerText = standingsData.records[1].teamRecords[5].team.name
+
+
+					var td7 = tr7.insertCell(0);
+					td7.innerText = standingsData.records[1].teamRecords[6].leagueRecord.ot;
+
+					var td7 = tr7.insertCell(0);
+					td7.innerText = standingsData.records[1].teamRecords[6].leagueRecord.losses;
+					var td7 = tr7.insertCell(0);
+					td7.innerText = standingsData.records[1].teamRecords[6].leagueRecord.wins;
+					
+					var td7 = tr7.insertCell(0);
+					td7.innerText = standingsData.records[1].teamRecords[6].team.name
+					
+
+					var td8 = tr8.insertCell(0);
+					td8.innerText = standingsData.records[1].teamRecords[7].leagueRecord.ot;
+
+					var td8 = tr8.insertCell(0);
+					td8.innerText = standingsData.records[1].teamRecords[7].leagueRecord.losses;
+					var td8 = tr8.insertCell(0);
+					td8.innerText = standingsData.records[1].teamRecords[7].leagueRecord.wins;
+					
+					var td8= tr8.insertCell(0);
+					td8.innerText = standingsData.records[1].teamRecords[7].team.name
+					
+					
+					
+					/**
+					for (let tr of [tr1, tr2, tr3, tr4]) {
+					    for (let i=0; i<4; i++) {
+					    var td = tr.insertCell(i)
+					    td.innerText = standingsData.records[1].teamRecords[i].team.name
+
+					  }
+					}
+					*/
+				});
+
+				
+
+				// Add the tbody to the table.
+				table.appendChild(tbody)
+
+			</script>
+    			
 			</div>
 		</div>
 	
