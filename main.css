@@ -5,7 +5,19 @@ body {
 	margin: 0;
 	background: #fff; 
 }
-
+/*--- table content ---*/
+table, th, td {
+  border:1px solid black;
+}
+th, td {
+  border-bottom: 1px solid #ddd;
+}
+tr:hover {background-color: coral;}
+tr:nth-child(even) {background-color: #f2f2f2;}
+th {
+  background-color: #326fa8;
+  color: white;
+}
 /*--- navigation bar ---*/
 
 .navbar {
