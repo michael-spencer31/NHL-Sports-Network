@@ -1,4 +1,4 @@
-# NHL-Stats
+# NHL Stats Website
 
 A website that uses the jQuery AJAX method to access the public NHL API. Written in JavaScript and HTML/CSS. Allows the user to see various stats and information about NHL players and teams.
 
