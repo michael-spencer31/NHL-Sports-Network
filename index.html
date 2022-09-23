@@ -67,12 +67,14 @@
 		        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
 		        document.getElementById("timer").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-		    }, 1000);
 
-			    if(distance < 0){
+		        if(distance < 0){
 			        clearInterval(x);
 			        document.getElementById("timer").innerHTML = "HOCKEY TIME!";
 			    }
+		    }, 1000);
+
+			    
 		</script>
 		
 		<script src="jquery-3.5.1.min.js"></script>
