@@ -323,7 +323,7 @@ function CalendarControl() {
     calendarControl.init();
   }
   
-  const calendarControl = new CalendarControl();
+  //const calendarControl = new CalendarControl();
 
 
 //do the ajax call in this function
