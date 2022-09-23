@@ -9,16 +9,17 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="main.css">
+		<script src="jquery-3.5.1.min.js"></script>
+		<script src="bootstrap/js/bootstrap.min.js" defer></script>
+		<script src="main.js" defer></script>
+	
 		
-		<script src="jquery-1.11.3.min.js"></script>
-		<script src="js/brackets.min.js"></script>
-
 	</head>
 	
 	<body>
 	
 		<nav class="navbar navbar-expand-md">
-			<a class="navbar-brand" href="#">Logo</a>
+		
 			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -51,15 +52,13 @@
 				<h1>Playoff Data</h1>
 				<p>Enter a year below:</p>
 
-				<input type="text" id="playoffin" class="btn btn-outline-secondary btn-lg">
-				<input type = "button" value="Search" class="btn btn-outline-secondary btn-lg" onclick="getPlayoffs()"><br>
+				<input type="text" id="playoffin" placeholder="Year">
+				<input type = "submit" value="Search"  onclick="getPlayoffs()"><br>
 				<label id="playoffrecords"></label>
 			</div>
 		</div>
 		
-		<script src="jquery-3.5.1.min.js"></script>
-		<script src="bootstrap/js/bootstrap.min.js"></script>
-		<script src="main.js"></script>
+		
 	</body>
 	
 </html>
