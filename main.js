@@ -5,9 +5,12 @@ var ready = (callback) => {
 	else document.addEventListener("DOMContentLoaded", callback);
 }
 
-ready(() => { 
-	document.querySelector(".header").style.height = window.innerHeight + "px";
+document.addEventListener("DOMContentLoaded", function(){
+  ready(() => { 
+  document.querySelector(".header").style.height = window.innerHeight + "px";
 })
+});
+
 
 // set modal time delay before loading
 
@@ -323,7 +326,7 @@ function CalendarControl() {
     calendarControl.init();
   }
   
-  //const calendarControl = new CalendarControl();
+  const calendarControl = new CalendarControl();
 
 
 //do the ajax call in this function
