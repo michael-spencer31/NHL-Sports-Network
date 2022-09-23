@@ -17,6 +17,29 @@ th {
   background-color: #326fa8;
   color: white;
 }
+
+input[type=submit] {
+  background-color: #326fa8;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #387cbc;
+}
+
+input[type=text], select {
+  width: 25%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
 /*--- navigation bar ---*/
 
 .navbar {
