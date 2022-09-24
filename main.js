@@ -32,6 +32,41 @@ function testFunc(){
 		document.getElementById("playerdata").innerHTML = playerData.people[0].fullName + " #" + playerData.people[0].primaryNumber + "<br>";
 	})
 }
+function getStandings(){
+
+    const tbl = document.createElement("table");
+    const tblBody = document.createElement("tbody");
+
+    var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
+
+    const headers = document.createElement("th");
+    headers.append("Team Names    Wins    Losses    OTL");
+    document.body.appendChild(headers);
+
+    $.ajax({
+        url: standingsURL,
+        method: "GET"
+    }).done(function(standingsData){
+
+        for(let i = 0; i < 8; i++){
+
+            const row = document.createElement("tr");
+
+            for(let j = 0; j < 1; j++){
+
+                const cell = document.createElement("td");
+
+                var standings = standingsData.records[1].teamRecords[i].team.name + " " + standingsData.records[1].teamRecords[i].leagueRecord.wins;
+                const cellText = document.createTextNode(standings);
+                cell.appendChild(cellText);
+                row.appendChild(cell);
+            }
+            tblBody.appendChild(row);
+        }
+        tbl.appendChild(tblBody);
+        document.body.appendChild(tbl);
+    });
+}
 //this function is used to get data about a entry draft
 //for a year specified by the user
 function getDraft(){
