@@ -47,9 +47,12 @@
 		<div class="background">
 			<div class="container team">
 				<h1>NHL Standings</h1>
-				<h4>Atlantic Standings</h4>
 
-				<input type = "submit" value="Search"  onclick="getStandings()"><br>
+				<input type ="submit" value="Atlantic" id="atlantic"onclick="getStandings(1)">
+				<input type="submit" value="Metro" id="metro" onclick="getStandings(0)">
+				<input type="submit" value="Central" id="central" onclick="getStandings(2)">
+				<input type="submit" value="Pacific" id="pacific" onclick="getStandings(3)">
+				<input type="submit"value="Reset" id="reset" onclick="reloadPage()">
 			</div>
 		</div>
 	
