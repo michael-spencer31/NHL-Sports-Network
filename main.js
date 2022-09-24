@@ -18,6 +18,9 @@ setTimeout(function() {
 	$('#demo-modal').modal();
 }, 500);
 
+function reloadPage(){
+    window.location.reload();
+}
 
 // this function uses the ajax jquery method to obtain data about a player
 function testFunc(){
@@ -32,7 +35,7 @@ function testFunc(){
 		document.getElementById("playerdata").innerHTML = playerData.people[0].fullName + " #" + playerData.people[0].primaryNumber + "<br>";
 	})
 }
-function getStandings(){
+function getStandings(division){
 
     const tbl = document.createElement("table");
     const tblBody = document.createElement("tbody");
@@ -40,7 +43,7 @@ function getStandings(){
     var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
 
     const headers = document.createElement("th");
-    headers.append("Team Names    Wins    Losses    OTL");
+    headers.append("Team Name    W    L    OTL");
     document.body.appendChild(headers);
 
     $.ajax({
@@ -54,12 +57,41 @@ function getStandings(){
 
             for(let j = 0; j < 1; j++){
 
-                const cell = document.createElement("td");
+                //atlantic = 1 metro = 0 central = 2 pacific = 3  
 
-                var standings = standingsData.records[1].teamRecords[i].team.name + " " + standingsData.records[1].teamRecords[i].leagueRecord.wins;
-                const cellText = document.createTextNode(standings);
-                cell.appendChild(cellText);
-                row.appendChild(cell);
+                var points = 0; 
+
+                const teamNames = document.createElement("td");
+                const wins = document.createElement("td");
+                const losses = document.createElement("td");
+                const otl = document.createElement("td");
+                const pointsAmount = document.createElement("td");
+
+                var standings = standingsData.records[division].teamRecords[i].team.name;
+                const teamText = document.createTextNode(standings);
+
+                standings = standingsData.records[division].teamRecords[i].leagueRecord.wins;
+                const winsText = document.createTextNode(standings);
+                points += standingsData.records[division].teamRecords[i].leagueRecord.wins * 2;
+
+                standings = standingsData.records[division].teamRecords[i].leagueRecord.losses;
+                const lossText = document.createTextNode(standings);
+
+                standings = standingsData.records[division].teamRecords[i].leagueRecord.ot;
+                const otlText = document.createTextNode(standings);
+                points += standingsData.records[division].teamRecords[i].leagueRecord.ot;
+
+                const pointsText = document.createTextNode(points);
+
+                teamNames.appendChild(teamText);
+                wins.appendChild(winsText);
+                losses.appendChild(lossText);
+                otl.appendChild(otlText);
+                row.appendChild(teamNames);
+                row.appendChild(wins);
+                row.appendChild(losses);
+                row.appendChild(otl);
+                row.appendChild(pointsText);
             }
             tblBody.appendChild(row);
         }
