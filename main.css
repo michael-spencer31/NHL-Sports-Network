@@ -17,6 +17,11 @@ th {
   background-color: #326fa8;
   color: white;
 }
+td{
+	height: 50px;
+	vertical-align: bottom;
+	text-align: left;
+}
 
 input[type=submit] {
   background-color: #326fa8;
