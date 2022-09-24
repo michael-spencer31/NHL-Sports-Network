@@ -32,33 +32,71 @@ function testFunc(){
 		document.getElementById("playerdata").innerHTML = playerData.people[0].fullName + " #" + playerData.people[0].primaryNumber + "<br>";
 	})
 }
+//this function is used to get data about a entry draft
+//for a year specified by the user
 function getDraft(){
 
-	document.getElementById('draftdata').innerHTML = " ";
+    document.getElementById('draftdata').innerHTML = "";
 
-	var year = document.getElementById('yearin').value;
-	var round = document.getElementById('roundin').value;
+    var roundNumber = document.getElementById('roundin').value;
+    var year = document.getElementById('yearin').value;
 
-    if(round > 7 || round <= 0){
+	const tbl = document.createElement("table");
+    const tblBody = document.createElement("tbody");
+    
+    var draftURL = "https://statsapi.web.nhl.com/api/v1/draft/" + year;
+
+    //check if the round number is valid, or not a number
+    if(roundNumber > 7 || roundNumber <= 0 || isNaN(roundNumber)){
         document.getElementById('draftdata').innerHTML += "Invalid round number";
     }
-	var roundNumber = round++;
-
-	round--;
-	round--;
-	var pickNumber = 1;
-
-	var draftURL = "https://statsapi.web.nhl.com/api/v1/draft/" + year;
-
-	$.ajax({
+    $.ajax({
         url: draftURL,
         method: "GET"
     }).done(function(draftData){
 
-        for(var i = 0; i < 32; i++){
-            document.getElementById('draftdata').innerHTML += "Round " + roundNumber + " pick" + " " + pickNumber + ": "+ draftData.drafts[0].rounds[round].picks[i].team.name + " " + draftData.drafts[0].rounds[round].picks[i].prospect.fullName + "<br />";
-            pickNumber++;
-        }  
+        //since the api counts rounds 0-6 instead of 1-7, subtract 1
+        roundNumber--;
+
+        var teams;
+
+        //logic to determine how many teams were in the NHL in a given year
+        if(year == 2022 || year == 2021){
+            teams = 32;
+        }else if(year >= 2016 && year <= 2020){
+            teams = 31;
+        }else if(year >= 2000 && year <= 2015){
+            teams = 30;
+        }else if(year == 1999){
+            teams = 27;
+        }else if(year >= 1993 && year <= 1998){
+            teams = 26;
+        }else if(year == 1991 || year == 1992){
+          teams = 22;
+        }else if(year >= 1979 && year <= 1990){
+          teams = 18;
+        }else if(year >= 1974 && year <= 1978){
+          teams = 14;
+        }
+        for(let i = 0; i < teams; i++){
+
+            const row = document.createElement("tr");
+
+            for(let j = 0; j < 1; j++){
+
+                const cell = document.createElement("td");
+
+                var teamName = draftData.drafts[0].rounds[roundNumber].picks[i].team.name
+                                + " " + draftData.drafts[0].rounds[roundNumber].picks[i].prospect.fullName;
+
+                const cellText = document.createTextNode(teamName);
+                cell.appendChild(cellText);
+                row.appendChild(cell);
+            }
+            tblBody.appendChild(row);
+        }
+        tbl.appendChild(tblBody);
+        document.body.appendChild(tbl);
     });
 }
 //this function uses the ajax jquery method to get data about the playoffs
