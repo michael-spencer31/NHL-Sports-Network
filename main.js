@@ -18,9 +18,6 @@ setTimeout(function() {
 	$('#demo-modal').modal();
 }, 500);
 
-function reloadPage(){
-    window.location.reload();
-}
 
 // this function uses the ajax jquery method to obtain data about a player
 function testFunc(){
@@ -35,7 +32,7 @@ function testFunc(){
 		document.getElementById("playerdata").innerHTML = playerData.people[0].fullName + " #" + playerData.people[0].primaryNumber + "<br>";
 	})
 }
-function getStandings(division){
+function getStandings(){
 
     const tbl = document.createElement("table");
     const tblBody = document.createElement("tbody");
@@ -43,7 +40,7 @@ function getStandings(division){
     var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
 
     const headers = document.createElement("th");
-    headers.append("Team Name    W    L    OTL");
+    headers.append("Team Names    Wins    Losses    OTL");
     document.body.appendChild(headers);
 
     $.ajax({
@@ -57,41 +54,12 @@ function getStandings(division){
 
             for(let j = 0; j < 1; j++){
 
-                //atlantic = 1 metro = 0 central = 2 pacific = 3  
+                const cell = document.createElement("td");
 
-                var points = 0; 
-
-                const teamNames = document.createElement("td");
-                const wins = document.createElement("td");
-                const losses = document.createElement("td");
-                const otl = document.createElement("td");
-                const pointsAmount = document.createElement("td");
-
-                var standings = standingsData.records[division].teamRecords[i].team.name;
-                const teamText = document.createTextNode(standings);
-
-                standings = standingsData.records[division].teamRecords[i].leagueRecord.wins;
-                const winsText = document.createTextNode(standings);
-                points += standingsData.records[division].teamRecords[i].leagueRecord.wins * 2;
-
-                standings = standingsData.records[division].teamRecords[i].leagueRecord.losses;
-                const lossText = document.createTextNode(standings);
-
-                standings = standingsData.records[division].teamRecords[i].leagueRecord.ot;
-                const otlText = document.createTextNode(standings);
-                points += standingsData.records[division].teamRecords[i].leagueRecord.ot;
-
-                const pointsText = document.createTextNode(points);
-
-                teamNames.appendChild(teamText);
-                wins.appendChild(winsText);
-                losses.appendChild(lossText);
-                otl.appendChild(otlText);
-                row.appendChild(teamNames);
-                row.appendChild(wins);
-                row.appendChild(losses);
-                row.appendChild(otl);
-                row.appendChild(pointsText);
+                var standings = standingsData.records[1].teamRecords[i].team.name + "   " + standingsData.records[1].teamRecords[i].leagueRecord.wins;
+                const cellText = document.createTextNode(standings);
+                cell.appendChild(cellText);
+                row.appendChild(cell);
             }
             tblBody.appendChild(row);
         }
@@ -107,10 +75,10 @@ function getDraft(){
 
     var roundNumber = document.getElementById('roundin').value;
     var year = document.getElementById('yearin').value;
-
+    var roundHolder = roundNumber;
 	const tbl = document.createElement("table");
     const tblBody = document.createElement("tbody");
-    
+    var pickHolder = 1;
     var draftURL = "https://statsapi.web.nhl.com/api/v1/draft/" + year;
 
     //check if the round number is valid, or not a number
@@ -153,13 +121,14 @@ function getDraft(){
 
                 const cell = document.createElement("td");
 
-                var teamName = draftData.drafts[0].rounds[roundNumber].picks[i].team.name
+                var teamName = "Round " + roundHolder + " Pick: " + pickHolder + ":" + draftData.drafts[0].rounds[roundNumber].picks[i].team.name
                                 + " " + draftData.drafts[0].rounds[roundNumber].picks[i].prospect.fullName;
 
                 const cellText = document.createTextNode(teamName);
                 cell.appendChild(cellText);
                 row.appendChild(cell);
             }
+            pickHolder++;
             tblBody.appendChild(row);
         }
         tbl.appendChild(tblBody);
@@ -174,17 +143,10 @@ function getPlayoffs(){
 
     //get the year the user wants to search for from the html page
 	var playoffYear = document.getElementById('playoffin').value;
-
-    //check if valid playoff year, or if the user enters something that is not a number
-    if(playoffYear >= 2023 || playoffYear <= 1930 || isNaN(playoffYear)){
-        document.getElementById("playoffrecords").innerHTML = "Please enter a valid year";
-        return;
-    }
-    //set up the values for the api call
 	var endYear = playoffYear;
-    playoffYear--;
+    endYear++;
     var year = playoffYear + "" + endYear;
-	var playoffURL = "https://statsapi.web.nhl.com/api/v1/tournaments/playoffs?expand=round.series,schedule.game.seriesSummary&season=" + year;
+	var playoffURL = "https://statsapi.web.nhl.com/api/v1/tournaments/playoffs?expand=round.series,schedule.game.seriesSummary&season=" + playoffYear + "" + endYear;
 	
     //call the api with the url using the GET method 
     $.ajax({
@@ -192,31 +154,24 @@ function getPlayoffs(){
 		method: "GET"
 	}).done(function(playoffData){
 
-        document.getElementById('playoffrecords').innerHTML += "<b>Quarter Finals" + "<br><br>";
+        document.getElementById('playoffrecords').innerHTML += "Quarter Finals" + "<br>";
 
 		for(var i = 0; i < 8; i++){
 
-			document.getElementById('playoffrecords').innerHTML += playoffData.rounds[0].series[i].names.matchupName;
-            document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[0].series[i].currentGame.seriesSummary.seriesStatus + "<br>";
+			document.getElementById('playoffrecords').innerHTML += playoffData.rounds[0].series[i].names.matchupName + "<br>";
 		}
-        document.getElementById('playoffrecords').innerHTML += "<br><b>Semi Finals" + "<br><br>";
+        document.getElementById('playoffrecords').innerHTML += "Semi Finals" + "<br>";
         for(var i = 0; i < 4; i++){
 
-            document.getElementById('playoffrecords').innerHTML += playoffData.rounds[1].series[i].names.matchupName;
-            document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[1].series[i].currentGame.seriesSummary.seriesStatus + "<br>";
-
+            document.getElementById('playoffrecords').innerHTML += playoffData.rounds[1].series[i].names.matchupName + "<br>";
         }
-        document.getElementById('playoffrecords').innerHTML += "<br><b>Conference Finals" + "<br><br>";
+        document.getElementById('playoffrecords').innerHTML += "Conference Finals" + "<br>";
         for(var i = 0; i < 2; i++){
-            document.getElementById('playoffrecords').innerHTML += playoffData.rounds[2].series[i].names.matchupName;
-            document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[2].series[i].currentGame.seriesSummary.seriesStatus + "<br>";
-
+            document.getElementById('playoffrecords').innerHTML += playoffData.rounds[2].series[i].names.matchupName + "<br>";
         }
-        document.getElementById('playoffrecords').innerHTML += "<br><b>Stanley Cup Finals" + "<br><br>";
+        document.getElementById('playoffrecords').innerHTML += "Stanley Cup Finals" + "<br>";
         //since the last round only has 2 teams we don't need a loop
-        document.getElementById('playoffrecords').innerHTML += playoffData.rounds[3].series[0].names.matchupName;
-        document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[3].series[0].currentGame.seriesSummary.seriesStatus + "<br>";
-
+        document.getElementById('playoffrecords').innerHTML += playoffData.rounds[3].series[0].names.matchupName + "<br>";
 
 	});
 }
