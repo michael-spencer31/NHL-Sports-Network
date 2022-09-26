@@ -224,7 +224,7 @@ function getPlayoffs(){
 //Fixed day highlight
 //Added previous month and next month view
 
-function CalendarControl() {h
+function CalendarControl() {
     const calendar = new Date();
     const calendarControl = {
       localDate: new Date(),
