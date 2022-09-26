@@ -19,7 +19,7 @@ setTimeout(function() {
 }, 500);
 
 function reloadPage(){
-    window.location.reload();
+    //window.location.reload();
 }
 
 // this function uses the ajax jquery method to obtain data about a player
