@@ -174,10 +174,17 @@ function getPlayoffs(){
 
     //get the year the user wants to search for from the html page
 	var playoffYear = document.getElementById('playoffin').value;
+
+    //check if valid playoff year, or if the user enters something that is not a number
+    if(playoffYear >= 2023 || playoffYear <= 1930 || isNaN(playoffYear)){
+        document.getElementById("playoffrecords").innerHTML = "Please enter a valid year";
+        return;
+    }
+    //set up the values for the api call
 	var endYear = playoffYear;
-    endYear++;
+    playoffYear--;
     var year = playoffYear + "" + endYear;
-	var playoffURL = "https://statsapi.web.nhl.com/api/v1/tournaments/playoffs?expand=round.series,schedule.game.seriesSummary&season=" + playoffYear + "" + endYear;
+	var playoffURL = "https://statsapi.web.nhl.com/api/v1/tournaments/playoffs?expand=round.series,schedule.game.seriesSummary&season=" + year;
 	
     //call the api with the url using the GET method 
     $.ajax({
@@ -185,24 +192,31 @@ function getPlayoffs(){
 		method: "GET"
 	}).done(function(playoffData){
 
-        document.getElementById('playoffrecords').innerHTML += "Quarter Finals" + "<br>";
+        document.getElementById('playoffrecords').innerHTML += "<b>Quarter Finals" + "<br><br>";
 
 		for(var i = 0; i < 8; i++){
 
-			document.getElementById('playoffrecords').innerHTML += playoffData.rounds[0].series[i].names.matchupName + "<br>";
+			document.getElementById('playoffrecords').innerHTML += playoffData.rounds[0].series[i].names.matchupName;
+            document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[0].series[i].currentGame.seriesSummary.seriesStatus + "<br>";
 		}
-        document.getElementById('playoffrecords').innerHTML += "Semi Finals" + "<br>";
+        document.getElementById('playoffrecords').innerHTML += "<br><b>Semi Finals" + "<br><br>";
         for(var i = 0; i < 4; i++){
 
-            document.getElementById('playoffrecords').innerHTML += playoffData.rounds[1].series[i].names.matchupName + "<br>";
+            document.getElementById('playoffrecords').innerHTML += playoffData.rounds[1].series[i].names.matchupName;
+            document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[1].series[i].currentGame.seriesSummary.seriesStatus + "<br>";
+
         }
-        document.getElementById('playoffrecords').innerHTML += "Conference Finals" + "<br>";
+        document.getElementById('playoffrecords').innerHTML += "<br><b>Conference Finals" + "<br><br>";
         for(var i = 0; i < 2; i++){
-            document.getElementById('playoffrecords').innerHTML += playoffData.rounds[2].series[i].names.matchupName + "<br>";
+            document.getElementById('playoffrecords').innerHTML += playoffData.rounds[2].series[i].names.matchupName;
+            document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[2].series[i].currentGame.seriesSummary.seriesStatus + "<br>";
+
         }
-        document.getElementById('playoffrecords').innerHTML += "Stanley Cup Finals" + "<br>";
+        document.getElementById('playoffrecords').innerHTML += "<br><b>Stanley Cup Finals" + "<br><br>";
         //since the last round only has 2 teams we don't need a loop
-        document.getElementById('playoffrecords').innerHTML += playoffData.rounds[3].series[0].names.matchupName + "<br>";
+        document.getElementById('playoffrecords').innerHTML += playoffData.rounds[3].series[0].names.matchupName;
+        document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[3].series[0].currentGame.seriesSummary.seriesStatus + "<br>";
+
 
 	});
 }
@@ -210,7 +224,7 @@ function getPlayoffs(){
 //Fixed day highlight
 //Added previous month and next month view
 
-function CalendarControl() {
+function CalendarControl() {h
     const calendar = new Date();
     const calendarControl = {
       localDate: new Date(),
