@@ -152,7 +152,7 @@ function getDraft(){
 
                 const cell = document.createElement("td");
 
-                var teamName = draftData.drafts[0].rounds[roundNumber].picks[i].team.name
+              	var teamName = "Round " + roundHolder + " Pick: " + pickHolder + ":" + draftData.drafts[0].rounds[roundNumber].picks[i].team.name
                                 + " " + draftData.drafts[0].rounds[roundNumber].picks[i].prospect.fullName;
 
                 const cellText = document.createTextNode(teamName);
