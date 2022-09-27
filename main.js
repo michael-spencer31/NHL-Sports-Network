@@ -106,6 +106,8 @@ function getDraft(){
 
     var roundNumber = document.getElementById('roundin').value;
     var year = document.getElementById('yearin').value;
+    var roundHolder = roundNumber;
+	var pickHolder = 1;
 
 	const tbl = document.createElement("table");
     const tblBody = document.createElement("tbody");
@@ -159,6 +161,7 @@ function getDraft(){
                 cell.appendChild(cellText);
                 row.appendChild(cell);
             }
+	    pickHolder++;
             tblBody.appendChild(row);
         }
         tbl.appendChild(tblBody);
