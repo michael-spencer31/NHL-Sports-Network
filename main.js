@@ -98,6 +98,65 @@ function getStandings(division){
         document.body.appendChild(tbl);
     });
 }
+function getRoster(){
+
+    //get the team name from the html document
+    document.getElementById('rosterdata').innerHTML = "";
+
+    var team = document.getElementById("rosterin").value;
+
+    //map each team to the team id
+    const TeamID = new Map([
+
+        ["New Jersery Devils", 1],
+        ["New York Rangers", 2],
+        ["Philadelphia Flyers", 4],
+        ["Pittsburgh Penguins", 5],
+        ["Boston Bruins", 6],
+        ["Buffalo Sabres", 7],
+        ["Montreal Canadiens", 8],
+        ["Ottawa Senators", 9],
+        ["Toronto Maple Leafs", 10],
+        ["Carolina Hurricanes", 12],
+        ["Florida Panthers", 13],
+        ["Tampa Bay Lightning", 14],
+        ["Washington Capitals", 15],
+        ["Chicago Blackhawks", 16],
+        ["Detroit Red Wings", 17],
+        ["Nashville Predators", 18],
+        ["St Louis Blues", 19],
+        ["Calgary Flames", 20],
+        ["Colorado Avalanche", 21],
+        ["Edmonton Oilers", 22],
+        ["Vancouver Canucks", 23],
+        ["Anaheim Ducks", 24],
+        ["Dallas Stars", 25],
+        ["Los Angeles Kings", 26],
+        ["San Jose Sharks", 28],
+        ["Columbus Blue Jackets", 29],
+        ["Minnesota Wild", 30],
+        ["Winnipeg Jets", 52],
+        ["Arizona Coyotes", 53],
+        ["Vegas Golden Knights", 54],
+        ["Seattle Kraken", 55]
+    ]);
+    //get the teams id from the map
+    var teamID = TeamID.get(team);
+
+    //build the api url
+    var rosterURL = "https://statsapi.web.nhl.com/api/v1/teams/" + teamID + "/roster/";
+
+    //start the ajax call
+    $.ajax({
+        url: rosterURL,
+        method: "GET"
+    }).done(function(rosterData){
+
+        for(var i = 0; i < 35; i++){
+            document.getElementById('rosterdata').innerHTML += "<br>" + "#" + rosterData.roster[i].jerseyNumber + " " + rosterData.roster[i].person.fullName + ", " + rosterData.roster[i].position.name;
+        }
+    });
+}
 //this function is used to get data about a entry draft
 //for a year specified by the user
 function getDraft(){
