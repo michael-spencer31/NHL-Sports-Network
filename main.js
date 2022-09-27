@@ -1,5 +1,4 @@
 // resize header to size of browser window
-
 var ready = (callback) => {
 	if (document.readyState != "loading") callback();
 	else document.addEventListener("DOMContentLoaded", callback);
@@ -7,8 +6,8 @@ var ready = (callback) => {
 
 document.addEventListener("DOMContentLoaded", function(){
   ready(() => { 
-  document.querySelector(".header").style.height = window.innerHeight + "px";
-})
+    document.querySelector(".header").style.height = window.innerHeight + "px";
+    })
 });
 
 
@@ -18,6 +17,9 @@ setTimeout(function() {
 	$('#demo-modal').modal();
 }, 500);
 
+function reloadPage(){
+    window.location.reload();
+}
 
 // this function uses the ajax jquery method to obtain data about a player
 function testFunc(){
@@ -32,7 +34,7 @@ function testFunc(){
 		document.getElementById("playerdata").innerHTML = playerData.people[0].fullName + " #" + playerData.people[0].primaryNumber + "<br>";
 	})
 }
-function getStandings(){
+function getStandings(division){
 
     const tbl = document.createElement("table");
     const tblBody = document.createElement("tbody");
@@ -40,7 +42,7 @@ function getStandings(){
     var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
 
     const headers = document.createElement("th");
-    headers.append("Team Names    Wins    Losses    OTL");
+    headers.append("Team Name    W    L    OTL");
     document.body.appendChild(headers);
 
     $.ajax({
@@ -54,12 +56,41 @@ function getStandings(){
 
             for(let j = 0; j < 1; j++){
 
-                const cell = document.createElement("td");
+                //atlantic = 1 metro = 0 central = 2 pacific = 3  
 
-                var standings = standingsData.records[1].teamRecords[i].team.name + "   " + standingsData.records[1].teamRecords[i].leagueRecord.wins;
-                const cellText = document.createTextNode(standings);
-                cell.appendChild(cellText);
-                row.appendChild(cell);
+                var points = 0; 
+
+                const teamNames = document.createElement("td");
+                const wins = document.createElement("td");
+                const losses = document.createElement("td");
+                const otl = document.createElement("td");
+                const pointsAmount = document.createElement("td");
+
+                var standings = standingsData.records[division].teamRecords[i].team.name;
+                const teamText = document.createTextNode(standings);
+
+                standings = standingsData.records[division].teamRecords[i].leagueRecord.wins;
+                const winsText = document.createTextNode(standings);
+                points += standingsData.records[division].teamRecords[i].leagueRecord.wins * 2;
+
+                standings = standingsData.records[division].teamRecords[i].leagueRecord.losses;
+                const lossText = document.createTextNode(standings);
+
+                standings = standingsData.records[division].teamRecords[i].leagueRecord.ot;
+                const otlText = document.createTextNode(standings);
+                points += standingsData.records[division].teamRecords[i].leagueRecord.ot;
+
+                const pointsText = document.createTextNode(points);
+
+                teamNames.appendChild(teamText);
+                wins.appendChild(winsText);
+                losses.appendChild(lossText);
+                otl.appendChild(otlText);
+                row.appendChild(teamNames);
+                row.appendChild(wins);
+                row.appendChild(losses);
+                row.appendChild(otl);
+                row.appendChild(pointsText);
             }
             tblBody.appendChild(row);
         }
@@ -75,10 +106,10 @@ function getDraft(){
 
     var roundNumber = document.getElementById('roundin').value;
     var year = document.getElementById('yearin').value;
-    var roundHolder = roundNumber;
+
 	const tbl = document.createElement("table");
     const tblBody = document.createElement("tbody");
-    var pickHolder = 1;
+    
     var draftURL = "https://statsapi.web.nhl.com/api/v1/draft/" + year;
 
     //check if the round number is valid, or not a number
@@ -121,14 +152,13 @@ function getDraft(){
 
                 const cell = document.createElement("td");
 
-                var teamName = "Round " + roundHolder + " Pick: " + pickHolder + ":" + draftData.drafts[0].rounds[roundNumber].picks[i].team.name
+                var teamName = draftData.drafts[0].rounds[roundNumber].picks[i].team.name
                                 + " " + draftData.drafts[0].rounds[roundNumber].picks[i].prospect.fullName;
 
                 const cellText = document.createTextNode(teamName);
                 cell.appendChild(cellText);
                 row.appendChild(cell);
             }
-            pickHolder++;
             tblBody.appendChild(row);
         }
         tbl.appendChild(tblBody);
@@ -1778,6 +1808,53 @@ function getPlayer(){
             document.getElementById('playerrecords').innerHTML += "Hits: Player is a goalie" + "<br>";         
         }else{
             document.getElementById('playerrecords').innerHTML += "Hits: " + playerData.people[0].stats[0].splits[0].stat.hits + "<br>";
+        }
+    });
+    var careerPlayer = "https://statsapi.web.nhl.com/api/v1/people/" + playerIDNum + "/stats?stats=statsSingleSeason&season=20052006";
+
+    var startYear = 2005;
+    var endYear = 2006;
+
+    var careerGoals = 0;
+    var careerAssists = 0;
+
+    var year = startYear + "" + endYear;
+
+    var counter = 0;
+
+    $.ajax({
+        url: careerPlayer,
+        method: "GET"
+    }).done(function(careerData){
+
+        if(careerData.stats[0].splits[0] != null){
+            careerGoals = careerData.stats[0].splits[0].stat.goals;
+            careerAssists = careerData.stats[0].splits[0].stat.assists;
+        }
+        while(startYear != 2021){
+
+            startYear++;
+            endYear++;
+
+            year = startYear + "" + endYear;
+
+            careerPlayer = "https://statsapi.web.nhl.com/api/v1/people/" + playerIDNum + "/stats?stats=statsSingleSeason&season=" + year;
+
+            $.ajax({
+                url: careerPlayer,
+                method: "GET"
+            }).done(function(newCareerData){
+
+                if(newCareerData.stats[0].splits[0] != null){
+                    careerGoals += newCareerData.stats[0].splits[0].stat.goals;
+                    careerAssists += newCareerData.stats[0].splits[0].stat.assists;
+                }
+                if(startYear == 2021){
+                    document.getElementById("careerrecords").innerHTML = "<br>" + "Career Goals: " + careerGoals + "<br>";     
+                    document.getElementById("careerrecords").innerHTML += "Career Assists: " + careerAssists + "<br>";     
+                    document.getElementById("careerrecords").innerHTML += "Career Points: " + (careerGoals + careerAssists) + "<br>";     
+                }
+            });
         }
     });
 }
