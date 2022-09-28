@@ -533,7 +533,6 @@ function getSchedule(year, month, day){
     //convert month to a number using a map
     var monthNum = MonthNumber.get(month);
     var scheduleURL = "https://statsapi.web.nhl.com/api/v1/schedule?startDate=" + year + "-" + monthNum + "-" + day +"&endDate=" + year + "-" + monthNum + "-" + day;
-    //document.getElementById('datedisplay').innerHTML = scheduleURL;
 
     $.ajax({
         url: scheduleURL,
@@ -542,15 +541,29 @@ function getSchedule(year, month, day){
 
         var games = scheduleData.dates[0].totalGames;
 
+        //check if no games are scheduled for the given day
         if(games == 0){
 
           document.getElementById('datedisplay').innerHTML = "No games scheduled for today.";
         }
-
+        //start to loop through all the games on the given day
         for(var i = 0; i < games; i++){
 
-          document.getElementById('datedisplay').innerHTML += scheduleData.dates[0].games[i].teams.away.team.name + " at "
-                                                              + scheduleData.dates[0].games[i].teams.home.team.name + "<br>";
+            var winningTeam = "";  
+
+            //determine which team won the game (i.e. score more goals)
+            if(scheduleData.dates[0].games[i].teams.away.score > scheduleData.dates[0].games[i].teams.home.score){
+                winningTeam = scheduleData.dates[0].games[i].teams.away.team.name;
+            }else if(scheduleData.dates[0].games[i].teams.away.score == scheduleData.dates[0].games[i].teams.home.score){
+                winningTeam = "Upcoming game";
+            }else{
+                winningTeam = scheduleData.dates[0].games[i].teams.home.team.name;
+            }
+            //display the obtained data on the html page
+            document.getElementById('datedisplay').innerHTML += scheduleData.dates[0].games[i].teams.away.team.name + "(" + scheduleData.dates[0].games[i].teams.away.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.losses + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.ot + ")" + " at "
+                                                                + scheduleData.dates[0].games[i].teams.home.team.name + "(" + scheduleData.dates[0].games[i].teams.home.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.losses + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.ot + "): " + 
+                                                                scheduleData.dates[0].games[i].teams.away.score + "-" + scheduleData.dates[0].games[i].teams.home.score 
+                                                                +  " " + winningTeam + "<br>";           
         }
     });
 }
