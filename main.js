@@ -1,7 +1,7 @@
 // resize header to size of browser window
 var ready = (callback) => {
-	if (document.readyState != "loading") callback();
-	else document.addEventListener("DOMContentLoaded", callback);
+  if (document.readyState != "loading") callback();
+  else document.addEventListener("DOMContentLoaded", callback);
 }
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function(){
 // set modal time delay before loading
 
 setTimeout(function() {
-	$('#demo-modal').modal();
+  $('#demo-modal').modal();
 }, 500);
 
 function reloadPage(){
@@ -24,15 +24,15 @@ function reloadPage(){
 // this function uses the ajax jquery method to obtain data about a player
 function testFunc(){
 
-	var playerURL = "https://statsapi.web.nhl.com/api/v1/people/8475158?hydrate=stats(splits=statsSingleSeason)/";
+  var playerURL = "https://statsapi.web.nhl.com/api/v1/people/8475158?hydrate=stats(splits=statsSingleSeason)/";
 
-	$.ajax({
-		url: playerURL,
-		method: "GET"
-	}).done(function(playerData){
+  $.ajax({
+    url: playerURL,
+    method: "GET"
+  }).done(function(playerData){
 
-		document.getElementById("playerdata").innerHTML = playerData.people[0].fullName + " #" + playerData.people[0].primaryNumber + "<br>";
-	})
+    document.getElementById("playerdata").innerHTML = playerData.people[0].fullName + " #" + playerData.people[0].primaryNumber + "<br>";
+  })
 }
 function getStandings(division){
 
@@ -166,9 +166,9 @@ function getDraft(){
     var roundNumber = document.getElementById('roundin').value;
     var year = document.getElementById('yearin').value;
     var roundHolder = roundNumber;
-	var pickHolder = 1;
+  var pickHolder = 1;
 
-	const tbl = document.createElement("table");
+  const tbl = document.createElement("table");
     const tblBody = document.createElement("tbody");
     
     var draftURL = "https://statsapi.web.nhl.com/api/v1/draft/" + year;
@@ -213,14 +213,14 @@ function getDraft(){
 
                 const cell = document.createElement("td");
 
-              	var teamName = "Round " + roundHolder + " Pick: " + pickHolder + ":" + draftData.drafts[0].rounds[roundNumber].picks[i].team.name
+                var teamName = "Round " + roundHolder + " Pick: " + pickHolder + ":" + draftData.drafts[0].rounds[roundNumber].picks[i].team.name
                                 + " " + draftData.drafts[0].rounds[roundNumber].picks[i].prospect.fullName;
 
                 const cellText = document.createTextNode(teamName);
                 cell.appendChild(cellText);
                 row.appendChild(cell);
             }
-	    pickHolder++;
+      pickHolder++;
             tblBody.appendChild(row);
         }
         tbl.appendChild(tblBody);
@@ -234,7 +234,7 @@ function getPlayoffs(){
     document.getElementById('playoffrecords').innerHTML = " ";
 
     //get the year the user wants to search for from the html page
-	var playoffYear = document.getElementById('playoffin').value;
+  var playoffYear = document.getElementById('playoffin').value;
 
     //check if valid playoff year, or if the user enters something that is not a number
     if(playoffYear >= 2023 || playoffYear <= 1930 || isNaN(playoffYear)){
@@ -242,24 +242,24 @@ function getPlayoffs(){
         return;
     }
     //set up the values for the api call
-	var endYear = playoffYear;
+  var endYear = playoffYear;
     playoffYear--;
     var year = playoffYear + "" + endYear;
-	var playoffURL = "https://statsapi.web.nhl.com/api/v1/tournaments/playoffs?expand=round.series,schedule.game.seriesSummary&season=" + year;
-	
+  var playoffURL = "https://statsapi.web.nhl.com/api/v1/tournaments/playoffs?expand=round.series,schedule.game.seriesSummary&season=" + year;
+  
     //call the api with the url using the GET method 
     $.ajax({
-		url: playoffURL,
-		method: "GET"
-	}).done(function(playoffData){
+    url: playoffURL,
+    method: "GET"
+  }).done(function(playoffData){
 
         document.getElementById('playoffrecords').innerHTML += "<b>Quarter Finals" + "<br><br>";
 
-		for(var i = 0; i < 8; i++){
+    for(var i = 0; i < 8; i++){
 
-			document.getElementById('playoffrecords').innerHTML += playoffData.rounds[0].series[i].names.matchupName;
+      document.getElementById('playoffrecords').innerHTML += playoffData.rounds[0].series[i].names.matchupName;
             document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[0].series[i].currentGame.seriesSummary.seriesStatus + "<br>";
-		}
+    }
         document.getElementById('playoffrecords').innerHTML += "<br><b>Semi Finals" + "<br><br>";
         for(var i = 0; i < 4; i++){
 
@@ -279,7 +279,7 @@ function getPlayoffs(){
         document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[3].series[0].currentGame.seriesSummary.seriesStatus + "<br>";
 
 
-	});
+  });
 }
 //check the console for date click event
 //Fixed day highlight
@@ -514,6 +514,7 @@ function getSchedule(year, month, day){
 
     document.getElementById('datedisplay').innerHTML = "";
 
+    document.getElementById('datedisplay').innerHTML += "<b>Schedule for " + month + " " + day + ", " + year + "<br><br>";
     //map to convert month to the numerical equivalent
     const MonthNumber = new Map([
 
@@ -544,7 +545,7 @@ function getSchedule(year, month, day){
         //check if no games are scheduled for the given day
         if(games == 0){
 
-          document.getElementById('datedisplay').innerHTML = "No games scheduled for today.";
+          document.getElementById('datedisplay').innerHTML += "No games scheduled for today.";
         }
         //start to loop through all the games on the given day
         for(var i = 0; i < games; i++){
@@ -578,11 +579,11 @@ function getSchedule(year, month, day){
 
 function getPlayer(){
 
-	var input = document.getElementById('playerin').value;
+  var input = document.getElementById('playerin').value;
 
-	const PlayerMap = new Map([
+  const PlayerMap = new Map([
 
-		[ "Jonathan Bernier", 8473541 ],
+    [ "Jonathan Bernier", 8473541 ],
         [ "Brendan Smith", 8474090 ],
         [ "Tomas Tatar", 8475193 ],
         [ "Erik Haula", 8475287 ],
@@ -1843,9 +1844,9 @@ function getPlayer(){
         [ "Simon Edvinsson", 8482762 ],
         [ "Pontus Andreasson", 8483608 ]
     ]);
-	var playerIDNum = PlayerMap.get(input);
+  var playerIDNum = PlayerMap.get(input);
 
-	//check if the player ID does not exist
+  //check if the player ID does not exist
     if(playerIDNum == undefined){
         document.getElementById('playerrecords').innerHTML = "Player not found - please try again";
     }
