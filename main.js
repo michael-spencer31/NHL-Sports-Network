@@ -550,20 +550,27 @@ function getSchedule(year, month, day){
         for(var i = 0; i < games; i++){
 
             var winningTeam = "";  
+            var winningGoals = "";
+            var loosingGoals = "";
 
             //determine which team won the game (i.e. score more goals)
             if(scheduleData.dates[0].games[i].teams.away.score > scheduleData.dates[0].games[i].teams.home.score){
                 winningTeam = scheduleData.dates[0].games[i].teams.away.team.name;
+                winningGoals = scheduleData.dates[0].games[i].teams.away.score;
+                loosingGoals = scheduleData.dates[0].games[i].teams.home.score;
             }else if(scheduleData.dates[0].games[i].teams.away.score == scheduleData.dates[0].games[i].teams.home.score){
                 winningTeam = "Upcoming game";
             }else{
                 winningTeam = scheduleData.dates[0].games[i].teams.home.team.name;
+                loosingGoals = scheduleData.dates[0].games[i].teams.away.score;
+                winningGoals = scheduleData.dates[0].games[i].teams.home.score;
+
             }
             //display the obtained data on the html page
             document.getElementById('datedisplay').innerHTML += scheduleData.dates[0].games[i].teams.away.team.name + "(" + scheduleData.dates[0].games[i].teams.away.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.losses + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.ot + ")" + " at "
-                                                                + scheduleData.dates[0].games[i].teams.home.team.name + "(" + scheduleData.dates[0].games[i].teams.home.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.losses + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.ot + "): " + 
-                                                                scheduleData.dates[0].games[i].teams.away.score + "-" + scheduleData.dates[0].games[i].teams.home.score 
-                                                                +  " " + winningTeam + "<br>";           
+                                                                + scheduleData.dates[0].games[i].teams.home.team.name + "(" + scheduleData.dates[0].games[i].teams.home.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.losses + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.ot + "): "; 
+            
+            document.getElementById('datedisplay').innerHTML += winningGoals + "-" + loosingGoals + " " + winningTeam + "<br>";                                                                         
         }
     });
 }
