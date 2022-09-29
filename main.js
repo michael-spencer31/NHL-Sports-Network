@@ -539,7 +539,7 @@ function getSchedule(year, month, day){
         method: "GET"
     }).done(function(scheduleData){
 
-        var games = scheduleData.dates[0].totalGames;
+        var games = scheduleData.totalGames;
 
         //check if no games are scheduled for the given day
         if(games == 0){
