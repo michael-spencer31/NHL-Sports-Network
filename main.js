@@ -559,13 +559,16 @@ function getSchedule(year, month, day){
                 winningTeam = scheduleData.dates[0].games[i].teams.away.team.name;
                 winningGoals = scheduleData.dates[0].games[i].teams.away.score;
                 loosingGoals = scheduleData.dates[0].games[i].teams.home.score;
-            }else if(scheduleData.dates[0].games[i].teams.away.score == scheduleData.dates[0].games[i].teams.home.score){
+            }else if(scheduleData.dates[0].games[i].teams.away.score == 0 && scheduleData.dates[0].games[i].teams.home.score == 0){
                 winningTeam = "Upcoming game";
+            }else if(scheduleData.dates[0].games[i].teams.away.score == scheduleData.dates[0].games[i].teams.home.score){
+                winningTeam = "Tie game";
+                winningGoals = scheduleData.dates[0].games[i].teams.home.score;
+                loosingGoals = scheduleData.dates[0].games[i].teams.home.score;
             }else{
                 winningTeam = scheduleData.dates[0].games[i].teams.home.team.name;
                 loosingGoals = scheduleData.dates[0].games[i].teams.away.score;
                 winningGoals = scheduleData.dates[0].games[i].teams.home.score;
-
             }
             //display the obtained data on the html page
             document.getElementById('datedisplay').innerHTML += scheduleData.dates[0].games[i].teams.away.team.name + "(" + scheduleData.dates[0].games[i].teams.away.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.losses + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.ot + ")" + " at "
