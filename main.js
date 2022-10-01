@@ -21,19 +21,7 @@ function reloadPage(){
     window.location.reload();
 }
 
-// this function uses the ajax jquery method to obtain data about a player
-function testFunc(){
-
-  var playerURL = "https://statsapi.web.nhl.com/api/v1/people/8475158?hydrate=stats(splits=statsSingleSeason)/";
-
-  $.ajax({
-    url: playerURL,
-    method: "GET"
-  }).done(function(playerData){
-
-    document.getElementById("playerdata").innerHTML = playerData.people[0].fullName + " #" + playerData.people[0].primaryNumber + "<br>";
-  })
-}
+// this function uses the ajax jquery method to obtain data about the standings
 function getStandings(division){
 
     const tbl = document.createElement("table");
@@ -509,9 +497,13 @@ function CalendarControl() {
   const calendarControl = new CalendarControl();
 
 
-//do the ajax call in this function
+/**
+ * this function uses the functions above to get the schedule
+ * for any given day the user clicks on
+*/
 function getSchedule(year, month, day){
 
+    //reset the page each time the function is called
     document.getElementById('datedisplay').innerHTML = "";
 
     document.getElementById('datedisplay').innerHTML += "<b>Schedule for " + month + " " + day + ", " + year + "<br><br>";
@@ -535,11 +527,13 @@ function getSchedule(year, month, day){
     var monthNum = MonthNumber.get(month);
     var scheduleURL = "https://statsapi.web.nhl.com/api/v1/schedule?startDate=" + year + "-" + monthNum + "-" + day +"&endDate=" + year + "-" + monthNum + "-" + day;
 
+    //start the ajax call to the api
     $.ajax({
         url: scheduleURL,
         method: "GET"
     }).done(function(scheduleData){
 
+        //get the number of games that day
         var games = scheduleData.totalGames;
 
         //check if no games are scheduled for the given day
@@ -550,46 +544,64 @@ function getSchedule(year, month, day){
         //start to loop through all the games on the given day
         for(var i = 0; i < games; i++){
 
+            //set up variables for the winning team and number of goals
             var winningTeam = "";  
             var winningGoals = "";
             var loosingGoals = "";
+            var gameStatus = scheduleData.dates[0].games[i].status.abstractGameState;
 
             //determine which team won the game (i.e. score more goals)
             if(scheduleData.dates[0].games[i].teams.away.score > scheduleData.dates[0].games[i].teams.home.score){
+                //if the game is not tied and the away team is winning
                 winningTeam = scheduleData.dates[0].games[i].teams.away.team.name;
                 winningGoals = scheduleData.dates[0].games[i].teams.away.score;
                 loosingGoals = scheduleData.dates[0].games[i].teams.home.score;
             }else if(scheduleData.dates[0].games[i].teams.away.score == 0 && scheduleData.dates[0].games[i].teams.home.score == 0){
+                //this checks if the game is live and is tied 0-0
+                if(gameStatus == "Live"){
+
+                    //in this case the goals are the same so both are set to 0
+                    winningGoals = 0;
+                    loosingGoals = 0;
+                }
             }else if(scheduleData.dates[0].games[i].teams.away.score == scheduleData.dates[0].games[i].teams.home.score){
+                
+                //this checks if the game is tied, but not a 0-0 tie
                 winningTeam = "Tie game";
                 winningGoals = scheduleData.dates[0].games[i].teams.home.score;
                 loosingGoals = scheduleData.dates[0].games[i].teams.home.score;
             }else{
+                //if the game is not tied and the home team is winning
                 winningTeam = scheduleData.dates[0].games[i].teams.home.team.name;
                 loosingGoals = scheduleData.dates[0].games[i].teams.away.score;
                 winningGoals = scheduleData.dates[0].games[i].teams.home.score;
             }
             //display the obtained data on the html page
-            document.getElementById('datedisplay').innerHTML += scheduleData.dates[0].games[i].teams.away.team.name + "(" + scheduleData.dates[0].games[i].teams.away.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.losses + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.ot + ")" + " at "
-                                                                + scheduleData.dates[0].games[i].teams.home.team.name + "(" + scheduleData.dates[0].games[i].teams.home.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.losses + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.ot + "): "; 
+            document.getElementById('datedisplay').innerHTML += scheduleData.dates[0].games[i].teams.away.team.name + "(" + scheduleData.dates[0].games[i].teams.away.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.losses + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.ot + ")" + " at "+ scheduleData.dates[0].games[i].teams.home.team.name + "(" + scheduleData.dates[0].games[i].teams.home.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.losses + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.ot + "): "; 
+            
             var gameTime = "";
-            var gameStatus = scheduleData.dates[0].games[i].status.abstractGameState;
             document.getElementById('datedisplay').innerHTML += winningGoals + "-" + loosingGoals + " " + winningTeam + " " + "(" + gameStatus + ")";          
 
+            //if the game hasn't started yet it will be in a preview state
             if(gameStatus == "Preview"){
 
+                //get the time the game starts at from the api
                 gameTime = scheduleData.dates[0].games[i].gameDate;
 
                 //uses the JavaScript split method to remove the date portion of the date
                 const timeArray = gameTime.split("T");
+                //now use split to remove the Z at the end of the string
                 const timeArray2 = timeArray[1].split("Z");
 
                 //now convert the time from 24 hour military time to 12 hour
                 const militaryTime = timeArray2[0];
+                //finally create a new Date object to convert the time to the users local time zone
                 const timeString12hr = new Date('1970-01-01T' + militaryTime + 'Z').toLocaleString('en-US', {hour12: true, hour: 'numeric', minute: 'numeric'});
                 
+                //finally display the results on the html page
                 document.getElementById('datedisplay').innerHTML += " " + timeString12hr + "<br>";
             }else{
+                //if the game has already started, just print out a blank line
                 document.getElementById('datedisplay').innerHTML += "<br>";
             }
         }
