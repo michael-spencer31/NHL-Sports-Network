@@ -560,7 +560,6 @@ function getSchedule(year, month, day){
                 winningGoals = scheduleData.dates[0].games[i].teams.away.score;
                 loosingGoals = scheduleData.dates[0].games[i].teams.home.score;
             }else if(scheduleData.dates[0].games[i].teams.away.score == 0 && scheduleData.dates[0].games[i].teams.home.score == 0){
-                winningTeam = "Upcoming game";
             }else if(scheduleData.dates[0].games[i].teams.away.score == scheduleData.dates[0].games[i].teams.home.score){
                 winningTeam = "Tie game";
                 winningGoals = scheduleData.dates[0].games[i].teams.home.score;
@@ -573,8 +572,26 @@ function getSchedule(year, month, day){
             //display the obtained data on the html page
             document.getElementById('datedisplay').innerHTML += scheduleData.dates[0].games[i].teams.away.team.name + "(" + scheduleData.dates[0].games[i].teams.away.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.losses + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.ot + ")" + " at "
                                                                 + scheduleData.dates[0].games[i].teams.home.team.name + "(" + scheduleData.dates[0].games[i].teams.home.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.losses + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.ot + "): "; 
-            
-            document.getElementById('datedisplay').innerHTML += winningGoals + "-" + loosingGoals + " " + winningTeam + "<br>";                                                                         
+            var gameTime = "";
+            var gameStatus = scheduleData.dates[0].games[i].status.abstractGameState;
+            document.getElementById('datedisplay').innerHTML += winningGoals + "-" + loosingGoals + " " + winningTeam + " " + "(" + gameStatus + ")";          
+
+            if(gameStatus == "Preview"){
+
+                gameTime = scheduleData.dates[0].games[i].gameDate;
+
+                //uses the JavaScript split method to remove the date portion of the date
+                const timeArray = gameTime.split("T");
+                const timeArray2 = timeArray[1].split("Z");
+
+                //now convert the time from 24 hour military time to 12 hour
+                const militaryTime = timeArray2[0];
+                const timeString12hr = new Date('1970-01-01T' + militaryTime + 'Z').toLocaleTimeString('en-US', {timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric'});
+                
+                document.getElementById('datedisplay').innerHTML += " " + timeString12hr + "<br>";
+            }else{
+                document.getElementById('datedisplay').innerHTML += "<br>";
+            }
         }
     });
 }
