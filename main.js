@@ -586,7 +586,7 @@ function getSchedule(year, month, day){
 
                 //now convert the time from 24 hour military time to 12 hour
                 const militaryTime = timeArray2[0];
-                const timeString12hr = new Date('1970-01-01T' + militaryTime + 'Z').toLocaleTimeString('en-US', {timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric'});
+                const timeString12hr = new Date('1970-01-01T' + militaryTime + 'Z').toLocaleString('en-US', {hour12: true, hour: 'numeric', minute: 'numeric'});
                 
                 document.getElementById('datedisplay').innerHTML += " " + timeString12hr + "<br>";
             }else{
