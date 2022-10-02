@@ -563,6 +563,7 @@ function getSchedule(year, month, day){
                     //in this case the goals are the same so both are set to 0
                     winningGoals = 0;
                     loosingGoals = 0;
+                    winningTeam = "Tie game";
                 }
             }else if(scheduleData.dates[0].games[i].teams.away.score == scheduleData.dates[0].games[i].teams.home.score){
                 
