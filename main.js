@@ -91,20 +91,36 @@ function getRoster(){
     //get the team name from the html document
     document.getElementById('rosterdata').innerHTML = "";
 
+    //get the team name in from the html fourm 
     var team = document.getElementById("rosterin").value;
+
+    //split the team name on each space
+    var splitTeam = team.toLowerCase().split(' ');
+
+    //loop through the string and uppercase the first letter of each word
+    for(var i = 0; i < splitTeam.length; i++){
+
+        splitTeam[i] = splitTeam[i].charAt(0).toUpperCase() + splitTeam[i].substring(1);  
+    }
+    //now rejoin the string together
+    team = splitTeam.join(' ');
 
     //map each team to the team id
     const TeamID = new Map([
 
-        ["New Jersery Devils", 1],
+        ["New Jersey Devils", 1],
         ["New York Rangers", 2],
         ["Philadelphia Flyers", 4],
         ["Pittsburgh Penguins", 5],
         ["Boston Bruins", 6],
         ["Buffalo Sabres", 7],
         ["Montreal Canadiens", 8],
+        ["Habs", 8],
+        ["Montreal", 8],
+        ["Canadiens", 8],
         ["Ottawa Senators", 9],
         ["Toronto Maple Leafs", 10],
+        ["Leafs", 10],
         ["Carolina Hurricanes", 12],
         ["Florida Panthers", 13],
         ["Tampa Bay Lightning", 14],
