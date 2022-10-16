@@ -51,11 +51,95 @@
 			<div class="container team">
 				<h1>NHL Standings</h1>
 
+				<!---
 				<input type ="submit" value="Atlantic" id="atlantic"onclick="getStandings(1)">
+			
 				<input type="submit" value="Metro" id="metro" onclick="getStandings(0)">
 				<input type="submit" value="Central" id="central" onclick="getStandings(2)">
 				<input type="submit" value="Pacific" id="pacific" onclick="getStandings(3)">
 				<input type="submit"value="Reset" id="reset" onclick="reloadPage()">
+				--->
+				<form name="form1">
+				<span id="buttons">
+				<input type="button" name="button1" value="Atlantic"/>
+				<input type="button" name="button2" value="Metro"/>
+				<input type="button" name="button3" value="Central"/>
+				<input type="button" name="button4" value="Pacific"/>
+				</span>
+				</form>				
+				<table class="table">
+					<thread>
+						<tr>
+							<th scope="col">Place</th>
+							<th scope="col">Team</th>
+							<th scope="col">Wins</th>
+							<th scope="col">Losses</th>
+							<th scope="col">OTL</th>
+							<th scope="col">Points</th>
+						</tr>
+					</thread>
+				<tbody>
+					<tr>
+						<script>
+							division = "";
+							var buttonsDiv = document.getElementById("buttons");
+
+							for(var i = 1; i <= 4; i++){
+								var button = document.form1["button" + i];		
+								button.onclick = async function(){
+									division = this.value;
+								};
+							}
+    						var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
+    						var team = "";
+    						const teams = [];
+    						const wins = [];
+    						const losses = [];
+    						const otl = [];
+    						const points = [];
+
+    						console.log(division);
+    						console.log("Emma");
+    						$.ajax({
+    							async: false,
+    							url: standingsURL,
+    							method: "GET"
+    						}).done(function(standingsData){
+
+    							for(let i = 0; i < 8; i++){
+    						    	teams[i] = standingsData.records[1].teamRecords[i].team.name;
+    						    	wins[i] = standingsData.records[1].teamRecords[i].leagueRecord.wins;
+    						    	losses[i] = standingsData.records[1].teamRecords[i].leagueRecord.losses;
+    						    	otl[i] = standingsData.records[1].teamRecords[i].leagueRecord.ot;
+    						    	points[i] = (wins[i] * 2) + otl[i];
+    							}
+    						});
+							let count = 1;
+							let teamCount = 0;
+
+							while(count <= 8){
+								document.write("<td>" + count + "</td>");
+								document.write("<td>" + teams[teamCount] + "</td>");
+								document.write("<td>" + wins[teamCount] + "</td>");
+								document.write("<td>" + losses[teamCount] + "</td>");
+								document.write("<td>" + otl[teamCount] + "</td>");
+								document.write("<td>" + points[teamCount] + "</td>");
+
+								teamCount = teamCount + 1;
+								count = count + 1;
+								document.write("<tr>");
+							}
+							
+
+							
+						</script>
+				</tbody>
+			</table>
+			
+
+				
+				
+			
 			</div>
 		</div>
 	
