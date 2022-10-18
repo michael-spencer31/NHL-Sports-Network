@@ -58,11 +58,11 @@
 				<input type="submit" value="Central" id="central" onclick="getStandings(2)">
 				<input type="submit" value="Pacific" id="pacific" onclick="getStandings(3)">
 				<input type="submit"value="Reset" id="reset" onclick="reloadPage()">
-				--->		
+				--->	
+				<h3>Atlantic Division</h3>	
 				<table class="table">
 					<thread>
 						<tr>
-							<th scope="col">Place</th>
 							<th scope="col">Team</th>
 							<th scope="col">Wins</th>
 							<th scope="col">Losses</th>
@@ -99,9 +99,43 @@
 							let count = 1;
 							let teamCount = 0;
 
+							var montreal = "Montréal  Canadiens";
+							var tampa = "Tampa Bay Lightning";
+							var toronto = "Toronto Maple Leafs";
+							var boston = "Boston Bruins";
+							var florida = "Florida Panthers";
+							var ottawa = "Ottawa Senators";
+							var tampa = "Tampa Bay Lightning";
+							var detriot = "Detriot Red Wings";
+							var buffalo = "Buffalo Sabres";
+							var carolina = "Carolina Hurricanes"
+
+							let teamTest = teams[0];
+							
+							let teamLogo = 0;
+							let teamName = "";
+
 							while(count <= 8){
-								document.write("<td>" + count + "</td>");
-								document.write("<td>" + teams[teamCount] + "</td>");
+
+								console.log(teams[teamCount]);
+
+								if(teams[teamCount] == "Montréal Canadiens"){
+									document.write("<td><img src='Logos/" + montreal + ".png' width=30>" + teams[teamCount] + "</td>");
+								}else if(teams[teamCount] == "Boston Bruins"){
+									document.write("<td><img src='Logos/" + boston + ".png' width=30>" + teams[teamCount] + "</td>");
+								}else if(teams[teamCount] == "Toronto Maple Leafs"){
+									document.write("<td><img src='Logos/" + toronto + ".png' width=30>" + teams[teamCount] + "</td>");
+								}else if(teams[teamCount] == "Florida Panthers"){
+									document.write("<td><img src='Logos/" + florida + ".png' width=30>" + teams[teamCount] + "</td>");
+								}else if(teams[teamCount] == "Tampa Bay Lightning"){
+									document.write("<td><img src='Logos/" + tampa + ".png' width=30>" + teams[teamCount] + "</td>");
+								}else if(teams[teamCount] == "Buffalo Sabres"){
+									document.write("<td><img src='Logos/" + buffalo + ".png' width=30>" + teams[teamCount] + "</td>");
+								}else if(teams[teamCount] == "Ottawa Senators"){
+									document.write("<td><img src='Logos/" + ottawa + ".png' width=30>" + teams[teamCount] + "</td>");
+								}else{
+									document.write("<td><img src='Logos/" + detriot + ".png' width=30>" + teams[teamCount] + "</td>");
+								}		
 								document.write("<td>" + wins[teamCount] + "</td>");
 								document.write("<td>" + losses[teamCount] + "</td>");
 								document.write("<td>" + otl[teamCount] + "</td>");
@@ -110,18 +144,15 @@
 								teamCount = teamCount + 1;
 								count = count + 1;
 								document.write("<tr>");
-							}
-							
-
-							
+							}	
 						</script>
+						
 				</tbody>
 			</table>
-
+			<h3>Metro Division</h3>
 			<table class="table">
 					<thread>
 						<tr>
-							<th scope="col">Place</th>
 							<th scope="col">Team</th>
 							<th scope="col">Wins</th>
 							<th scope="col">Losses</th>
@@ -176,11 +207,10 @@
 				</tbody>
 			</table>
 			
-			
+			<h3>Central Division</h3>
 			<table class="table">
 					<thread>
 						<tr>
-							<th scope="col">Place</th>
 							<th scope="col">Team</th>
 							<th scope="col">Wins</th>
 							<th scope="col">Losses</th>
@@ -232,11 +262,10 @@
 						</script>
 				</tbody>
 			</table>
-
+			<h3>Pacific Division</h3>
 			<table class="table">
 					<thread>
 						<tr>
-							<th scope="col">Place</th>
 							<th scope="col">Team</th>
 							<th scope="col">Wins</th>
 							<th scope="col">Losses</th>
