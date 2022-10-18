@@ -51,19 +51,12 @@
 			<div class="container team">
 				<h1>NHL Standings</h1>
 
-				<!---
-				<input type ="submit" value="Atlantic" id="atlantic"onclick="getStandings(1)">
-			
-				<input type="submit" value="Metro" id="metro" onclick="getStandings(0)">
-				<input type="submit" value="Central" id="central" onclick="getStandings(2)">
-				<input type="submit" value="Pacific" id="pacific" onclick="getStandings(3)">
-				<input type="submit"value="Reset" id="reset" onclick="reloadPage()">
-				--->	
 				<h3>Atlantic Division</h3>	
 				<table class="table">
 					<thread>
 						<tr>
 							<th scope="col">Team</th>
+							<th scope="col">GP</th>
 							<th scope="col">Wins</th>
 							<th scope="col">Losses</th>
 							<th scope="col">OTL</th>
@@ -109,6 +102,29 @@
 							var detriot = "Detriot Red Wings";
 							var buffalo = "Buffalo Sabres";
 							var carolina = "Carolina Hurricanes"
+							var rangers = "New York Rangers";
+							var pens = "Pittsburgh Penguins";
+							var philly = "Philadelphia Flyers";
+							var caps = "Washington Capitals";
+							var islanders = "New York Islanders";
+							var devils = "New Jersey Devils";
+							var colombus = "Columbus Blue Jackets";
+							var stars = "Dallas Stars";
+							var preds = "Nashville Predators";
+							var blues = "St Louis Blues";
+							var jets = "Winnipeg Jets";
+							var colorado = "Colorado Avalanche";
+							var hawks = "Chicago Blackhawks";
+							var arizona = "Arizona Coyotes";
+							var minnesota = "Minnesota Wild";
+							var vegas = "Vegas Golden Knights";
+							var flames = "Calgary Flames";
+							var kings = "Los Angeles Kings";
+							var kraken = "Seattle Kraken";
+							var ducks = "Anaheim Ducks";
+							var edmonton = "Edmonton Oilers";
+							var vancouver = "Vancouver Canucks";
+							var sharks = "San Jose Sharks";
 
 							let teamTest = teams[0];
 							
@@ -116,8 +132,6 @@
 							let teamName = "";
 
 							while(count <= 8){
-
-								console.log(teams[teamCount]);
 
 								if(teams[teamCount] == "Montréal Canadiens"){
 									document.write("<td><img src='Logos/" + montreal + ".png' width=30>" + teams[teamCount] + "</td>");
@@ -136,6 +150,7 @@
 								}else{
 									document.write("<td><img src='Logos/" + detriot + ".png' width=30>" + teams[teamCount] + "</td>");
 								}		
+								document.write("<td>" + (wins[teamCount] + losses[teamCount] + otl[teamCount]) + "</td>");
 								document.write("<td>" + wins[teamCount] + "</td>");
 								document.write("<td>" + losses[teamCount] + "</td>");
 								document.write("<td>" + otl[teamCount] + "</td>");
@@ -154,6 +169,7 @@
 					<thread>
 						<tr>
 							<th scope="col">Team</th>
+							<th scope="col">GP</th>
 							<th scope="col">Wins</th>
 							<th scope="col">Losses</th>
 							<th scope="col">OTL</th>
@@ -190,8 +206,25 @@
 							let metroTeamCount = 0;
 
 							while(metroCount <= 8){
-								document.write("<td>" + metroCount + "</td>");
-								document.write("<td>" + metroArray[metroTeamCount] + "</td>");
+
+								if(metroArray[metroTeamCount] == "New York Rangers"){
+									document.write("<td><img src='Logos/" + rangers + ".png' width=30>" + metroArray[metroTeamCount] + "</td>");
+								}else if(metroArray[metroTeamCount] == "Pittsburgh Penguins"){
+									document.write("<td><img src='Logos/" + pens + ".png' width=30>" + metroArray[metroTeamCount] + "</td>");
+								}else if(metroArray[metroTeamCount] == "New Jersey Devils"){
+									document.write("<td><img src='Logos/" + devils + ".png' width=30>" + metroArray[metroTeamCount] + "</td>");
+								}else if(metroArray[metroTeamCount] == "Philadelphia Flyers"){
+									document.write("<td><img src='Logos/" + philly + ".png' width=30>" + metroArray[metroTeamCount] + "</td>");
+								}else if(metroArray[metroTeamCount] == "Washington Capitals"){
+									document.write("<td><img src='Logos/" + caps + ".png' width=30>" + metroArray[metroTeamCount] + "</td>");
+								}else if(metroArray[metroTeamCount] == "New York Islanders"){
+									document.write("<td><img src='Logos/" + islanders + ".png' width=30>" + metroArray[metroTeamCount] + "</td>");
+								}else if(metroArray[metroTeamCount] == "Columbus Blue Jackets"){
+									document.write("<td><img src='Logos/" + colombus + ".png' width=30>" + metroArray[metroTeamCount] + "</td>");
+								}else{
+									document.write("<td><img src='Logos/" + carolina + ".png' width=30>" + metroArray[metroTeamCount] + "</td>");
+								}		
+								document.write("<td>" + (metroWins[metroTeamCount] + metroLosses[metroTeamCount] + metroOTL[metroTeamCount]) + "</td>");
 								document.write("<td>" + metroWins[metroTeamCount] + "</td>");
 								document.write("<td>" + metroLosses[metroTeamCount] + "</td>");
 								document.write("<td>" + metroOTL[metroTeamCount] + "</td>");
@@ -212,6 +245,7 @@
 					<thread>
 						<tr>
 							<th scope="col">Team</th>
+							<th scope="col">GP</th>
 							<th scope="col">Wins</th>
 							<th scope="col">Losses</th>
 							<th scope="col">OTL</th>
@@ -247,8 +281,26 @@
 							let centralTeamCount = 0;
 
 							while(centralCount <= 8){
-								document.write("<td>" + centralCount + "</td>");
-								document.write("<td>" + centralArray[centralTeamCount] + "</td>");
+
+								if(centralArray[centralTeamCount] == "Dallas Stars"){
+									document.write("<td><img src='Logos/" + stars + ".png' width=30>" + centralArray[centralTeamCount] + "</td>");
+								}else if(centralArray[centralTeamCount] == "Colorado Avalanche"){
+									document.write("<td><img src='Logos/" + colorado + ".png' width=30>" + centralArray[centralTeamCount] + "</td>");
+								}else if(centralArray[centralTeamCount] == "Nashville Predators"){
+									document.write("<td><img src='Logos/" + preds + ".png' width=30>" + centralArray[centralTeamCount] + "</td>");
+								}else if(centralArray[centralTeamCount] == "St. Louis Blues"){
+									document.write("<td><img src='Logos/" + blues + ".png' width=30>" + centralArray[centralTeamCount] + "</td>");
+								}else if(centralArray[centralTeamCount] == "Winnipeg Jets"){
+									document.write("<td><img src='Logos/" + jets + ".png' width=30>" + centralArray[centralTeamCount] + "</td>");
+								}else if(centralArray[centralTeamCount] == "Chicago Blackhawks"){
+									document.write("<td><img src='Logos/" + hawks + ".png' width=30>" + centralArray[centralTeamCount] + "</td>");
+								}else if(centralArray[centralTeamCount] == "Arizona Coyotes"){
+									document.write("<td><img src='Logos/" + arizona + ".png' width=30>" + centralArray[centralTeamCount] + "</td>");
+								}else{
+									document.write("<td><img src='Logos/" + minnesota + ".png' width=30>" + centralArray[centralTeamCount] + "</td>");
+								}		
+								document.write("<td>" + (centralWins[centralTeamCount] + centralLosses[centralTeamCount] + centralOTL[centralTeamCount]) + "</td>");
+							
 								document.write("<td>" + centralWins[centralTeamCount] + "</td>");
 								document.write("<td>" + centralLosses[centralTeamCount] + "</td>");
 								document.write("<td>" + centralOTL[centralTeamCount] + "</td>");
@@ -267,6 +319,7 @@
 					<thread>
 						<tr>
 							<th scope="col">Team</th>
+							<th scope="col">GP</th>
 							<th scope="col">Wins</th>
 							<th scope="col">Losses</th>
 							<th scope="col">OTL</th>
@@ -302,8 +355,27 @@
 							let pacificTeamCount = 0;
 
 							while(pacificCount <= 8){
-								document.write("<td>" + pacificCount + "</td>");
-								document.write("<td>" + pacificArray[pacificTeamCount] + "</td>");
+
+								if(pacificArray[pacificTeamCount] == "Vegas Golden Knights"){
+									document.write("<td><img src='Logos/" + vegas + ".png' width=30>" + pacificArray[pacificTeamCount] + "</td>");
+								}else if(pacificArray[pacificTeamCount] == "Seattle Kraken"){
+									document.write("<td><img src='Logos/" + kraken + ".png' width=30>" + pacificArray[pacificTeamCount] + "</td>");
+								}else if(pacificArray[pacificTeamCount] == "Calgary Flames"){
+									document.write("<td><img src='Logos/" + flames + ".png' width=30>" + pacificArray[pacificTeamCount] + "</td>");
+								}else if(pacificArray[pacificTeamCount] == "Los Angeles Kings"){
+									document.write("<td><img src='Logos/" + kings + ".png' width=30>" + pacificArray[pacificTeamCount] + "</td>");
+								}else if(pacificArray[pacificTeamCount] == "Edmonton Oilers"){
+									document.write("<td><img src='Logos/" + edmonton + ".png' width=30>" + pacificArray[pacificTeamCount] + "</td>");
+								}else if(pacificArray[pacificTeamCount] == "Anaheim Ducks"){
+									document.write("<td><img src='Logos/" + ducks + ".png' width=30>" + pacificArray[pacificTeamCount] + "</td>");
+								}else if(pacificArray[pacificTeamCount] == "Vancouver Canucks"){
+									document.write("<td><img src='Logos/" + vancouver + ".png' width=30>" + pacificArray[pacificTeamCount] + "</td>");
+								}else{
+									document.write("<td><img src='Logos/" + sharks + ".png' width=30>" + pacificArray[pacificTeamCount] + "</td>");
+								}
+								document.write("<td>" + (pacificWins[pacificTeamCount] + pacificLosses[pacificTeamCount] + pacificOTL[pacificTeamCount]) + "</td>");		
+															
+						
 								document.write("<td>" + pacificWins[pacificTeamCount] + "</td>");
 								document.write("<td>" + centralLosses[pacificTeamCount] + "</td>");
 								document.write("<td>" + pacificOTL[pacificTeamCount] + "</td>");
