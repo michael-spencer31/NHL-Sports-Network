@@ -1898,6 +1898,7 @@ function getPlayer(){
   //check if the player ID does not exist
     if(playerIDNum == undefined){
         document.getElementById('playerrecords').innerHTML = "Player not found - please try again";
+        document.getElementById('careerrecords').innerHTML = "";      
     }
     var playerURL = "https://statsapi.web.nhl.com/api/v1/people/" + playerIDNum + "?hydrate=stats(splits=statsSingleSeason)/";
 
