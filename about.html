@@ -134,9 +134,13 @@
 									console.log(teamName);
 									team.innerHTML = draftData.drafts[0].rounds[round].picks[i].team.name;
 
+									
 									row.appendChild(pickNum);
 									row.appendChild(player);
-									row.appendChild(team);
+
+									row.innerHTML += ("<img src='Logos/" + teamName + ".png' width=30>");
+									//row.appendChild(team);
+
 
 									tbody.appendChild(row);
 									i++;
