@@ -44,20 +44,92 @@
 				</ul>
 			</div>
 		</nav>
+
+		<script src="jquery-3.5.1.min.js"></script>
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<script src="main.js"></script>
 		
 		<div class="background">
 			<div class="container team">
 				<h1>Draft Records</h1>
-				<p>Enter a year and a round number(1-7):</p>
 
+				
 				<input type="text" id="yearin" placeholder="year">
 				<input type="text" id="roundin" placeholder="round">
-				<input type = "submit" value="Search"  onclick="getDraft()"><br>
+				<input type = "submit" value="Search"  onclick="emma()"><br>
+				
 				<label id="draftdata"></label>
+				<select name="cars" id="cars">
+  					<optgroup label="Rounds">
+    					<option value="1">1</option>
+    					<option value="2">2</option>
+    					<option value="3">3</option>
+    					<option value="4">4</option>
+    					<option value="5">5</option>
+    					<option value="6">6</option>
+    					<option value="7">7</option>
+  					</optgroup>
+				</select>
+
+				<table class="table">
+					<thread>
+						<tr>
+							<th scope="col">Pick</th>
+							<th scope="col">Player</th>
+							<th scope="col">Team</th>
+						</tr>
+					</thread>
+				<tbody>
+					<tr>
+						<script>
+
+							function emma(){
+
+							}
+
+							function draft(roundNumber){
+
+								console.log(roundNumber);
+
+								var round = "";
+								var year = 2022;
+
+							
+								/**
+								var e = document.getElementById('cars');
+								e.addEventListener('change', function(){
+									round = this.value;
+								*/
+								round = 1;
+								var draftURL = "https://statsapi.web.nhl.com/api/v1/draft/" + year;
+
+								$.ajax({
+									async: false,
+									url: draftURL,
+									method: "GET"
+								}).done(function(draftData){
+
+									console.log(round);
+									var roundHolder = round;
+									round--;
+									var teams = 32;
+									var pick = 1;
+
+									for(var i = 0; i < teams; i++){
+										document.write("<td>" + pick + "</td>");
+										document.write("<td>" + draftData.drafts[0].rounds[round].picks[i].prospect.fullName + "</td>");
+										document.write("<td>" + draftData.drafts[0].rounds[round].picks[i].team.name + "</td>")
+										document.write("<tr>");
+
+										pick++;
+									}
+								});
+							}
+							/* }, true); */
+						</script>
+					</tbody>
+				</table>
 			</div>
 		</div>
-		<script src="jquery-3.5.1.min.js"></script>
-		<script src="bootstrap/js/bootstrap.min.js"></script>
-		<script src="main.js"></script>
 	</body>
 </html>
