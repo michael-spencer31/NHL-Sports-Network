@@ -6,11 +6,20 @@ body {
 	background: #fff; 
 }
 /*--- table content ---*/
+table.center{
+
+}
 table, th, td {
   border:1px solid black;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-left: auto;
+	margin-right: auto;
 }
 th, td {
   border-bottom: 1px solid #ddd;
+  padding:  10px 20px;
+  border: 1px solid #000;
 }
 tr:nth-child(even) {background-color: #f2f2f2;}
 th {
@@ -48,7 +57,7 @@ input[type=text], select {
 /*--- navigation bar ---*/
 
 .navbar {
-	background: #326fa8;
+	background: #55d149;		/*#326fa8;*/
 }
 
 .nav-link,
