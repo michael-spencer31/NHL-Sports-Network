@@ -11,7 +11,7 @@
 		<link rel="stylesheet" type="text/css" href="main.css">
 
 	</head>
-	
+	<body id="body">
 	<body>
 	
 		<nav class="navbar navbar-expand-md">
@@ -56,76 +56,93 @@
 				
 				<input type="text" id="yearin" placeholder="year">
 				<input type="text" id="roundin" placeholder="round">
-				<input type = "submit" value="Search"  onclick="emma()"><br>
+				<input type = "submit" value="Search"  onclick="draft()"><br>
 				
 				<label id="draftdata"></label>
-				<select name="cars" id="cars">
-  					<optgroup label="Rounds">
-    					<option value="1">1</option>
-    					<option value="2">2</option>
-    					<option value="3">3</option>
-    					<option value="4">4</option>
-    					<option value="5">5</option>
-    					<option value="6">6</option>
-    					<option value="7">7</option>
-  					</optgroup>
-				</select>
+				
+					<script>
 
-				<table class="table">
-					<thread>
-						<tr>
-							<th scope="col">Pick</th>
-							<th scope="col">Player</th>
-							<th scope="col">Team</th>
-						</tr>
-					</thread>
-				<tbody>
-					<tr>
-						<script>
+						function reset(){
+							window.location.reload();
+						}
 
-							function emma(){
+						function draft(){
 
+							document.getElementById('draftdata').innerHTML = "";
+
+							var round = document.getElementById('roundin').value;
+							var year = document.getElementById('yearin').value;
+
+							if(round > 7 || round < 1 || isNaN(round)){
+								document.getElementById('draftdata').innerHTML = "Invalid round number.";
+								return;
+							}
+							if(year > 2022 || year < 1970 || isNaN(year)){
+								document.getElementById('draftdata').innerHTML = "Invalid year.";
+								return;
 							}
 
-							function draft(roundNumber){
+							let table = document.createElement('table');
+							let thead = document.createElement('thead');
+							let tbody = document.createElement('tbody');
 
-								console.log(roundNumber);
+							table.appendChild(thead);
+							table.appendChild(tbody);
 
-								var round = "";
-								var year = 2022;
+							// Adding the entire table to the body tag
+							document.getElementById('body').appendChild(table);
+							let row_1 = document.createElement('tr');
+							let heading_1 = document.createElement('th');
+							heading_1.innerHTML = "Pick";
+							let heading_2 = document.createElement('th');
+							heading_2.innerHTML = "Name";
+							let heading_3 = document.createElement('th');
+							heading_3.innerHTML = "Team";
 
-							
-								/**
-								var e = document.getElementById('cars');
-								e.addEventListener('change', function(){
-									round = this.value;
-								*/
-								round = 1;
-								var draftURL = "https://statsapi.web.nhl.com/api/v1/draft/" + year;
+							row_1.appendChild(heading_1);
+							row_1.appendChild(heading_2);
+							row_1.appendChild(heading_3);
+							thead.appendChild(row_1);
 
-								$.ajax({
-									async: false,
-									url: draftURL,
-									method: "GET"
-								}).done(function(draftData){
+							var draftURL = "https://statsapi.web.nhl.com/api/v1/draft/" + year;
 
-									console.log(round);
-									var roundHolder = round;
-									round--;
-									var teams = 32;
-									var pick = 1;
+							$.ajax({
+								async: false,
+								url: draftURL,
+								method: "GET"
+							}).done(function(draftData){
 
-									for(var i = 0; i < teams; i++){
-										document.write("<td>" + pick + "</td>");
-										document.write("<td>" + draftData.drafts[0].rounds[round].picks[i].prospect.fullName + "</td>");
-										document.write("<td>" + draftData.drafts[0].rounds[round].picks[i].team.name + "</td>")
-										document.write("<tr>");
+								var pickHolder = 1;
+								round--;
 
-										pick++;
-									}
+
+								let i = 0;
+
+								while(i < 32){
+
+									let row = document.createElement('tr');
+
+									let pickNum = document.createElement('td');
+									let player = document.createElement('td');
+									let team = document.createElement('td');
+
+									pickNum.innerHTML = pickHolder;
+									player.innerHTML = draftData.drafts[0].rounds[round].picks[i].prospect.fullName;
+
+									var teamName = draftData.drafts[0].rounds[round].picks[i].team.name;
+									console.log(teamName);
+									team.innerHTML = draftData.drafts[0].rounds[round].picks[i].team.name;
+
+									row.appendChild(pickNum);
+									row.appendChild(player);
+									row.appendChild(team);
+
+									tbody.appendChild(row);
+									i++;
+									pickHolder++;
+								}
 								});
 							}
-							/* }, true); */
 						</script>
 					</tbody>
 				</table>
