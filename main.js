@@ -17,9 +17,6 @@ setTimeout(function() {
   $('#demo-modal').modal();
 }, 500);
 
-function reloadPage(){
-    window.location.reload();
-}
 
 function getRoster(){
 
@@ -561,6 +558,84 @@ function getSchedule(year, month, day){
         }
     });
 }
+function draft(){
+
+    document.getElementById('draftdata').innerHTML = "";
+
+    var round = document.getElementById('roundin').value;
+    var year = document.getElementById('yearin').value;
+
+    if(round > 7 || round < 1 || isNaN(round)){
+        document.getElementById('draftdata').innerHTML = "Invalid round number.";
+        return;
+    }
+    if(year > 2022 || year < 1970 || isNaN(year)){
+        document.getElementById('draftdata').innerHTML = "Invalid year.";
+        return;
+    }
+    let table = document.createElement('table');
+    let thead = document.createElement('thead');
+    let tbody = document.createElement('tbody');
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+
+    // Adding the entire table to the body tag
+    document.getElementById('body').appendChild(table);
+    let row_1 = document.createElement('tr');
+    let heading_1 = document.createElement('th');
+    heading_1.innerHTML = "Pick";
+    let heading_2 = document.createElement('th');
+    heading_2.innerHTML = "Name";
+    let heading_3 = document.createElement('th');
+    heading_3.innerHTML = "Team";
+
+    row_1.appendChild(heading_1);
+    row_1.appendChild(heading_2);
+    row_1.appendChild(heading_3);
+    thead.appendChild(row_1);
+
+    var draftURL = "https://statsapi.web.nhl.com/api/v1/draft/" + year;
+
+    $.ajax({
+        async: false,
+        url: draftURL,
+        method: "GET"
+    }).done(function(draftData){
+
+        var pickHolder = 1;
+        round--;
+
+        let i = 0;
+
+        while(i < 32){
+
+        let row = document.createElement('tr');
+
+        let pickNum = document.createElement('td');
+        let player = document.createElement('td');
+        let team = document.createElement('td');
+
+        pickNum.innerHTML = pickHolder;
+        player.innerHTML = draftData.drafts[0].rounds[round].picks[i].prospect.fullName;
+
+        var teamName = draftData.drafts[0].rounds[round].picks[i].team.name;
+        team.innerHTML = draftData.drafts[0].rounds[round].picks[i].team.name;
+
+        row.appendChild(pickNum);
+        row.appendChild(player);
+
+        row.innerHTML += ("<img src='Logos/" + teamName + ".png' width=30>" + teamName);
+        tbody.appendChild(row);
+        i++;
+        pickHolder++;
+        }
+    });
+}
+function reloadPage(){
+
+    window.location.reload();
+}
 //define an object to represent a team with their points, wins, losses and ot
 function team(name, points, wins, losses, ot){
     this.name = name;
@@ -648,8 +723,6 @@ function getDivisionStandings(division){
        
         team.innerHTML += ("<img src='Logos/" + teams[i].name + ".png' width=30>" + teams[i].name);
         
-
-        //team.innerHTML = teams[i].name;
         gp.innerHTML = teams[i].wins + teams[i].losses + teams[i].ot;
         wins.innerHTML = teams[i].wins;
         loss.innerHTML = teams[i].losses;
