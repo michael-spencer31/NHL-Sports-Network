@@ -1,199 +1,823 @@
-var teamListElement = $("#team-list");
-var teamElement = $("#team");
-var playerListElement = $("#player-list");
-var playerElement = $("#player");
+// resize header to size of browser window
+var ready = (callback) => {
+  if (document.readyState != "loading") callback();
+  else document.addEventListener("DOMContentLoaded", callback);
+}
 
-// create a list of all team IDs for later
-var teamIDList = [];
-var playerIDList = [];
-
-// link to the NHL API
-var queryURL = "https://statsapi.web.nhl.com/api/v1/teams/";
-
-// use jQuery ajax to get and return the data
-$.ajax({
-    url: queryURL,
-    method: "GET"
-}).done(function(data){
-
-    // for each team in the data, get the name and id
-    for (i = 0; i < data.teams.length; i++) {
-        var teamName = data.teams[i].name;
-        var teamID = data.teams[i].id;
-
-        var team = $("<li><button id='btn-" + teamID + "'>" + teamName + "</button></li>");
-        teamListElement.append(team);
-        teamIDList.push(teamID);
-    };
-    // when button is clicked pull up team JSON data
-    for (i = 0; i < teamIDList.length; i++) {
-        $("#btn-" + teamIDList[i]).on("click", function () {
-
-            teamElement.html("");
-            playerListElement.html("");
-            playerElement.html("");
-            playerIDList = [];
-           
-            // access target team api
-            var teamID = $(this).attr("id");
-            teamID = teamID.replace("btn-", "");
-            var queryURL = "https://statsapi.web.nhl.com/api/v1/teams/" + teamID + "?hydrate=stats(splits=statsSingleSeason)/";
-
-            // get and return the data with ajax
-            $.ajax({
-                url: queryURL,
-                method: "GET"
-            }).done(function(data) {
-
-                // get stats about team name, win/losses, etc.
-                var abbrName = data.teams[0].abbreviation;
-                var teamName = data.teams[0].name;
-                var venue = data.teams[0].venue.name;
-                var city = data.teams[0].venue.city;
-                var site = data.teams[0].officialSiteUrl;
-                var gamesPlayed = data.teams[0].teamStats[0].splits[0].stat.gamesPlayed;
-                var wins = data.teams[0].teamStats[0].splits[0].stat.wins;
-                var losses = data.teams[0].teamStats[0].splits[0].stat.losses;
-                var points = data.teams[0].teamStats[0].splits[0].stat.pts;
-                var rank = data.teams[0].teamStats[0].splits[1].stat.pts;
-
-                // create stat elements
-                var teamNameElement = $("<li>" + abbrName + " - " + teamName + "</li>");
-                var venueElement = $("<li>" + venue + ", " + city + "</li>");
-                var websiteElement = $("<a href='" + site + "'><li>" + site + "</li></a>");
-                var gamesPlayedElement = $("<li>Games Played: " + gamesPlayed + "</li>");
-                var winsElement = $("<li>Wins: " + wins + "</li>");
-                var lossesElement = $("<li>Losses: " + losses + "</li>");
-                var pointsElement = $("<li>Points: " + points + "</li>");
-                var rankElement = $("<li>Rank: " + rank + "</li>");
-
-                // append stat elements to the team element
-                teamElement.append(teamNameElement);
-                teamElement.append(venueElement);
-                teamElement.append(websiteElement);
-                teamElement.append(gamesPlayedElement);
-                teamElement.append(winsElement);
-                teamElement.append(lossesElement);
-                teamElement.append(pointsElement);
-                teamElement.append(rankElement);
-            });
-            // access the roster api
-            var teamID = $(this).attr("id");
-            teamID = teamID.replace("btn-", "");
-            var queryURL = "https://statsapi.web.nhl.com/api/v1/teams/" + teamID + "/roster?hydrate=stats(splits=statsSingleSeason)/";
-            console.log(queryURL);
-
-            $.ajax({
-                url: queryURL,
-                method: "GET"
-            }).done(function(data) {
-
-                // for each player in the data get their name and id
-                for (i = 0; i < data.roster.length; i++) {
-                    var playerName = data.roster[i].person.fullName;
-                    var playerID = data.roster[i].person.id;
-                    var jerseyNumber = data.roster[i].jerseyNumber;
-
-                    var player = $("<li><button id='btn-" + playerID + "'>" + playerName + " (" + jerseyNumber + ")" + "</button></li>");
-                    playerListElement.append(player);
-                    playerIDList.push(playerID);
-                };
-               
-         
-                for (i = 0; i < playerIDList.length; i++) {
-                    $("#btn-" + playerIDList[i]).on("click", function () {
-                        playerElement.html("");
-
-                        var playerID = $(this).attr("id");
-                        playerID = playerID.replace("btn-", "");
-                        var queryURL = "https://statsapi.web.nhl.com/api/v1/people/" + playerID + "?hydrate=stats(splits=statsSingleSeason)/";
-                        console.log(queryURL);
-                        var newQuery = "https://statsapi.web.nhl.com/api/v1/people/" + playerID + "/stats?stats=gameLog&season=20202021";
-
-                        $.ajax({
-                            url: queryURL,
-                            method: "GET"
-                        }).done(function(data) {
-                            var playerName = data.people[0].fullName;
-                            var number = data.people[0].primaryNumber;
-                            var age = data.people[0].currentAge;
-                            var height = data.people[0].height;
-                            var weight = data.people[0].weight;
-                            var position = data.people[0].primaryPosition.name;
-
-                            var nationality = data.people[0].nationality;
-                            var goals = data.people[0].stats[0].splits[0].stat.goals;
-                            var assists = data.people[0].stats[0].splits[0].stat.assists;
-                            var plusMinus = data.people[0].stats[0].splits[0].stat.plusMinus;
-
-                            // goals, assists and +/- are all 'undefined' for goalies so just set them to 0
-                            if(goals == null){
-                                goals = 0;
-                            }
-                            if(assists == null){
-                                assists = 0;
-                            }
-                            if(plusMinus == null){
-                                plusMinus = 0;
-                            }
-                            // create stat elements
-                            var playerNameElement = $("<li>" + playerName + "</li>");
-                            var numberElement = $("<li>(" + number + ")</li>");
-                            var ageElement = $("<li>Age: " + age + "</li>");
-                            var heightElement = $("<li>Height: " + height + "</li>");
-                            var weightElement = $("<li>Weight: " + weight + "</li>");
-                            var positionElement = $("<li>Position: " + position + "</li>");
-                            var nationElement = $("<li>Nationality: " + nationality + "</li>");
-
-                            var goalsElement = $("<li>Goals: " + goals + "</li>");
-                            var assistsElement = $("<li>Assists: " + assists + "</li>");
-                            var plusMinusElement = $("<li>Plus/Minus: " + plusMinus + "</li>");
-
-                            // append stat elements to the team element
-                            playerElement.append(playerNameElement);
-                            playerElement.append(numberElement);
-                            playerElement.append(ageElement);
-                            playerElement.append(heightElement);
-                            playerElement.append(weightElement);
-                            playerElement.append(positionElement);
-                            playerElement.append(nationElement);
-
-                            playerElement.append(goalsElement);
-                            playerElement.append(assistsElement);
-                            playerElement.append(plusMinusElement);
-                        }); //end assemble player html
-                    });     //end player button click
-                };   //end player json
-            });     // end assemble team hmtl
-        }); // end team button click
-    };      // end team json
+document.addEventListener("DOMContentLoaded", function(){
+  ready(() => { 
+    document.querySelector(".header").style.height = window.innerHeight + "px";
+    })
 });
+
+
+// set modal time delay before loading
+
+setTimeout(function() {
+  $('#demo-modal').modal();
+}, 500);
+
+function reloadPage(){
+    window.location.reload();
+}
+
+function getRoster(){
+
+    //get the team name from the html document
+    document.getElementById('rosterdata').innerHTML = "";
+
+    //get the team name in from the html fourm 
+    var team = document.getElementById("rosterin").value;
+
+    //split the team name on each space
+    var splitTeam = team.toLowerCase().split(' ');
+
+    //loop through the string and uppercase the first letter of each word
+    for(var i = 0; i < splitTeam.length; i++){
+
+        splitTeam[i] = splitTeam[i].charAt(0).toUpperCase() + splitTeam[i].substring(1);  
+    }
+    //now rejoin the string together
+    team = splitTeam.join(' ');
+
+    //map each team to the team id
+    const TeamID = new Map([
+
+        ["New Jersey Devils", 1],
+        ["New York Rangers", 2],
+        ["Philadelphia Flyers", 4],
+        ["Pittsburgh Penguins", 5],
+        ["Boston Bruins", 6],
+        ["Buffalo Sabres", 7],
+        ["Montreal Canadiens", 8],
+        ["Habs", 8],
+        ["Montreal", 8],
+        ["Canadiens", 8],
+        ["Ottawa Senators", 9],
+        ["Toronto Maple Leafs", 10],
+        ["Leafs", 10],
+        ["Carolina Hurricanes", 12],
+        ["Florida Panthers", 13],
+        ["Tampa Bay Lightning", 14],
+        ["Washington Capitals", 15],
+        ["Chicago Blackhawks", 16],
+        ["Detroit Red Wings", 17],
+        ["Nashville Predators", 18],
+        ["St Louis Blues", 19],
+        ["Calgary Flames", 20],
+        ["Colorado Avalanche", 21],
+        ["Edmonton Oilers", 22],
+        ["Vancouver Canucks", 23],
+        ["Anaheim Ducks", 24],
+        ["Dallas Stars", 25],
+        ["Los Angeles Kings", 26],
+        ["San Jose Sharks", 28],
+        ["Columbus Blue Jackets", 29],
+        ["Minnesota Wild", 30],
+        ["Winnipeg Jets", 52],
+        ["Arizona Coyotes", 53],
+        ["Vegas Golden Knights", 54],
+        ["Seattle Kraken", 55]
+    ]);
+    //get the teams id from the map
+    var teamID = TeamID.get(team);
+
+    //build the api url
+    var rosterURL = "https://statsapi.web.nhl.com/api/v1/teams/" + teamID + "/roster/";
+
+    //start the ajax call
+    $.ajax({
+        url: rosterURL,
+        method: "GET"
+    }).done(function(rosterData){
+
+        for(var i = 0; i < 35; i++){
+            document.getElementById('rosterdata').innerHTML += "<br>" + "#" + rosterData.roster[i].jerseyNumber + " " + rosterData.roster[i].person.fullName + ", " + rosterData.roster[i].position.name;
+        }
+    });
+}
+//this function is used to get data about a entry draft
+//for a year specified by the user
 function getDraft(){
 
-    var input = document.getElementById('draftin').value;
-    var round = document.getElementById('roundin').value;
-    round--;
+    document.getElementById('draftdata').innerHTML = "";
 
-    var draftURL = "https://statsapi.web.nhl.com/api/v1/draft/" + input;
+    var roundNumber = document.getElementById('roundin').value;
+    var year = document.getElementById('yearin').value;
+    var roundHolder = roundNumber;
+    var pickHolder = 1;
 
+    const tbl = document.createElement("table");
+    const tblBody = document.createElement("tbody");
+    
+    var draftURL = "https://statsapi.web.nhl.com/api/v1/draft/" + year;
+
+    //check if the round number is valid, or not a number
+    if(roundNumber > 7 || roundNumber <= 0 || isNaN(roundNumber)){
+        document.getElementById('draftdata').innerHTML += "Invalid round number";
+    }
     $.ajax({
         url: draftURL,
         method: "GET"
     }).done(function(draftData){
 
-        for(var i = 0; i < 32; i++){
-            document.getElementById('draftrecords').innerHTML +=  draftData.drafts[0].rounds[round].picks[i].team.name;
-            document.getElementById('draftrecords').innerHTML += " " + draftData.drafts[0].rounds[round].picks[i].prospect.fullName + "<br />";
-        }  
+        //since the api counts rounds 0-6 instead of 1-7, subtract 1
+        roundNumber--;
+
+        var teams;
+
+        //logic to determine how many teams were in the NHL in a given year
+        if(year == 2022 || year == 2021){
+            teams = 32;
+        }else if(year >= 2016 && year <= 2020){
+            teams = 31;
+        }else if(year >= 2000 && year <= 2015){
+            teams = 30;
+        }else if(year == 1999){
+            teams = 27;
+        }else if(year >= 1993 && year <= 1998){
+            teams = 26;
+        }else if(year == 1991 || year == 1992){
+          teams = 22;
+        }else if(year >= 1979 && year <= 1990){
+          teams = 18;
+        }else if(year >= 1974 && year <= 1978){
+          teams = 14;
+        }
+        for(let i = 0; i < teams; i++){
+
+            const row = document.createElement("tr");
+
+            for(let j = 0; j < 1; j++){
+
+                const cell = document.createElement("td");
+
+                var teamName = "Round " + roundHolder + " Pick: " + pickHolder + ":" + draftData.drafts[0].rounds[roundNumber].picks[i].team.name
+                                + " " + draftData.drafts[0].rounds[roundNumber].picks[i].prospect.fullName;
+
+                const cellText = document.createTextNode(teamName);
+                cell.appendChild(cellText);
+                row.appendChild(cell);
+            }
+            pickHolder++;
+            tblBody.appendChild(row);
+        }
+        tbl.appendChild(tblBody);
+        document.body.appendChild(tbl);
     });
 }
-function getPlayers(){
+//this function uses the ajax jquery method to get data about the playoffs
+function getPlayoffs(){
 
-    var input = document.getElementById('playerin').value;
+    //each time the button is pressed, reset the html element to be empty
+    document.getElementById('playoffrecords').innerHTML = " ";
 
-    const PlayerMap = new Map([
+    //get the year the user wants to search for from the html page
+  var playoffYear = document.getElementById('playoffin').value;
 
-        [ "Jonathan Bernier", 8473541 ],
+    //check if valid playoff year, or if the user enters something that is not a number
+    if(playoffYear >= 2023 || playoffYear <= 1930 || isNaN(playoffYear)){
+        document.getElementById("playoffrecords").innerHTML = "Please enter a valid year";
+        return;
+    }
+    //set up the values for the api call
+  var endYear = playoffYear;
+    playoffYear--;
+    var year = playoffYear + "" + endYear;
+  var playoffURL = "https://statsapi.web.nhl.com/api/v1/tournaments/playoffs?expand=round.series,schedule.game.seriesSummary&season=" + year;
+  
+    //call the api with the url using the GET method 
+    $.ajax({
+    url: playoffURL,
+    method: "GET"
+  }).done(function(playoffData){
+
+        document.getElementById('playoffrecords').innerHTML += "<b>Quarter Finals" + "<br><br>";
+
+    for(var i = 0; i < 8; i++){
+
+      document.getElementById('playoffrecords').innerHTML += playoffData.rounds[0].series[i].names.matchupName;
+            document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[0].series[i].currentGame.seriesSummary.seriesStatus + "<br>";
+    }
+        document.getElementById('playoffrecords').innerHTML += "<br><b>Semi Finals" + "<br><br>";
+        for(var i = 0; i < 4; i++){
+
+            document.getElementById('playoffrecords').innerHTML += playoffData.rounds[1].series[i].names.matchupName;
+            document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[1].series[i].currentGame.seriesSummary.seriesStatus + "<br>";
+
+        }
+        document.getElementById('playoffrecords').innerHTML += "<br><b>Conference Finals" + "<br><br>";
+        for(var i = 0; i < 2; i++){
+            document.getElementById('playoffrecords').innerHTML += playoffData.rounds[2].series[i].names.matchupName;
+            document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[2].series[i].currentGame.seriesSummary.seriesStatus + "<br>";
+
+        }
+        document.getElementById('playoffrecords').innerHTML += "<br><b>Stanley Cup Finals" + "<br><br>";
+        //since the last round only has 2 teams we don't need a loop
+        document.getElementById('playoffrecords').innerHTML += playoffData.rounds[3].series[0].names.matchupName;
+        document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[3].series[0].currentGame.seriesSummary.seriesStatus + "<br>";
+
+
+  });
+}
+//check the console for date click event
+//Fixed day highlight
+//Added previous month and next month view
+
+function CalendarControl() {
+    const calendar = new Date();
+    const calendarControl = {
+      localDate: new Date(),
+      prevMonthLastDate: null,
+      calWeekDays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      calMonthName: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ],
+      daysInMonth: function (month, year) {
+        return new Date(year, month, 0).getDate();
+      },
+      firstDay: function () {
+        return new Date(calendar.getFullYear(), calendar.getMonth(), 1);
+      },
+      lastDay: function () {
+        return new Date(calendar.getFullYear(), calendar.getMonth() + 1, 0);
+      },
+      firstDayNumber: function () {
+        return calendarControl.firstDay().getDay() + 1;
+      },
+      lastDayNumber: function () {
+        return calendarControl.lastDay().getDay() + 1;
+      },
+      getPreviousMonthLastDate: function () {
+        let lastDate = new Date(
+          calendar.getFullYear(),
+          calendar.getMonth(),
+          0
+        ).getDate();
+        return lastDate;
+      },
+      navigateToPreviousMonth: function () {
+        calendar.setMonth(calendar.getMonth() - 1);
+        calendarControl.attachEventsOnNextPrev();
+      },
+      navigateToNextMonth: function () {
+        calendar.setMonth(calendar.getMonth() + 1);
+        calendarControl.attachEventsOnNextPrev();
+      },
+      navigateToCurrentMonth: function () {
+        let currentMonth = calendarControl.localDate.getMonth();
+        let currentYear = calendarControl.localDate.getFullYear();
+        calendar.setMonth(currentMonth);
+        calendar.setYear(currentYear);
+        calendarControl.attachEventsOnNextPrev();
+      },
+      displayYear: function () {
+        let yearLabel = document.querySelector(".calendar .calendar-year-label");
+        yearLabel.innerHTML = calendar.getFullYear();
+      },
+      displayMonth: function () {
+        let monthLabel = document.querySelector(
+          ".calendar .calendar-month-label"
+        );
+        monthLabel.innerHTML = calendarControl.calMonthName[calendar.getMonth()];
+      },
+      selectDate: function (e) {
+        console.log(
+          `${e.target.textContent} ${
+            calendarControl.calMonthName[calendar.getMonth()]
+          } ${calendar.getFullYear()}`
+        );
+        getSchedule(calendar.getFullYear(), calendarControl.calMonthName[calendar.getMonth()], e.target.textContent);
+      },
+      plotSelectors: function () {
+        document.querySelector(
+          ".calendar"
+        ).innerHTML += `<div class="calendar-inner"><div class="calendar-controls">
+          <div class="calendar-prev"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><path fill="#666" d="M88.2 3.8L35.8 56.23 28 64l7.8 7.78 52.4 52.4 9.78-7.76L45.58 64l52.4-52.4z"/></svg></a></div>
+          <div class="calendar-year-month">
+          <div class="calendar-month-label"></div>
+          <div>-</div>
+          <div class="calendar-year-label"></div>
+          </div>
+          <div class="calendar-next"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><path fill="#666" d="M38.8 124.2l52.4-52.42L99 64l-7.77-7.78-52.4-52.4-9.8 7.77L81.44 64 29 116.42z"/></svg></a></div>
+          </div>
+          <div class="calendar-today-date">Today: 
+            ${calendarControl.calWeekDays[calendarControl.localDate.getDay()]}, 
+            ${calendarControl.localDate.getDate()}, 
+            ${calendarControl.calMonthName[calendarControl.localDate.getMonth()]} 
+            ${calendarControl.localDate.getFullYear()}
+          </div>
+          <div class="calendar-body"></div></div>`;
+      },
+      plotDayNames: function () {
+        for (let i = 0; i < calendarControl.calWeekDays.length; i++) {
+          document.querySelector(
+            ".calendar .calendar-body"
+          ).innerHTML += `<div>${calendarControl.calWeekDays[i]}</div>`;
+        }
+      },
+      plotDates: function () {
+        document.querySelector(".calendar .calendar-body").innerHTML = "";
+        calendarControl.plotDayNames();
+        calendarControl.displayMonth();
+        calendarControl.displayYear();
+        let count = 1;
+        let prevDateCount = 0;
+  
+        calendarControl.prevMonthLastDate = calendarControl.getPreviousMonthLastDate();
+        let prevMonthDatesArray = [];
+        let calendarDays = calendarControl.daysInMonth(
+          calendar.getMonth() + 1,
+          calendar.getFullYear()
+        );
+        // dates of current month
+        for (let i = 1; i < calendarDays; i++) {
+          if (i < calendarControl.firstDayNumber()) {
+            prevDateCount += 1;
+            document.querySelector(
+              ".calendar .calendar-body"
+            ).innerHTML += `<div class="prev-dates"></div>`;
+            prevMonthDatesArray.push(calendarControl.prevMonthLastDate--);
+          } else {
+            document.querySelector(
+              ".calendar .calendar-body"
+            ).innerHTML += `<div class="number-item" data-num=${count}><a class="dateNumber" href="#">${count++}</a></div>`;
+          }
+        }
+        //remaining dates after month dates
+        for (let j = 0; j < prevDateCount + 1; j++) {
+          document.querySelector(
+            ".calendar .calendar-body"
+          ).innerHTML += `<div class="number-item" data-num=${count}><a class="dateNumber" href="#">${count++}</a></div>`;
+        }
+        calendarControl.highlightToday();
+        calendarControl.plotPrevMonthDates(prevMonthDatesArray);
+        calendarControl.plotNextMonthDates();
+      },
+      attachEvents: function () {
+        let prevBtn = document.querySelector(".calendar .calendar-prev a");
+        let nextBtn = document.querySelector(".calendar .calendar-next a");
+        let todayDate = document.querySelector(".calendar .calendar-today-date");
+        let dateNumber = document.querySelectorAll(".calendar .dateNumber");
+        prevBtn.addEventListener(
+          "click",
+          calendarControl.navigateToPreviousMonth
+        );
+        nextBtn.addEventListener("click", calendarControl.navigateToNextMonth);
+        todayDate.addEventListener(
+          "click",
+          calendarControl.navigateToCurrentMonth
+        );
+        for (var i = 0; i < dateNumber.length; i++) {
+            dateNumber[i].addEventListener(
+              "click",
+              calendarControl.selectDate,
+              false
+            );
+        }
+      },
+      highlightToday: function () {
+        let currentMonth = calendarControl.localDate.getMonth() + 1;
+        let changedMonth = calendar.getMonth() + 1;
+        let currentYear = calendarControl.localDate.getFullYear();
+        let changedYear = calendar.getFullYear();
+        if (
+          currentYear === changedYear &&
+          currentMonth === changedMonth &&
+          document.querySelectorAll(".number-item")
+        ) {
+          document
+            .querySelectorAll(".number-item")
+            [calendar.getDate() - 1].classList.add("calendar-today");
+        }
+      },
+      plotPrevMonthDates: function(dates){
+        dates.reverse();
+        for(let i=0;i<dates.length;i++) {
+            if(document.querySelectorAll(".prev-dates")) {
+                document.querySelectorAll(".prev-dates")[i].textContent = dates[i];
+            }
+        }
+      },
+      plotNextMonthDates: function(){
+       let childElemCount = document.querySelector('.calendar-body').childElementCount;
+       //7 lines
+       if(childElemCount > 42 ) {
+           let diff = 49 - childElemCount;
+           calendarControl.loopThroughNextDays(diff);
+       }
+
+       //6 lines
+       if(childElemCount > 35 && childElemCount <= 42 ) {
+        let diff = 42 - childElemCount;
+        calendarControl.loopThroughNextDays(42 - childElemCount);
+       }
+
+      },
+      loopThroughNextDays: function(count) {
+        if(count > 0) {
+            for(let i=1;i<=count;i++) {
+                document.querySelector('.calendar-body').innerHTML += `<div class="next-dates">${i}</div>`;
+            }
+        }
+      },
+      attachEventsOnNextPrev: function () {
+        calendarControl.plotDates();
+        calendarControl.attachEvents();
+      },
+      init: function () {
+        calendarControl.plotSelectors();
+        calendarControl.plotDates();
+        calendarControl.attachEvents();
+      }
+    };
+    calendarControl.init();
+  }
+  
+  const calendarControl = new CalendarControl();
+
+
+/**
+ * this function uses the functions above to get the schedule
+ * for any given day the user clicks on
+*/
+function getSchedule(year, month, day){
+
+    getFullStandings();
+
+    //reset the page each time the function is called
+    document.getElementById('datedisplay').innerHTML = "";
+
+    document.getElementById('datedisplay').innerHTML += "<b>Schedule for " + month + " " + day + ", " + year + "<br><br>";
+    //map to convert month to the numerical equivalent
+    const MonthNumber = new Map([
+
+        ["Jan", 1],
+        ["Feb", 2],
+        ["Mar", 3],
+        ["Apr", 4],
+        ["May", 5],
+        ["Jun", 6],
+        ["Jul", 7],
+        ["Aug", 8],
+        ["Sep", 9],
+        ["Oct", 10],
+        ["Nov", 11],
+        ["Dec", 12]
+    ]);
+    //convert month to a number using a map
+    var monthNum = MonthNumber.get(month);
+    var scheduleURL = "https://statsapi.web.nhl.com/api/v1/schedule?startDate=" + year + "-" + monthNum + "-" + day +"&endDate=" + year + "-" + monthNum + "-" + day;
+
+    //start the ajax call to the api
+    $.ajax({
+        url: scheduleURL,
+        method: "GET"
+    }).done(function(scheduleData){
+
+        //get the number of games that day
+        var games = scheduleData.totalGames;
+
+        //check if no games are scheduled for the given day
+        if(games == 0){
+
+          document.getElementById('datedisplay').innerHTML += "No games scheduled for today.";
+        }
+        //start to loop through all the games on the given day
+        for(var i = 0; i < games; i++){
+
+            //set up variables for the winning team and number of goals
+            var winningTeam = "";  
+            var winningGoals = "";
+            var loosingGoals = "";
+            var gameStatus = scheduleData.dates[0].games[i].status.abstractGameState;
+
+            //determine which team won the game (i.e. score more goals)
+            if(scheduleData.dates[0].games[i].teams.away.score > scheduleData.dates[0].games[i].teams.home.score){
+                //if the game is not tied and the away team is winning
+                winningTeam = scheduleData.dates[0].games[i].teams.away.team.name;
+                winningGoals = scheduleData.dates[0].games[i].teams.away.score;
+                loosingGoals = scheduleData.dates[0].games[i].teams.home.score;
+            }else if(scheduleData.dates[0].games[i].teams.away.score == 0 && scheduleData.dates[0].games[i].teams.home.score == 0){
+                //this checks if the game is live and is tied 0-0
+                if(gameStatus == "Live"){
+
+                    //in this case the goals are the same so both are set to 0
+                    winningGoals = 0;
+                    loosingGoals = 0;
+                    winningTeam = "Tie game";
+                }
+            }else if(scheduleData.dates[0].games[i].teams.away.score == scheduleData.dates[0].games[i].teams.home.score){
+                
+                //this checks if the game is tied, but not a 0-0 tie
+                winningTeam = "Tie game";
+                winningGoals = scheduleData.dates[0].games[i].teams.home.score;
+                loosingGoals = scheduleData.dates[0].games[i].teams.home.score;
+            }else{
+                //if the game is not tied and the home team is winning
+                winningTeam = scheduleData.dates[0].games[i].teams.home.team.name;
+                loosingGoals = scheduleData.dates[0].games[i].teams.away.score;
+                winningGoals = scheduleData.dates[0].games[i].teams.home.score;
+            }
+            //display the obtained data on the html page
+            document.getElementById('datedisplay').innerHTML += scheduleData.dates[0].games[i].teams.away.team.name + "(" + scheduleData.dates[0].games[i].teams.away.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.losses + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.ot + ")" + " at "+ scheduleData.dates[0].games[i].teams.home.team.name + "(" + scheduleData.dates[0].games[i].teams.home.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.losses + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.ot + "): "; 
+            
+            var gameTime = "";
+            document.getElementById('datedisplay').innerHTML += winningGoals + "-" + loosingGoals + " " + winningTeam + " " + "(" + gameStatus + ")";          
+
+            //if the game hasn't started yet it will be in a preview state
+            if(gameStatus == "Preview"){
+
+                //get the time the game starts at from the api
+                gameTime = scheduleData.dates[0].games[i].gameDate;
+
+                //uses the JavaScript split method to remove the date portion of the date
+                const timeArray = gameTime.split("T");
+                //now use split to remove the Z at the end of the string
+                const timeArray2 = timeArray[1].split("Z");
+
+                //now convert the time from 24 hour military time to 12 hour
+                const militaryTime = timeArray2[0];
+                //finally create a new Date object to convert the time to the users local time zone
+                const timeString12hr = new Date('1970-01-01T' + militaryTime + 'Z').toLocaleString('en-US', {hour12: true, hour: 'numeric', minute: 'numeric'});
+                
+                //finally display the results on the html page
+                document.getElementById('datedisplay').innerHTML += " " + timeString12hr + "<br>";
+            }else{
+                //if the game has already started, just print out a blank line
+                document.getElementById('datedisplay').innerHTML += "<br>";
+            }
+        }
+    });
+}
+//define an object to represent a team with their points, wins, losses and ot
+function team(name, points, wins, losses, ot){
+    this.name = name;
+    this.points = points;
+    this.wins = wins;
+    this.losses = losses;
+    this.ot = ot;
+}
+function getDivisionStandings(division){
+
+    const teams = [];
+    var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
+    var points = 0;
+    var teamName = "";
+    var wins = 0;
+    var loss = 0;
+    var otl = 0;
+
+    $.ajax({
+        url: standingsURL,
+        async: false,
+        method: "GET"
+    }).done(function(standingsData){
+
+        for(var i = 0; i < 8; i++){
+
+            teamName = standingsData.records[division].teamRecords[i].team.name;
+            points = standingsData.records[division].teamRecords[i].leagueRecord.wins * 2;
+            points +=  standingsData.records[division].teamRecords[i].leagueRecord.ot;
+            wins = standingsData.records[division].teamRecords[i].leagueRecord.wins;
+            loss = standingsData.records[division].teamRecords[i].leagueRecord.losses;
+            otl = standingsData.records[division].teamRecords[i].leagueRecord.ot;
+
+            teams[i] = new team(teamName, points, wins, loss, otl);
+            points = 0;
+
+        }
+    });
+    //call the function to sort the teams based on points
+    sortByKey(teams);
+
+    let table = document.createElement('table');
+    let thead = document.createElement('thead');
+    let tbody = document.createElement('tbody');
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+
+    // Adding the entire table to the body tag
+    document.getElementById('body').appendChild(table);
+    let row_1 = document.createElement('tr');
+    let heading_1 = document.createElement('th');
+    heading_1.innerHTML = "Team";
+    let heading_2 = document.createElement('th');
+    heading_2.innerHTML = "GP";
+    let heading_3 = document.createElement('th');
+    heading_3.innerHTML = "Wins";
+    let heading_4 = document.createElement('th');
+    heading_4.innerHTML = "Losses";
+    let heading_5 = document.createElement('th');
+    heading_5.innerHTML = "OTL";
+    let heading_6 = document.createElement('th');
+    heading_6.innerHTML = "Points";
+
+    row_1.appendChild(heading_1);
+    row_1.appendChild(heading_2);
+    row_1.appendChild(heading_3);
+    row_1.appendChild(heading_4);
+    row_1.appendChild(heading_5);
+    row_1.appendChild(heading_6);
+    thead.appendChild(row_1);
+
+    var i = 7;
+
+    while(i > 0){
+
+        let row = document.createElement('tr');
+        let team = document.createElement('td');
+        let gp = document.createElement('td');
+        let wins = document.createElement('td');
+        let loss = document.createElement('td');
+        let ot = document.createElement('td');
+        let point = document.createElement('td');
+        team.innerHTML += ("<img src='Logos/" + teams[i].name + ".png' width=30>" + teams[i].name);
+
+        //team.innerHTML = teams[i].name;
+        gp.innerHTML = teams[i].wins + teams[i].losses + teams[i].ot;
+        wins.innerHTML = teams[i].wins;
+        loss.innerHTML = teams[i].losses;
+        ot.innerHTML = teams[i].ot;
+        point.innerHTML = teams[i].points;
+
+        row.appendChild(team);
+        row.appendChild(gp);
+        row.appendChild(wins);
+        row.appendChild(loss);
+        row.appendChild(ot);
+        row.appendChild(point);
+
+        tbody.appendChild(row);
+        i--;
+    }
+}
+function getFullStandings(){
+
+    const teams = [];
+    var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
+    var points = 0;
+    var teamName = "";
+    var counter = 0;
+    var counterTwo = 0;
+    var wins = 0;
+    var loss = 0;
+    var otl = 0;
+    var counterThree = 0;
+
+    $.ajax({
+        url: standingsURL,
+        async: false,
+        method: "GET"
+    }).done(function(standingsData){
+
+        for(var i = 0; i < 8; i++){
+
+            teamName = standingsData.records[0].teamRecords[i].team.name;
+            points = standingsData.records[0].teamRecords[i].leagueRecord.wins * 2;
+            points +=  standingsData.records[0].teamRecords[i].leagueRecord.ot;
+            wins = standingsData.records[0].teamRecords[i].leagueRecord.wins;
+            loss = standingsData.records[0].teamRecords[i].leagueRecord.losses;
+            otl = standingsData.records[0].teamRecords[i].leagueRecord.ot;
+
+            teams[i] = new team(teamName, points, wins, loss, otl);
+            points = 0;
+        }
+        for(var i = 8; i < 16; i++){
+            teamName = standingsData.records[1].teamRecords[counter].team.name;
+            points = standingsData.records[1].teamRecords[counter].leagueRecord.wins * 2;
+            points +=  standingsData.records[1].teamRecords[counter].leagueRecord.ot;
+            wins = standingsData.records[1].teamRecords[counter].leagueRecord.wins;
+            loss = standingsData.records[1].teamRecords[counter].leagueRecord.losses;
+            otl = standingsData.records[1].teamRecords[counter].leagueRecord.ot;
+
+            teams[i] = new team(teamName, points, wins, loss, otl);
+            points = 0;
+            counter++;
+        }
+        for(var i = 16; i < 24; i++){
+            teamName = standingsData.records[2].teamRecords[counterTwo].team.name;
+            points = standingsData.records[2].teamRecords[counterTwo].leagueRecord.wins * 2;
+            points +=  standingsData.records[2].teamRecords[counterTwo].leagueRecord.ot;
+            wins = standingsData.records[2].teamRecords[counterTwo].leagueRecord.wins;
+            loss = standingsData.records[2].teamRecords[counterTwo].leagueRecord.losses;
+            otl = standingsData.records[2].teamRecords[counterTwo].leagueRecord.ot;
+
+            teams[i] = new team(teamName, points, wins, loss, otl);
+            points = 0;
+            counterTwo++;
+        }
+        for(var i = 24; i < 32; i++){
+
+            teamName = standingsData.records[3].teamRecords[counterThree].team.name;
+            points = standingsData.records[3].teamRecords[counterThree].leagueRecord.wins * 2;
+            points +=  standingsData.records[3].teamRecords[counterThree].leagueRecord.ot;
+            wins = standingsData.records[3].teamRecords[counterThree].leagueRecord.wins;
+            loss = standingsData.records[3].teamRecords[counterThree].leagueRecord.losses;
+            otl = standingsData.records[3].teamRecords[counterThree].leagueRecord.ot;
+
+            teams[i] = new team(teamName, points, wins, loss, otl);
+            points = 0;
+            counterThree++;
+        }
+    });
+    //call the function to sort the teams based on points
+    sortByKey(teams);
+
+    let table = document.createElement('table');
+    let thead = document.createElement('thead');
+    let tbody = document.createElement('tbody');
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+
+    // Adding the entire table to the body tag
+    document.getElementById('body').appendChild(table);
+    let row_1 = document.createElement('tr');
+    let heading_1 = document.createElement('th');
+    heading_1.innerHTML = "Team";
+    let heading_2 = document.createElement('th');
+    heading_2.innerHTML = "GP";
+    let heading_3 = document.createElement('th');
+    heading_3.innerHTML = "Wins";
+    let heading_4 = document.createElement('th');
+    heading_4.innerHTML = "Losses";
+    let heading_5 = document.createElement('th');
+    heading_5.innerHTML = "OTL";
+    let heading_6 = document.createElement('th');
+    heading_6.innerHTML = "Points";
+
+    row_1.appendChild(heading_1);
+    row_1.appendChild(heading_2);
+    row_1.appendChild(heading_3);
+    row_1.appendChild(heading_4);
+    row_1.appendChild(heading_5);
+    row_1.appendChild(heading_6);
+    thead.appendChild(row_1);
+
+    var i = 31;
+
+    while(i > 0){
+
+        let row = document.createElement('tr');
+        let team = document.createElement('td');
+        let gp = document.createElement('td');
+        let wins = document.createElement('td');
+        let loss = document.createElement('td');
+        let ot = document.createElement('td');
+        let point = document.createElement('td');
+
+        team.innerHTML += ("<img src='Logos/" + teams[i].name + ".png' width=30>" + teams[i].name);
+
+        //team.innerHTML = teams[i].name;
+        gp.innerHTML = teams[i].wins + teams[i].losses + teams[i].ot;
+        wins.innerHTML = teams[i].wins;
+        loss.innerHTML = teams[i].losses;
+        ot.innerHTML = teams[i].ot;
+        point.innerHTML = teams[i].points;
+
+        row.appendChild(team);
+        row.appendChild(gp);
+        row.appendChild(wins);
+        row.appendChild(loss);
+        row.appendChild(ot);
+        row.appendChild(point);
+
+        tbody.appendChild(row);
+        i--;
+    }
+}
+//this function uses arrays.sort with a small modification
+//to sort the teams based on points
+function sortByKey(array){
+
+    return array.sort(function(a, b){
+
+        var x = a.points;
+        var y = b.points;
+
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
+}
+function getPlayer(){
+
+  var input = document.getElementById('playerin').value;
+
+  const PlayerMap = new Map([
+
+    [ "Jonathan Bernier", 8473541 ],
         [ "Brendan Smith", 8474090 ],
         [ "Tomas Tatar", 8475193 ],
         [ "Erik Haula", 8475287 ],
@@ -1454,11 +2078,12 @@ function getPlayers(){
         [ "Simon Edvinsson", 8482762 ],
         [ "Pontus Andreasson", 8483608 ]
     ]);
-    var playerIDNum = PlayerMap.get(input);
+  var playerIDNum = PlayerMap.get(input);
 
-    //check if the player ID does not exist
+  //check if the player ID does not exist
     if(playerIDNum == undefined){
         document.getElementById('playerrecords').innerHTML = "Player not found - please try again";
+        document.getElementById('careerrecords').innerHTML = "";      
     }
     var playerURL = "https://statsapi.web.nhl.com/api/v1/people/" + playerIDNum + "?hydrate=stats(splits=statsSingleSeason)/";
 
@@ -1503,86 +2128,51 @@ function getPlayers(){
             document.getElementById('playerrecords').innerHTML += "Hits: " + playerData.people[0].stats[0].splits[0].stat.hits + "<br>";
         }
     });
-}
-function getResults(){
+    var careerPlayer = "https://statsapi.web.nhl.com/api/v1/people/" + playerIDNum + "/stats?stats=statsSingleSeason&season=20052006";
 
-    //create a map with team name -> team id
-    const teamNames = new Map([
-        ["New Jersery Devils", 1],
-        ["New York Islanders", 2],
-        ["New York Rangers", 3],
-        ["Philadelphia Flyers", 4],
-        ["Pittsburgh Penguins", 5],
-        ["Boston Bruins", 6],
-        ["Buffalo Sabres", 7],
-        ["Montreal Canadiens", 8],
-        ["Ottawa Senators", 9],
-        ["Toronto Maple Leafs", 10],
-        ["Carolina Hurricanes", 12],
-        ["Florida Panthers", 13],
-        ["Tampa Bay Lightning", 14],
-        ["Washington Capitals", 15],
-        ["Chicago Blackhawks", 16],
-        ["Detroit Red Wings", 17],
-        ["Nashville Predators", 18],
-        ["St. Louis Blues", 19],
-        ["Calgary Flames", 20],
-        ["Colorado Avalanche", 21],
-        ["Edmonton Oilers", 22],
-        ["Vancouver Canucks", 23],
-        ["Anaheim Ducks", 24],
-        ["Dallas Stars", 25],
-        ["Los Angeles Kings", 26],
-        ["Phoenix Coyotes", 27],
-        ["San Jose Sharks", 28],
-        ["Columbus Blue Jackets", 29],
-        ["Minnesota Wild", 30],
-        ["Winnipeg Jets", 52],
-        [ "Vegas Golden Knights" , 54 ],
-        ["Seattle Kraken", 55],
-    ]);
-    //get the team name from input
-    var teamName = document.getElementById('teamin').value;
-    //use the map to get the teams id
-    var teamID = teamNames.get(teamName);
-    //then call the api using the id number
-    var resultURL = "https://statsapi.web.nhl.com/api/v1/schedule?teamId=" + teamID + "&startDate=2018-10-01&endDate=2019-05-02";
+    var startYear = 2005;
+    var endYear = 2006;
+
+    var careerGoals = 0;
+    var careerAssists = 0;
+
+    var year = startYear + "" + endYear;
+
+    var counter = 0;
 
     $.ajax({
-        url: resultURL,
+        url: careerPlayer,
         method: "GET"
-    }).done(function(results){
+    }).done(function(careerData){
 
-        for(var i = 0; i < 82; i++){
-            document.getElementById('resultrecords').innerHTML += results.dates[i].games[0].teams.home.team.name + " ";    
-            document.getElementById('resultrecords').innerHTML += results.dates[i].games[0].teams.home.score + " vs. ";
-            document.getElementById('resultrecords').innerHTML += results.dates[i].games[0].teams.away.score + " ";
-            document.getElementById('resultrecords').innerHTML += results.dates[i].games[0].teams.away.team.name + "<br>";    
+        if(careerData.stats[0].splits[0] != null){
+            careerGoals = careerData.stats[0].splits[0].stat.goals;
+            careerAssists = careerData.stats[0].splits[0].stat.assists;
+        }
+        while(startYear != 2021){
+
+            startYear++;
+            endYear++;
+
+            year = startYear + "" + endYear;
+
+            careerPlayer = "https://statsapi.web.nhl.com/api/v1/people/" + playerIDNum + "/stats?stats=statsSingleSeason&season=" + year;
+
+            $.ajax({
+                url: careerPlayer,
+                method: "GET"
+            }).done(function(newCareerData){
+
+                if(newCareerData.stats[0].splits[0] != null){
+                    careerGoals += newCareerData.stats[0].splits[0].stat.goals;
+                    careerAssists += newCareerData.stats[0].splits[0].stat.assists;
+                }
+                if(startYear == 2021){
+                    document.getElementById("careerrecords").innerHTML = "<br>" + "Career Goals: " + careerGoals + "<br>";     
+                    document.getElementById("careerrecords").innerHTML += "Career Assists: " + careerAssists + "<br>";     
+                    document.getElementById("careerrecords").innerHTML += "Career Points: " + (careerGoals + careerAssists) + "<br>";     
+                }
+            });
         }
     });
-    document.getElementById('resultrecords').innerHTML = " ";
-}
-/**
- * this class controls the tab class and the controls
- * between them
-*/
-function openTabs(evt, tabName){
-
-    var i, tabcontent, tablinks;
-
-    tabcontent = document.getElementsByClassName("tabcontent");
-
-    for(i = 0; i < tabcontent.length; i++){
-        tabcontent[i].style.display = "none";
-    }
-    tablinks = document.getElementsByClassName("tablinks");
-
-    for(i = 0; i < tablinks.length; i++){
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-    document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
-}
-function resetDraft(){
-    document.getElementById('draftrecords').innerHTML = " ";
 }
