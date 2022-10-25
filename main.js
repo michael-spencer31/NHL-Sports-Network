@@ -772,7 +772,7 @@ function getFullStandings(){
 
     var i = 31;
 
-    while(i > 0){
+    while(i >= 0){
 
         let row = document.createElement('tr');
         let team = document.createElement('td');
