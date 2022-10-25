@@ -635,7 +635,7 @@ function getDivisionStandings(division){
 
     var i = 7;
 
-    while(i > 0){
+    while(i >= 0){
 
         let row = document.createElement('tr');
         let team = document.createElement('td');
