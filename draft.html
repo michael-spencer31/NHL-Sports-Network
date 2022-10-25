@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+	<head>
+
+		<title>Draft Data</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="main.css">
+
+	</head>
+	<body id="body">
+	<body>
+	
+		<nav class="navbar navbar-expand-md">
+			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="main-navigation">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" href="index.html">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="draft.html">Draft Data</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="standings.html">Standings</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="players.html">Player Data</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="playoffs.html">Playoffs</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="schedule.html">Schedule</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="roster.html">Roster</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<script src="jquery-3.5.1.min.js"></script>
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<script src="main.js"></script>
+		
+		<div class="background">
+			<div class="container team">
+				<h1>Draft Records</h1>
+
+				
+				<input type="text" id="yearin" placeholder="year">
+				<input type="text" id="roundin" placeholder="round">
+				<input type = "submit" value="Search"  onclick="draft()">
+				<input type= "submit" value="Reset" onclick="reset()"><br>
+				
+				<label id="draftdata"></label>
+				
+					<script>
+
+						function reset(){
+							window.location.reload();
+						}
+
+						function draft(){
+
+							document.getElementById('draftdata').innerHTML = "";
+
+							var round = document.getElementById('roundin').value;
+							var year = document.getElementById('yearin').value;
+
+							if(round > 7 || round < 1 || isNaN(round)){
+								document.getElementById('draftdata').innerHTML = "Invalid round number.";
+								return;
+							}
+							if(year > 2022 || year < 1970 || isNaN(year)){
+								document.getElementById('draftdata').innerHTML = "Invalid year.";
+								return;
+							}
+
+							let table = document.createElement('table');
+							let thead = document.createElement('thead');
+							let tbody = document.createElement('tbody');
+
+							table.appendChild(thead);
+							table.appendChild(tbody);
+
+							// Adding the entire table to the body tag
+							document.getElementById('body').appendChild(table);
+							let row_1 = document.createElement('tr');
+							let heading_1 = document.createElement('th');
+							heading_1.innerHTML = "Pick";
+							let heading_2 = document.createElement('th');
+							heading_2.innerHTML = "Name";
+							let heading_3 = document.createElement('th');
+							heading_3.innerHTML = "Team";
+
+							row_1.appendChild(heading_1);
+							row_1.appendChild(heading_2);
+							row_1.appendChild(heading_3);
+							thead.appendChild(row_1);
+
+							var draftURL = "https://statsapi.web.nhl.com/api/v1/draft/" + year;
+
+							$.ajax({
+								async: false,
+								url: draftURL,
+								method: "GET"
+							}).done(function(draftData){
+
+								var pickHolder = 1;
+								round--;
+
+
+								let i = 0;
+
+								while(i < 32){
+
+									let row = document.createElement('tr');
+
+									let pickNum = document.createElement('td');
+									let player = document.createElement('td');
+									let team = document.createElement('td');
+
+									pickNum.innerHTML = pickHolder;
+									player.innerHTML = draftData.drafts[0].rounds[round].picks[i].prospect.fullName;
+
+									var teamName = draftData.drafts[0].rounds[round].picks[i].team.name;
+									console.log(teamName);
+									team.innerHTML = draftData.drafts[0].rounds[round].picks[i].team.name;
+
+									
+									row.appendChild(pickNum);
+									row.appendChild(player);
+
+									row.innerHTML += ("<img src='Logos/" + teamName + ".png' width=30>" + teamName);
+									
+
+									tbody.appendChild(row);
+									i++;
+									pickHolder++;
+								}
+								});
+							}
+						</script>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</body>
+</html>
