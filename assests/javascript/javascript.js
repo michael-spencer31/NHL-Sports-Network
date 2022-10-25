@@ -644,7 +644,10 @@ function getDivisionStandings(division){
         let loss = document.createElement('td');
         let ot = document.createElement('td');
         let point = document.createElement('td');
+
+       
         team.innerHTML += ("<img src='Logos/" + teams[i].name + ".png' width=30>" + teams[i].name);
+        
 
         //team.innerHTML = teams[i].name;
         gp.innerHTML = teams[i].wins + teams[i].losses + teams[i].ot;
