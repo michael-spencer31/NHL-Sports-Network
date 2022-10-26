@@ -451,8 +451,6 @@ function CalendarControl() {
 */
 function getSchedule(year, month, day){
 
-    getFullStandings();
-
     //reset the page each time the function is called
     document.getElementById('datedisplay').innerHTML = "";
 
