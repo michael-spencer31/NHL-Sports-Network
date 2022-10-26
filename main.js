@@ -12,12 +12,14 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
 // set modal time delay before loading
-
 setTimeout(function() {
   $('#demo-modal').modal();
 }, 500);
 
-
+/**
+ * this function uses the jQuery ajax method to get information
+ * about a teams roster.
+*/
 function getRoster(){
 
     //get the team name from the html document
@@ -93,76 +95,6 @@ function getRoster(){
         }
     });
 }
-//this function is used to get data about a entry draft
-//for a year specified by the user
-function getDraft(){
-
-    document.getElementById('draftdata').innerHTML = "";
-
-    var roundNumber = document.getElementById('roundin').value;
-    var year = document.getElementById('yearin').value;
-    var roundHolder = roundNumber;
-    var pickHolder = 1;
-
-    const tbl = document.createElement("table");
-    const tblBody = document.createElement("tbody");
-    
-    var draftURL = "https://statsapi.web.nhl.com/api/v1/draft/" + year;
-
-    //check if the round number is valid, or not a number
-    if(roundNumber > 7 || roundNumber <= 0 || isNaN(roundNumber)){
-        document.getElementById('draftdata').innerHTML += "Invalid round number";
-    }
-    $.ajax({
-        url: draftURL,
-        method: "GET"
-    }).done(function(draftData){
-
-        //since the api counts rounds 0-6 instead of 1-7, subtract 1
-        roundNumber--;
-
-        var teams;
-
-        //logic to determine how many teams were in the NHL in a given year
-        if(year == 2022 || year == 2021){
-            teams = 32;
-        }else if(year >= 2016 && year <= 2020){
-            teams = 31;
-        }else if(year >= 2000 && year <= 2015){
-            teams = 30;
-        }else if(year == 1999){
-            teams = 27;
-        }else if(year >= 1993 && year <= 1998){
-            teams = 26;
-        }else if(year == 1991 || year == 1992){
-          teams = 22;
-        }else if(year >= 1979 && year <= 1990){
-          teams = 18;
-        }else if(year >= 1974 && year <= 1978){
-          teams = 14;
-        }
-        for(let i = 0; i < teams; i++){
-
-            const row = document.createElement("tr");
-
-            for(let j = 0; j < 1; j++){
-
-                const cell = document.createElement("td");
-
-                var teamName = "Round " + roundHolder + " Pick: " + pickHolder + ":" + draftData.drafts[0].rounds[roundNumber].picks[i].team.name
-                                + " " + draftData.drafts[0].rounds[roundNumber].picks[i].prospect.fullName;
-
-                const cellText = document.createTextNode(teamName);
-                cell.appendChild(cellText);
-                row.appendChild(cell);
-            }
-            pickHolder++;
-            tblBody.appendChild(row);
-        }
-        tbl.appendChild(tblBody);
-        document.body.appendChild(tbl);
-    });
-}
 //this function uses the ajax jquery method to get data about the playoffs
 function getPlayoffs(){
 
@@ -191,36 +123,34 @@ function getPlayoffs(){
 
         document.getElementById('playoffrecords').innerHTML += "<b>Quarter Finals" + "<br><br>";
 
-    for(var i = 0; i < 8; i++){
+        //loop through each round (quarters, semi, confrence final, finals)
+        //and then display the returned content
+        for(var i = 0; i < 8; i++){
 
-      document.getElementById('playoffrecords').innerHTML += playoffData.rounds[0].series[i].names.matchupName;
+            document.getElementById('playoffrecords').innerHTML += playoffData.rounds[0].series[i].names.matchupName;
             document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[0].series[i].currentGame.seriesSummary.seriesStatus + "<br>";
-    }
+        }
         document.getElementById('playoffrecords').innerHTML += "<br><b>Semi Finals" + "<br><br>";
         for(var i = 0; i < 4; i++){
 
             document.getElementById('playoffrecords').innerHTML += playoffData.rounds[1].series[i].names.matchupName;
             document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[1].series[i].currentGame.seriesSummary.seriesStatus + "<br>";
-
         }
         document.getElementById('playoffrecords').innerHTML += "<br><b>Conference Finals" + "<br><br>";
         for(var i = 0; i < 2; i++){
             document.getElementById('playoffrecords').innerHTML += playoffData.rounds[2].series[i].names.matchupName;
             document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[2].series[i].currentGame.seriesSummary.seriesStatus + "<br>";
-
         }
         document.getElementById('playoffrecords').innerHTML += "<br><b>Stanley Cup Finals" + "<br><br>";
         //since the last round only has 2 teams we don't need a loop
         document.getElementById('playoffrecords').innerHTML += playoffData.rounds[3].series[0].names.matchupName;
         document.getElementById('playoffrecords').innerHTML += "=>" + playoffData.rounds[3].series[0].currentGame.seriesSummary.seriesStatus + "<br>";
-
-
   });
 }
 //check the console for date click event
 //Fixed day highlight
 //Added previous month and next month view
-
+//code to create and control a calendar 
 function CalendarControl() {
     const calendar = new Date();
     const calendarControl = {
@@ -440,10 +370,9 @@ function CalendarControl() {
       }
     };
     calendarControl.init();
-  }
-  
-  const calendarControl = new CalendarControl();
-
+}
+//create a new calendar to use later
+const calendarControl = new CalendarControl();
 
 /**
  * this function uses the functions above to get the schedule
@@ -556,29 +485,38 @@ function getSchedule(year, month, day){
         }
     });
 }
+/**
+ * this function uses the ajax jQuery method to obtain data about a draft year
+*/
 function draft(){
 
+    //reset the page on each call to the function
     document.getElementById('draftdata').innerHTML = "";
 
+    //get the round and year in from the html document
     var round = document.getElementById('roundin').value;
     var year = document.getElementById('yearin').value;
 
+    //error checking to make sure the round number is valid
     if(round > 7 || round < 1 || isNaN(round)){
         document.getElementById('draftdata').innerHTML = "Invalid round number.";
         return;
     }
+    //error checking to make sure the year is valid
     if(year > 2022 || year < 1970 || isNaN(year)){
         document.getElementById('draftdata').innerHTML = "Invalid year.";
         return;
     }
+    //create a table, heading and body for later
     let table = document.createElement('table');
     let thead = document.createElement('thead');
     let tbody = document.createElement('tbody');
 
+    //append the head and body to the table
     table.appendChild(thead);
     table.appendChild(tbody);
 
-    // Adding the entire table to the body tag
+    //create the headings for the table and then add to table
     document.getElementById('body').appendChild(table);
     let row_1 = document.createElement('tr');
     let heading_1 = document.createElement('th');
@@ -587,14 +525,15 @@ function draft(){
     heading_2.innerHTML = "Name";
     let heading_3 = document.createElement('th');
     heading_3.innerHTML = "Team";
-
     row_1.appendChild(heading_1);
     row_1.appendChild(heading_2);
     row_1.appendChild(heading_3);
     thead.appendChild(row_1);
 
+    //this is the URL to the API on
     var draftURL = "https://statsapi.web.nhl.com/api/v1/draft/" + year;
 
+    //start the ajax call, set async to false so data can be obtained in the function
     $.ajax({
         async: false,
         url: draftURL,
@@ -602,48 +541,68 @@ function draft(){
     }).done(function(draftData){
 
         var pickHolder = 1;
+        //the api uses 0-6 for round numbers instead of 1-7 so subtract one
         round--;
 
+        //counter variable
         let i = 0;
 
+        //since the are currently 32 teams 
+        //start the main loop
         while(i < 32){
 
-        let row = document.createElement('tr');
+            //create a row
+            let row = document.createElement('tr');
 
-        let pickNum = document.createElement('td');
-        let player = document.createElement('td');
-        let team = document.createElement('td');
+            //create a holder for the pick, player name and team
+            let pickNum = document.createElement('td');
+            let player = document.createElement('td');
+            let team = document.createElement('td');
 
-        pickNum.innerHTML = pickHolder;
-        player.innerHTML = draftData.drafts[0].rounds[round].picks[i].prospect.fullName;
+            //set the data of each uses the data from the api
+            pickNum.innerHTML = pickHolder;
+            player.innerHTML = draftData.drafts[0].rounds[round].picks[i].prospect.fullName;
 
-        var teamName = draftData.drafts[0].rounds[round].picks[i].team.name;
-        team.innerHTML = draftData.drafts[0].rounds[round].picks[i].team.name;
+            var teamName = draftData.drafts[0].rounds[round].picks[i].team.name;
+            team.innerHTML = draftData.drafts[0].rounds[round].picks[i].team.name;
 
-        row.appendChild(pickNum);
-        row.appendChild(player);
+            //now append it to the table
+            row.appendChild(pickNum);
+            row.appendChild(player);
 
-        row.innerHTML += ("<img src='Logos/" + teamName + ".png' width=30>" + teamName);
-        tbody.appendChild(row);
-        i++;
-        pickHolder++;
+            //add the team logo
+            row.innerHTML += ("<img src='Logos/" + teamName + ".png' width=30>" + teamName);
+            tbody.appendChild(row);
+           
+            //increment counter and the pick number 
+            i++;
+            pickHolder++;
         }
     });
 }
+/**
+ * this function reloads the page when called.
+*/
 function reloadPage(){
 
     window.location.reload();
 }
 //define an object to represent a team with their points, wins, losses and ot
-function team(name, points, wins, losses, ot){
+function team(name, points, wins, losses, ot, gp){
     this.name = name;
     this.points = points;
     this.wins = wins;
     this.losses = losses;
     this.ot = ot;
+    this.gp = gp;
 }
+/**
+ * this function is used to get standings about a division
+ * parameters: division(int)
+*/
 function getDivisionStandings(division){
 
+    //set up variables for later use
     const teams = [];
     var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
     var points = 0;
@@ -651,7 +610,9 @@ function getDivisionStandings(division){
     var wins = 0;
     var loss = 0;
     var otl = 0;
+    var gp = 0;
 
+    //make sure async is set to false so the data can be used outside this function
     $.ajax({
         url: standingsURL,
         async: false,
@@ -666,10 +627,9 @@ function getDivisionStandings(division){
             wins = standingsData.records[division].teamRecords[i].leagueRecord.wins;
             loss = standingsData.records[division].teamRecords[i].leagueRecord.losses;
             otl = standingsData.records[division].teamRecords[i].leagueRecord.ot;
-
-            teams[i] = new team(teamName, points, wins, loss, otl);
+            gp = wins + loss + otl;
+            teams[i] = new team(teamName, points, wins, loss, otl, gp);
             points = 0;
-
         }
     });
     //call the function to sort the teams based on points
@@ -721,7 +681,7 @@ function getDivisionStandings(division){
        
         team.innerHTML += ("<img src='Logos/" + teams[i].name + ".png' width=30>" + teams[i].name);
         
-        gp.innerHTML = teams[i].wins + teams[i].losses + teams[i].ot;
+        gp.innerHTML = teams[i].gp;
         wins.innerHTML = teams[i].wins;
         loss.innerHTML = teams[i].losses;
         ot.innerHTML = teams[i].ot;
@@ -738,6 +698,7 @@ function getDivisionStandings(division){
         i--;
     }
 }
+//this function displays the standings for every team in the league
 function getFullStandings(){
 
     const teams = [];
@@ -749,6 +710,7 @@ function getFullStandings(){
     var wins = 0;
     var loss = 0;
     var otl = 0;
+    var gp = 0;
     var counterThree = 0;
 
     $.ajax({
@@ -765,8 +727,8 @@ function getFullStandings(){
             wins = standingsData.records[0].teamRecords[i].leagueRecord.wins;
             loss = standingsData.records[0].teamRecords[i].leagueRecord.losses;
             otl = standingsData.records[0].teamRecords[i].leagueRecord.ot;
-
-            teams[i] = new team(teamName, points, wins, loss, otl);
+            gp = wins + loss + otl;
+            teams[i] = new team(teamName, points, wins, loss, otl, gp);
             points = 0;
         }
         for(var i = 8; i < 16; i++){
@@ -776,8 +738,8 @@ function getFullStandings(){
             wins = standingsData.records[1].teamRecords[counter].leagueRecord.wins;
             loss = standingsData.records[1].teamRecords[counter].leagueRecord.losses;
             otl = standingsData.records[1].teamRecords[counter].leagueRecord.ot;
-
-            teams[i] = new team(teamName, points, wins, loss, otl);
+            gp = wins + loss + otl;
+            teams[i] = new team(teamName, points, wins, loss, otl, gp);
             points = 0;
             counter++;
         }
@@ -788,8 +750,8 @@ function getFullStandings(){
             wins = standingsData.records[2].teamRecords[counterTwo].leagueRecord.wins;
             loss = standingsData.records[2].teamRecords[counterTwo].leagueRecord.losses;
             otl = standingsData.records[2].teamRecords[counterTwo].leagueRecord.ot;
-
-            teams[i] = new team(teamName, points, wins, loss, otl);
+            gp = wins + loss + otl;
+            teams[i] = new team(teamName, points, wins, loss, otl, gp);
             points = 0;
             counterTwo++;
         }
@@ -801,8 +763,8 @@ function getFullStandings(){
             wins = standingsData.records[3].teamRecords[counterThree].leagueRecord.wins;
             loss = standingsData.records[3].teamRecords[counterThree].leagueRecord.losses;
             otl = standingsData.records[3].teamRecords[counterThree].leagueRecord.ot;
-
-            teams[i] = new team(teamName, points, wins, loss, otl);
+            gp = wins + loss + otl;
+            teams[i] = new team(teamName, points, wins, loss, otl, gp);
             points = 0;
             counterThree++;
         }
@@ -856,7 +818,7 @@ function getFullStandings(){
         team.innerHTML += ("<img src='Logos/" + teams[i].name + ".png' width=30>" + teams[i].name);
 
         //team.innerHTML = teams[i].name;
-        gp.innerHTML = teams[i].wins + teams[i].losses + teams[i].ot;
+        gp.innerHTML = teams[i].gp;
         wins.innerHTML = teams[i].wins;
         loss.innerHTML = teams[i].losses;
         ot.innerHTML = teams[i].ot;
@@ -882,14 +844,22 @@ function sortByKey(array){
         var x = a.points;
         var y = b.points;
 
+        if(x == y){
+            return x.gp - y.gp;
+        }
+
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
 }
+//get information about a specific player
 function getPlayer(){
 
-  var input = document.getElementById('playerin').value;
+    //get the player name in from the html doc
+    var input = document.getElementById('playerin').value;
 
-  const PlayerMap = new Map([
+    //create a (very) long map to map player names to player id
+    const PlayerMap = new Map([
+
 
     [ "Jonathan Bernier", 8473541 ],
         [ "Brendan Smith", 8474090 ],
