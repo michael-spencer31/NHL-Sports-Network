@@ -53,7 +53,45 @@
 		<div class="background">
 			<div class="container team">
 				<h1>NHL Rosters</h1>
-				<input type="text" id="rosterin" placeholder="Enter team">
+				<label>Enter a team to see their roster. Start typing a few characters to autofill the box.</label>
+				<input type="text" id="rosterin" list="teamList" placeholder="Enter team">
+
+				<datalist id="teamList">
+					<option value="Carolina Hurricanes"/>
+					<option value="Colombus Blue Jackets"/>
+					<option value="New Jersey Devils"/>
+					<option value="New York Islanders"/>
+					<option value="New York Rangers"/>
+					<option value="Philadelphia Flyers"/>
+					<option value="Pittsburgh Penguins"/>
+					<option value="Washington Capitals"/>
+					<option value="Boston Bruins"/>
+					<option value="Buffalo Sabres"/>
+					<option value="Detriot Red Wings"/>
+					<option value="Florida Panthers"/>
+					<option value="Montreal Canadiens"/>
+					<option value="Ottawa Senators"/>
+					<option value="Tampa Bay Lightning"/>
+					<option value="Toronto Maple Leafs"/>
+					<option value="Arizona Coyotes"/>
+					<option value="Chicago Blackhawks"/>
+					<option value="Colorado Avalanche"/>
+					<option value="Dallas Stars"/>
+					<option value="Minnesota Wild"/>
+					<option value="Nashville Predators"/>
+					<option value="St Louis Blues"/>
+					<option value="Winnipeg Jets"/>
+					<option value="Anaheim Ducks"/>
+					<option value="Calgary Flames"/>
+					<option value="Edmonton Oilers"/>
+					<option value="Los Angeles Kings"/>
+					<option value="Seattle Kraken"/>
+					<option value="San Jose Sharks"/>
+					<option value="Vancouver Canucks"/>
+					<option value="Vegas Golden Knights"/>
+				</datalist>
+
+
 				<input type ="submit" value="Get Roster" id="getroster"onclick="getRoster()"><br>
 				<label id="rosterdata"></label>	
 			</div>

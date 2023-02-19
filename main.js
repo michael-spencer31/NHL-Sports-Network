@@ -15,6 +15,40 @@ setTimeout(function () {
     $("#demo-modal").modal();
 }, 500);
 
+resultsHTML.onclick = function(event) {
+
+    const setValue = event.target.innerText;
+    autocomplete.value = setValue;
+    this.innerHTML = "";
+}
+
+function getResults(input){
+
+    const results = [];
+    for(i = 0; i < data.length; i++){
+
+        if(input == data[i].slice(0, input.length)){
+            results.push(data[i]);
+        }
+    }
+    return results;
+}
+
+autocomplete.oninput = function () {
+    let results = [];
+    const userInput = this.value;
+    resultsHTML.innerHTML = "";
+
+    if(userInput.length > 0){
+        results = getResults(userInput);
+        resultsHTML.style.display = "block";
+
+        for(i = 0; i < results.length; i++){
+            resultsHTML.innerHTML += "<li>" + results[i] + "</li>";
+        }
+    }
+};
+
 /**
  * this function uses the jQuery ajax method to get information
  * about a teams roster.
@@ -75,6 +109,12 @@ function getRoster() {
         ["Vegas Golden Knights", 54],
         ["Seattle Kraken", 55],
     ]);
+
+    const teams = ["Montreal Canadiens", "Toronto Maple Leafs", "Boston Bruins", "Seattle Kraken"];
+
+    const autocomplete = document.getElementById("autocomplete");
+    const resultsHTML = document.getElementById("results");
+
     //get the teams id from the map
     var teamID = TeamID.get(team);
 
