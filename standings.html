@@ -55,15 +55,24 @@
 				<h1>NHL Standings</h1>
 
 				<h3>Overall Standings</h3>
+
+				<!---
 				<input type = "submit" value="Overall" onclick="getFullStandings()">
 				<input type="submit" value="Atlantic" onclick="getDivisionStandings(1)">
 				<input type="submit" value="Metro" onclick="getDivisionStandings(0)">
 				<input type="submit" value="Central" onclick="getDivisionStandings(2)">
 				<input type="submit" value="Pacific" onclick="getDivisionStandings(3)"><br><br>
 				<input type="submit" value="Reset" onclick="reloadPage()"><br>
+				--->
+				<script>
+					window.onload = function() {
+						getFullStandings();
+					}
+				</script>
 			</div>
 		</div>
 
+		
 		<script src="jquery-3.5.1.min.js"></script>
 		<script src="bootstrap/js/bootstrap.min.js"></script>
 		<script src="main.js"></script>
