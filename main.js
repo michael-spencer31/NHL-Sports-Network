@@ -25,7 +25,6 @@ function getRoster() {
     document.getElementById("rosterdata").innerHTML = "";
 
     //get the team name in from the html fourm
-    var team = document.getElementById("rosterin").value;
 
     //split the team name on each space
     var splitTeam = team.toLowerCase().split(" ");
@@ -510,24 +509,56 @@ function getSchedule(year, month, day) {
                 winningGoals = scheduleData.dates[0].games[i].teams.home.score;
             }
             //display the obtained data on the html page
+            
+            // this block bolds the score of the team that won the game
+            if(scheduleData.dates[0].games[i].teams.away.score > scheduleData.dates[0].games[i].teams.home.score) {
+                datedisplay.innerHTML += `<b> ${scheduleData.dates[0].games[i].teams.away.score} </b>`;
+            } else {
+                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.score;
+            }
+
+            datedisplay.innerHTML += 
+            "<img src='Logos/" + scheduleData.dates[0].games[i].teams.away.team.name + ".png' width=30>";
+
+            let awayot = 0;
+            let homeot = 0;
+
+            // fixes games (mostly playoff) that should overtime records as 'undefined'
+            if(scheduleData.dates[0].games[i].teams.away.leagueRecord.ot != undefined) {
+                awayot = scheduleData.dates[0].games[i].teams.away.leagueRecord.ot;
+
+            } else if(scheduleData.dates[0].games[i].teams.home.leagueRecord.ot != undefined) {
+                homeot = scheduleData.dates[0].games[i].teams.home.leagueRecord.ot
+            }
+    
             document.getElementById("datedisplay").innerHTML +=
                 scheduleData.dates[0].games[i].teams.away.team.name +
                 "(" +
                 scheduleData.dates[0].games[i].teams.away.leagueRecord.wins +
                 "," +
                 scheduleData.dates[0].games[i].teams.away.leagueRecord.losses +
-                "," +
-                scheduleData.dates[0].games[i].teams.away.leagueRecord.ot +
+                "," + awayot +
                 ")" +
-                " at " +
+                "<br>";
+            
+            // this block bolds the score of the team that won the game
+            if(scheduleData.dates[0].games[i].teams.away.score < scheduleData.dates[0].games[i].teams.home.score) {
+                datedisplay.innerHTML += `<b> ${scheduleData.dates[0].games[i].teams.home.score} </b>`;
+            } else {
+                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.home.score;
+            }
+
+            document.getElementById("datedisplay").innerHTML += "<img src='Logos/" + 
+                scheduleData.dates[0].games[i].teams.home.team.name + ".png' width=30>" +
+                "" +
                 scheduleData.dates[0].games[i].teams.home.team.name +
                 "(" +
                 scheduleData.dates[0].games[i].teams.home.leagueRecord.wins +
                 "," +
                 scheduleData.dates[0].games[i].teams.home.leagueRecord.losses +
-                "," +
-                scheduleData.dates[0].games[i].teams.home.leagueRecord.ot +
-                "): ";
+                "," + homeot +
+                ")" + ""  + "<br>";
+
 
             var gameTime = "";
             document.getElementById("datedisplay").innerHTML +=
@@ -539,7 +570,7 @@ function getSchedule(year, month, day) {
                 " " +
                 "(" +
                 gameStatus +
-                ")";
+                ") <br>";
 
             //if the game hasn't started yet it will be in a preview state
             if (gameStatus == "Preview") {
