@@ -25,7 +25,7 @@ function getRoster() {
     document.getElementById("rosterdata").innerHTML = "";
 
     //get the team name in from the html fourm
-
+    var team = document.getElementById('rosterin').value;
     //split the team name on each space
     var splitTeam = team.toLowerCase().split(" ");
 
