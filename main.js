@@ -2252,86 +2252,74 @@ function getPlayer() {
         url: playerURL,
         method: "GET",
     }).done(function (playerData) {
-        document.getElementById("playerrecords").innerHTML =
-            playerData.people[0].fullName +
-            " #" +
-            playerData.people[0].primaryNumber +
-            "<br>";
-        document.getElementById("playerrecords").innerHTML +=
-            "Age: " + playerData.people[0].currentAge + "<br>";
 
-        document.getElementById("playerrecords").innerHTML +=
-            "Nationality: " + playerData.people[0].birthCountry + "<br>";
+        const countries_names = new Map([
+            ["CAN", "Canada"],
+            ["FIN", "Finland"],
+            ["SWE", "Sweden"],
+            ["USA", "United States of America"],
+            ["CZE", "Czechia"]
+        ]);
+        document.getElementById("personalinfo").innerHTML = playerData.people[0].fullName + " #" + playerData.people[0].primaryNumber  + "<br>";
+        document.getElementById("personalinfo").innerHTML += "Age: " + playerData.people[0].currentAge + "<br>";
 
         var nationality = playerData.people[0].birthCountry;
 
-        var countries = ["CAN", "FIN", "SWE", "FIN", "CZE"];
+        var countries = ["CAN", "SWE", "FIN", "USA", "CZE"];
 
         if (countries.includes(nationality)) {
-            playerrecords.innerHTML += 
+
+            document.getElementById("personalinfo").innerHTML +=
+            "Birthplace: " + playerData.people[0].birthCity
+             + ", " +  countries_names.get(nationality) + " ";
+            
+             personalinfo.innerHTML += 
             "<img src='Flags/" + nationality + ".png' width=30> <br>"; 
         } else {
+
+            document.getElementById("personalinfo").innerHTML +=
+            "Birthplace: " + playerData.people[0].birthCity
+             +  " ";
             // if the player is from a country we don't have a flag for put a generic "Earth" flag
-            playerrecords.innerHTML += 
+            playerinfo.innerHTML += 
             "<img src='Flags/EARTH.png' width=30> <br>"; 
         }
-        document.getElementById("playerrecords").innerHTML +=
-            "Hometown: " + playerData.people[0].birthCity + "<br>";
-        document.getElementById("playerrecords").innerHTML +=
+        document.getElementById("personalinfo").innerHTML +=
             "Height: " + playerData.people[0].height + "<br>";
-        document.getElementById("playerrecords").innerHTML +=
+        document.getElementById("personalinfo").innerHTML +=
             "Weight: " + playerData.people[0].weight + "lbs" + "<br>";
-        document.getElementById("playerrecords").innerHTML +=
+        document.getElementById("personalinfo").innerHTML +=
             "Team: " + playerData.people[0].currentTeam.name;
 
-        playerrecords.innerHTML += "<img src='Logos/" + playerData.people[0].currentTeam.name + ".png' width=30> <br>";
+        personalinfo.innerHTML += "<img src='Logos/" + playerData.people[0].currentTeam.name + ".png' width=30> <br>";
 
-        if (playerData.people[0].stats[0].splits[0].stat.goals == undefined) {
-            document.getElementById("playerrecords").innerHTML +=
-                "Goals: " + 0 + "<br>";
-        } else {
-            document.getElementById("playerrecords").innerHTML +=
+        document.getElementById("playerrecords").innerHTML =
                 "Goals: " + playerData.people[0].stats[0].splits[0].stat.goals + "<br>";
-        }
-        if (playerData.people[0].stats[0].splits[0].stat.assists == undefined) {
-            document.getElementById("playerrecords").innerHTML +=
-                "Assists: " + 0 + "<br>";
-        } else {
-            document.getElementById("playerrecords").innerHTML +=
+        
+       document.getElementById("playerrecords").innerHTML +=
                 "Assists: " +
                 playerData.people[0].stats[0].splits[0].stat.assists +
                 "<br>";
-        }
-        if (playerData.people[0].stats[0].splits[0].stat.pim == undefined) {
-            document.getElementById("playerrecords").innerHTML +=
-                "Penalty Minutes: " + 0 + "<br>";
-        } else {
-            document.getElementById("playerrecords").innerHTML +=
+       
+        document.getElementById("playerrecords").innerHTML +=
                 "Penalty Minutes: " +
                 playerData.people[0].stats[0].splits[0].stat.pim +
                 "<br>";
-        }
+        
         document.getElementById("playerrecords").innerHTML +=
             "Games Played: " +
             playerData.people[0].stats[0].splits[0].stat.games +
             "<br>";
 
-        if (playerData.people[0].stats[0].splits[0].stat.plusMinus == undefined) {
-            document.getElementById("playerrecords").innerHTML +=
-                "Plus/Minus: Player is a goalie" + "<br>";
-        } else {
-            document.getElementById("playerrecords").innerHTML +=
+        
+        document.getElementById("playerrecords").innerHTML +=
                 "Plus/Minus: " +
                 playerData.people[0].stats[0].splits[0].stat.plusMinus +
                 "<br>";
-        }
-        if (playerData.people[0].stats[0].splits[0].stat.hits == undefined) {
-            document.getElementById("playerrecords").innerHTML +=
-                "Hits: Player is a goalie" + "<br>";
-        } else {
-            document.getElementById("playerrecords").innerHTML +=
+        
+        document.getElementById("playerrecords").innerHTML +=
                 "Hits: " + playerData.people[0].stats[0].splits[0].stat.hits + "<br>";
-        }
+        
     });
     var careerPlayer =
         "https://statsapi.web.nhl.com/api/v1/people/" +
