@@ -25,7 +25,7 @@ function getRoster() {
     document.getElementById("rosterdata").innerHTML = "";
 
     //get the team name in from the html fourm
-    var team = document.getElementById('rosterin').value;
+    var team = document.getElementById("rosterin").value;
     //split the team name on each space
     var splitTeam = team.toLowerCase().split(" ");
 
@@ -2259,8 +2259,22 @@ function getPlayer() {
             "<br>";
         document.getElementById("playerrecords").innerHTML +=
             "Age: " + playerData.people[0].currentAge + "<br>";
+
         document.getElementById("playerrecords").innerHTML +=
             "Nationality: " + playerData.people[0].birthCountry + "<br>";
+
+        var nationality = playerData.people[0].birthCountry;
+
+        var countries = ["CAN", "FIN", "SWE", "FIN", "CZE"];
+
+        if (countries.includes(nationality)) {
+            playerrecords.innerHTML += 
+            "<img src='Flags/" + nationality + ".png' width=30> <br>"; 
+        } else {
+            // if the player is from a country we don't have a flag for put a generic "Earth" flag
+            playerrecords.innerHTML += 
+            "<img src='Flags/EARTH.png' width=30> <br>"; 
+        }
         document.getElementById("playerrecords").innerHTML +=
             "Hometown: " + playerData.people[0].birthCity + "<br>";
         document.getElementById("playerrecords").innerHTML +=
@@ -2268,7 +2282,9 @@ function getPlayer() {
         document.getElementById("playerrecords").innerHTML +=
             "Weight: " + playerData.people[0].weight + "lbs" + "<br>";
         document.getElementById("playerrecords").innerHTML +=
-            "Team: " + playerData.people[0].currentTeam.name + "<br>";
+            "Team: " + playerData.people[0].currentTeam.name;
+
+        playerrecords.innerHTML += "<img src='Logos/" + playerData.people[0].currentTeam.name + ".png' width=30> <br>";
 
         if (playerData.people[0].stats[0].splits[0].stat.goals == undefined) {
             document.getElementById("playerrecords").innerHTML +=
@@ -2330,7 +2346,7 @@ function getPlayer() {
 
     var year = startYear + "" + endYear;
 
-    var counter = 0;
+    var currentYear = new Date().getFullYear() - 1;
 
     $.ajax({
         url: careerPlayer,
@@ -2340,7 +2356,7 @@ function getPlayer() {
             careerGoals = careerData.stats[0].splits[0].stat.goals;
             careerAssists = careerData.stats[0].splits[0].stat.assists;
         }
-        while (startYear != 2021) {
+        while (startYear != currentYear) {
             startYear++;
             endYear++;
 
@@ -2360,7 +2376,7 @@ function getPlayer() {
                     careerGoals += newCareerData.stats[0].splits[0].stat.goals;
                     careerAssists += newCareerData.stats[0].splits[0].stat.assists;
                 }
-                if (startYear == 2021) {
+                if (startYear == currentYear) {
                     document.getElementById("careerrecords").innerHTML =
                         "<br>" + "Career Goals: " + careerGoals + "<br>";
                     document.getElementById("careerrecords").innerHTML +=
