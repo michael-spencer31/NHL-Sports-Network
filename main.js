@@ -2281,7 +2281,7 @@ function getPlayer() {
             "Birthplace: " + playerData.people[0].birthCity
              +  " ";
             // if the player is from a country we don't have a flag for put a generic "Earth" flag
-            playerinfo.innerHTML += 
+            personalinfo.innerHTML += 
             "<img src='Flags/EARTH.png' width=30> <br>"; 
         }
         document.getElementById("personalinfo").innerHTML +=
