@@ -972,6 +972,9 @@ function getPlayer() {
     //get the player name in from the html doc
     var input = document.getElementById("playerin").value;
 
+    // use regex to capatilize the first letter of the name and ensure all other letters are lower case
+    var input_string = input.replace(/(^\w|\s\w)(\S*)/g, (_,m1,m2) => m1.toUpperCase()+m2.toLowerCase())
+
     //create a (very) long map to map player names to player id
     const PlayerMap = new Map([
         ["Jonathan Bernier", 8473541],
@@ -2235,7 +2238,7 @@ function getPlayer() {
         ["Simon Edvinsson", 8482762],
         ["Pontus Andreasson", 8483608],
     ]);
-    var playerIDNum = PlayerMap.get(input);
+    var playerIDNum = PlayerMap.get(input_string);
 
     //check if the player ID does not exist
     if (playerIDNum == undefined) {
