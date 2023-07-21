@@ -1,8 +1,16 @@
+// const playerdata = require('./index.js')
 // resize header to size of browser window
+
 var ready = (callback) => {
     if (document.readyState != "loading") callback();
     else document.addEventListener("DOMContentLoaded", callback);
 };
+
+
+// set modal time delay before loading
+setTimeout(function () {
+    $("#demo-modal").modal();
+}, 500);
 
 document.addEventListener("DOMContentLoaded", function () {
     ready(() => {
@@ -10,16 +18,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// set modal time delay before loading
-setTimeout(function () {
-    $("#demo-modal").modal();
-}, 500);
-
-
 /**
  * this function uses the jQuery ajax method to get information
  * about a teams roster.
  */
+
 function getRoster() {
     //get the team name from the html document
     document.getElementById("rosterdata").innerHTML = "";
@@ -105,6 +108,8 @@ function getRoster() {
         }
     });
 }
+
+
 //this function uses the ajax jquery method to get data about the playoffs
 function getPlayoffs() {
     //each time the button is pressed, reset the html element to be empty
@@ -967,6 +972,21 @@ function sortByKey(array) {
         return x < y ? -1 : x > y ? 1 : 0;
     });
 }
+function getPlayerID () {
+
+    var player_name = document.getElementById("playerin").value;
+    var base_url = "https://suggest.svc.nhl.com/svc/suggest/v1/minplayers/";
+    var num_to_return = '1';
+
+    var full_url = base_url + 'connor' + '%20' + 'mcdavid' + '/' + num_to_return;
+
+    $.ajax({
+        url: full_url,
+        method: "GET",
+    }).done(function (playerin) {
+        console.log(playerin);
+    });
+}
 //get information about a specific player
 function getPlayer() {
     //get the player name in from the html doc
@@ -977,6 +997,7 @@ function getPlayer() {
 
     //create a (very) long map to map player names to player id
     const PlayerMap = new Map([
+        ["Wayne Gretzky", 8447400],
         ["Jonathan Bernier", 8473541],
         ["Brendan Smith", 8474090],
         ["Tomas Tatar", 8475193],
@@ -2291,11 +2312,22 @@ function getPlayer() {
             "Height: " + playerData.people[0].height + "<br>";
         document.getElementById("personalinfo").innerHTML +=
             "Weight: " + playerData.people[0].weight + "lbs" + "<br>";
-        document.getElementById("personalinfo").innerHTML +=
-            "Team: " + playerData.people[0].currentTeam.name;
 
-        personalinfo.innerHTML += "<img src='Logos/" + playerData.people[0].currentTeam.name + ".png' width=30> <br>";
+        // check if the player is still active in the nhl
+        if (playerData.people[0].rosterStatus === 'Y' || playerData.people[0].rosterStatus === 'I') {
+            document.getElementById("personalinfo").innerHTML += "Team: " + playerData.people[0].currentTeam.name;
+            personalinfo.innerHTML += "<img src='Logos/" + playerData.people[0].currentTeam.name + ".png' width=30><br>";
+        } else {
+            document.getElementById("personalinfo").innerHTML += "Team: Retired<br>";
+        }
 
+        if (playerData.people[0].shootsCatches === 'L') {
+            document.getElementById("personalinfo").innerHTML += "Shoots: Left" + "<br>";
+        } else {
+            document.getElementById("personalinfo").innerHTML += "Shoots: Right" + "<br>";
+        }
+        document.getElementById("personalinfo").innerHTML += "Position: " + playerData.people[0].primaryPosition.name + "<br>";
+       
         document.getElementById("playerrecords").innerHTML =
                 "Goals: " + playerData.people[0].stats[0].splits[0].stat.goals + "<br>";
         
@@ -2324,13 +2356,14 @@ function getPlayer() {
                 "Hits: " + playerData.people[0].stats[0].splits[0].stat.hits + "<br>";
         
     });
+
     var careerPlayer =
         "https://statsapi.web.nhl.com/api/v1/people/" +
         playerIDNum +
         "/stats?stats=statsSingleSeason&season=20052006";
 
-    var startYear = 2005;
-    var endYear = 2006;
+    var startYear = 1900;
+    var endYear = 1901;
 
     var careerGoals = 0;
     var careerAssists = 0;
@@ -2367,6 +2400,7 @@ function getPlayer() {
                     careerGoals += newCareerData.stats[0].splits[0].stat.goals;
                     careerAssists += newCareerData.stats[0].splits[0].stat.assists;
                 }
+               
                 if (startYear == currentYear) {
                     document.getElementById("careerrecords").innerHTML =
                         "<br>" + "Career Goals: " + careerGoals + "<br>";
