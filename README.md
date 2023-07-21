@@ -4,7 +4,7 @@ A website that uses the jQuery AJAX method to access the public NHL API. Written
 
 Hosted on Microsoft Azure at https://brave-flower-001b1dd10.1.azurestaticapps.net/
 
-![Alt text](/splashscreen.PNG?raw=true "Optional Title")
+![Sample screenshot showing Nick Suzuki's stats.](/splashscreen.PNG?raw=true)
 
 
 
