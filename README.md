@@ -1,6 +1,8 @@
 # NHL Stats Website
 
-A website that uses the jQuery AJAX method to access the public NHL API. Written in JavaScript and HTML/CSS. Allows the user to see various stats and information about NHL players and teams.
+A TSN like website for NHL scores, schedules, player information and more.
+
+Built mostly in JavaScript using the jQuery AJAX method to call the NHL API. 
 
 Hosted on Microsoft Azure at https://brave-flower-001b1dd10.1.azurestaticapps.net/
 
