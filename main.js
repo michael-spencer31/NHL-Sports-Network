@@ -991,9 +991,15 @@ function getPlayerID () {
 function getPlayer() {
     //get the player name in from the html doc
     var input = document.getElementById("playerin").value;
+    var capitals = input.length - input.replace(/[A-Z]/g, '').length;
+    var input_string;
 
+    if (capitals <= 2) {
+        input_string = input.replace(/(^\w|\s\w)(\S*)/g, (_,m1,m2) => m1.toUpperCase()+m2.toLowerCase());
+    } else {
+        input_string = input;
+    }
     // use regex to capatilize the first letter of the name and ensure all other letters are lower case
-    var input_string = input.replace(/(^\w|\s\w)(\S*)/g, (_,m1,m2) => m1.toUpperCase()+m2.toLowerCase())
 
     //create a (very) long map to map player names to player id
     const PlayerMap = new Map([
@@ -1594,6 +1600,7 @@ function getPlayer() {
         ["Leon Draisaitl", 8477934],
         ["Warren Foegele", 8477998],
         ["Connor McDavid", 8478402],
+        ["connor mcdavid", 8478402],
         ["Derek Ryan", 8478585],
         ["Markus Niemelainen", 8479338],
         ["Jesse Puljujarvi", 8479344],
