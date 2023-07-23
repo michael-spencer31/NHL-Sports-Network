@@ -2289,14 +2289,15 @@ function getPlayer() {
             ["FIN", "Finland"],
             ["SWE", "Sweden"],
             ["USA", "United States of America"],
-            ["CZE", "Czechia"]
+            ["CZE", "Czechia"],
+            ["DEU", "Germany"]
         ]);
         document.getElementById("personalinfo").innerHTML = playerData.people[0].fullName + " #" + playerData.people[0].primaryNumber  + "<br>";
         document.getElementById("personalinfo").innerHTML += "Age: " + playerData.people[0].currentAge + "<br>";
 
         var nationality = playerData.people[0].birthCountry;
 
-        var countries = ["CAN", "SWE", "FIN", "USA", "CZE"];
+        var countries = ["CAN", "SWE", "FIN", "USA", "CZE", "DEU"];
 
         if (countries.includes(nationality)) {
 
