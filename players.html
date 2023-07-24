@@ -9,7 +9,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="main.css">
-
+		<link rel="icon" href="https://icons.iconarchive.com/icons/martz90/circle/512/nhl-icon.png">
 	</head>
 	
 	<body>
@@ -53,9 +53,9 @@
 			<div class="container team">
 				<h1>Player Data</h1>
 				<p>Enter a player name below.</p>
-				<p>Currently only works for active players.</p>
 				<input type="text" id="playerin" placeholder="Player Name">
 				<input type = "submit" value="Search" onclick="getPlayer()"><br>
+				<label id="playernotfound"></label>
 				<h4><b>Player Information</b></h4>
 				<label id="personalinfo"></label><br>
 				<h4><b>Season Stats</b></h4>
@@ -69,5 +69,4 @@
 		<script src="bootstrap/js/bootstrap.min.js"></script>
 		<script src="main.js"></script>
 	</body>
-	
 </html>
