@@ -461,7 +461,7 @@ function getSchedule(year, month, day) {
             //display the obtained data on the html page
             
             // this block bolds the score of the team that won the game
-            if(scheduleData.dates[0].games[i].teams.away.score > scheduleData.dates[0].games[i].teams.home.score) {
+            if (scheduleData.dates[0].games[i].teams.away.score > scheduleData.dates[0].games[i].teams.home.score) {
                 datedisplay.innerHTML += `<b> ${scheduleData.dates[0].games[i].teams.away.score} </b>`;
             } else {
                 datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.score;
@@ -483,7 +483,7 @@ function getSchedule(year, month, day) {
             document.getElementById("datedisplay").innerHTML +=scheduleData.dates[0].games[i].teams.away.team.name + "(" + scheduleData.dates[0].games[i].teams.away.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.losses + "," + awayot + ")" + "<br>";
             
             // this block bolds the score of the team that won the game
-            if(scheduleData.dates[0].games[i].teams.away.score < scheduleData.dates[0].games[i].teams.home.score) {
+            if (scheduleData.dates[0].games[i].teams.away.score < scheduleData.dates[0].games[i].teams.home.score) {
                 datedisplay.innerHTML += `<b> ${scheduleData.dates[0].games[i].teams.home.score} </b>`;
             } else {
                 datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.home.score;
@@ -872,15 +872,78 @@ function sortByKey(array) {
         return x < y ? -1 : x > y ? 1 : 0;
     });
 }
-function getPlayerID () {
+function getOverallStandings () {
 
-    var playerURL = "https://records.nhl.com/site/api/milestone-1000-point-career/"
+    var overall = "https://statsapi.web.nhl.com/api/v1/standings/byLeague/";
 
     $.ajax({
-        url: playerURL,
+        url: overall,
         method: "GET",
-    }).done(function (playerin) {
-        console.log(playerin);
+    }).done(function (standings) {
+
+        for (var i = 0; i < 31; i++) {
+            document.getElementById("overallstandings").innerHTML += "<img src='Logos/" + standings.records[0].teamRecords[i].team.name + ".png' width=30>"
+            document.getElementById("overallstandings").innerHTML += standings.records[0].teamRecords[i].team.name + "<br>";
+        }
+    });
+}
+function getWildCardStandings () {
+
+    var wildcard = "https://statsapi.web.nhl.com/api/v1/standings/wildCardWithLeaders/";
+
+    $.ajax({
+        url: wildcard,
+        method: "GET",
+    }).done(function (standings) {
+        console.log(standings);
+        
+        for (var i = 0; i < 3; i++) {
+            document.getElementById("metroseeds").innerHTML += "<img src='Logos/" + standings.records[2].teamRecords[i].team.name + ".png' width=30>"
+            document.getElementById("metroseeds").innerHTML += standings.records[2].teamRecords[i].team.name + " ";
+            document.getElementById("metroseeds").innerHTML += standings.records[2].teamRecords[i].points + "<br>";
+        }
+        for (var i = 0; i < 3; i++) {
+            document.getElementById("atlanticseeds").innerHTML += "<img src='Logos/" + standings.records[3].teamRecords[i].team.name + ".png' width=30>"
+            document.getElementById("atlanticseeds").innerHTML += standings.records[3].teamRecords[i].team.name + " ";
+            document.getElementById("atlanticseeds").innerHTML += standings.records[3].teamRecords[i].points + "<br>";
+        }
+        
+        for (var i = 0; i < 2; i++) {
+            document.getElementById("eastwildcard").innerHTML += "<img src='Logos/" + standings.records[0].teamRecords[i].team.name + ".png' width=30>"
+            document.getElementById("eastwildcard").innerHTML += standings.records[0].teamRecords[i].team.name + " ";
+            document.getElementById("eastwildcard").innerHTML += standings.records[0].teamRecords[i].points + "<br>";           
+        }
+        document.getElementById("eastwildcard").innerHTML += "<hr style=width:300% color=black>";
+
+        for (var i = 2; i < 10; i++) {
+            document.getElementById("eastwildcard").innerHTML += "<img src='Logos/" + standings.records[0].teamRecords[i].team.name + ".png' width=30>"
+            document.getElementById("eastwildcard").innerHTML += standings.records[0].teamRecords[i].team.name + " ";
+            document.getElementById("eastwildcard").innerHTML += standings.records[0].teamRecords[i].points + "<br>";           
+        }
+
+        for (var i = 0; i < 3; i++) {
+            document.getElementById("pacificseeds").innerHTML += "<img src='Logos/" + standings.records[4].teamRecords[i].team.name + ".png' width=30>"
+            document.getElementById("pacificseeds").innerHTML += standings.records[4].teamRecords[i].team.name + " ";
+            document.getElementById("pacificseeds").innerHTML += standings.records[4].teamRecords[i].points + "<br>";           
+        }
+        for (var i = 0; i < 3; i++) {
+            document.getElementById("centralseeds").innerHTML += "<img src='Logos/" + standings.records[5].teamRecords[i].team.name + ".png' width=30>"
+            document.getElementById("centralseeds").innerHTML += standings.records[5].teamRecords[i].team.name + " ";
+            document.getElementById("centralseeds").innerHTML += standings.records[5].teamRecords[i].points + "<br>";           
+        }
+
+        for (var i = 0; i < 2; i++) {
+            document.getElementById("westwildcard").innerHTML += "<img src='Logos/" + standings.records[1].teamRecords[i].team.name + ".png' width=30>"
+            document.getElementById("westwildcard").innerHTML += standings.records[1].teamRecords[i].team.name + " ";
+            document.getElementById("westwildcard").innerHTML += standings.records[1].teamRecords[i].points + "<br>";           
+        }
+        document.getElementById("westwildcard").innerHTML += "<hr style=width:300% color=black>";
+        
+        for (var i = 2; i < 10; i++) {
+            document.getElementById("westwildcard").innerHTML += "<img src='Logos/" + standings.records[1].teamRecords[i].team.name + ".png' width=30>"
+            document.getElementById("westwildcard").innerHTML += standings.records[1].teamRecords[i].team.name + " ";
+            document.getElementById("westwildcard").innerHTML += standings.records[1].teamRecords[i].points + "<br>";           
+        }
     });
 }
 //get information about a specific player
