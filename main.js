@@ -874,6 +874,37 @@ function sortByKey(array) {
 }
 function getOverallStandings () {
 
+    let table = document.createElement("table");
+    let thead = document.createElement("thead");
+    let tbody = document.createElement("tbody");
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+
+    // Adding the entire table to the body tag
+    document.getElementById("body").appendChild(table);
+    let row_1 = document.createElement("tr");
+    let heading_1 = document.createElement("th");
+    heading_1.innerHTML = "Team";
+    let heading_2 = document.createElement("th");
+    heading_2.innerHTML = "Points";
+    let heading_3 = document.createElement("th");
+    heading_3.innerHTML = "GP";
+    let heading_4 = document.createElement("th");
+    heading_4.innerHTML = "Wins";
+    let heading_5 = document.createElement("th");
+    heading_5.innerHTML = "Losses";
+    let heading_6 = document.createElement("th");
+    heading_6.innerHTML = "OTL";
+
+    row_1.appendChild(heading_1);
+    row_1.appendChild(heading_2);
+    row_1.appendChild(heading_3);
+    row_1.appendChild(heading_4);
+    row_1.appendChild(heading_5);
+    row_1.appendChild(heading_6);
+    thead.appendChild(row_1);
+
     var overall = "https://statsapi.web.nhl.com/api/v1/standings/byLeague/";
 
     $.ajax({
@@ -881,9 +912,32 @@ function getOverallStandings () {
         method: "GET",
     }).done(function (standings) {
 
+        console.log(standings);
         for (var i = 0; i < 31; i++) {
-            document.getElementById("overallstandings").innerHTML += "<img src='Logos/" + standings.records[0].teamRecords[i].team.name + ".png' width=30>"
-            document.getElementById("overallstandings").innerHTML += standings.records[0].teamRecords[i].team.name + "<br>";
+
+            let row = document.createElement("tr");
+            let team = document.createElement("td");
+            let gp = document.createElement("td");
+            let wins = document.createElement("td");
+            let loss = document.createElement("td");
+            let ot = document.createElement("td");
+            let point = document.createElement("td");
+
+            team.innerHTML += "<img src='Logos/" + standings.records[0].teamRecords[i].team.name + ".png' width=30>" + standings.records[0].teamRecords[i].team.name;
+            point.innerHTML += standings.records[0].teamRecords[i].points;
+            gp.innerHTML += standings.records[0].teamRecords[i].gamesPlayed;
+            wins.innerHTML += standings.records[0].teamRecords[i].leagueRecord.wins;
+            loss.innerHTML += standings.records[0].teamRecords[i].leagueRecord.losses;
+            ot.innerHTML += standings.records[0].teamRecords[i].leagueRecord.ot;
+            
+            row.appendChild(team);
+            row.appendChild(point);
+            row.appendChild(gp);
+            row.appendChild(wins);
+            row.appendChild(loss);
+            row.appendChild(ot);
+            tbody.appendChild(row);
+
         }
     });
 }
@@ -899,7 +953,7 @@ function getWildCardStandings () {
         
         for (var i = 0; i < 3; i++) {
             document.getElementById("metroseeds").innerHTML += "<img src='Logos/" + standings.records[2].teamRecords[i].team.name + ".png' width=30>"
-            document.getElementById("metroseeds").innerHTML += standings.records[2].teamRecords[i].team.name + " ";
+            document.getElementById("metroseeds").innerHTML += standings.records[2].teamRecords[i].team.name + "\t\t\t\tHello";
             document.getElementById("metroseeds").innerHTML += standings.records[2].teamRecords[i].points + "<br>";
         }
         for (var i = 0; i < 3; i++) {
