@@ -29,6 +29,7 @@ th {
     color: white;
     position: sticky;
     top: 0;
+	z-index: 9999;
 }
 td{
 	height: 10px;
