@@ -629,235 +629,6 @@ function team(name, points, wins, losses, ot, gp) {
     this.ot = ot;
     this.gp = gp;
 }
-/**
- * this function is used to get standings about a division
- * parameters: division(int)
- */
-function getDivisionStandings(division) {
-    //set up variables for later use
-    const teams = [];
-    var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
-    var points = 0;
-    var teamName = "";
-    var wins = 0;
-    var loss = 0;
-    var otl = 0;
-    var gp = 0;
-
-    //make sure async is set to false so the data can be used outside this function
-    $.ajax({
-        url: standingsURL,
-        async: false,
-        method: "GET",
-    }).done(function (standingsData) {
-        for (var i = 0; i < 8; i++) {
-            teamName = standingsData.records[division].teamRecords[i].team.name;
-            points = standingsData.records[division].teamRecords[i].leagueRecord.wins * 2;
-            points += standingsData.records[division].teamRecords[i].leagueRecord.ot;
-            wins = standingsData.records[division].teamRecords[i].leagueRecord.wins;
-            loss = standingsData.records[division].teamRecords[i].leagueRecord.losses;
-            otl = standingsData.records[division].teamRecords[i].leagueRecord.ot;
-            gp = wins + loss + otl;
-            teams[i] = new team(teamName, points, wins, loss, otl, gp);
-            points = 0;
-        }
-    });
-    //call the function to sort the teams based on points
-    sortByKey(teams);
-
-    let table = document.createElement("table");
-    let thead = document.createElement("thead");
-    let tbody = document.createElement("tbody");
-
-    table.appendChild(thead);
-    table.appendChild(tbody);
-
-    // Adding the entire table to the body tag
-    document.getElementById("body").appendChild(table);
-    let row_1 = document.createElement("tr");
-    let heading_1 = document.createElement("th");
-    heading_1.innerHTML = "Team";
-    let heading_2 = document.createElement("th");
-    heading_2.innerHTML = "GP";
-    let heading_3 = document.createElement("th");
-    heading_3.innerHTML = "Wins";
-    let heading_4 = document.createElement("th");
-    heading_4.innerHTML = "Losses";
-    let heading_5 = document.createElement("th");
-    heading_5.innerHTML = "OTL";
-    let heading_6 = document.createElement("th");
-    heading_6.innerHTML = "Points";
-
-    row_1.appendChild(heading_1);
-    row_1.appendChild(heading_2);
-    row_1.appendChild(heading_3);
-    row_1.appendChild(heading_4);
-    row_1.appendChild(heading_5);
-    row_1.appendChild(heading_6);
-    thead.appendChild(row_1);
-
-    var i = 7;
-
-    while (i >= 0) {
-        let row = document.createElement("tr");
-        let team = document.createElement("td");
-        let gp = document.createElement("td");
-        let wins = document.createElement("td");
-        let loss = document.createElement("td");
-        let ot = document.createElement("td");
-        let point = document.createElement("td");
-
-        team.innerHTML += "<img src='Logos/" + teams[i].name + ".png' width=30>" + teams[i].name;
-
-        gp.innerHTML = teams[i].gp;
-        wins.innerHTML = teams[i].wins;
-        loss.innerHTML = teams[i].losses;
-        ot.innerHTML = teams[i].ot;
-        point.innerHTML = teams[i].points;
-
-        row.appendChild(team);
-        row.appendChild(gp);
-        row.appendChild(wins);
-        row.appendChild(loss);
-        row.appendChild(ot);
-        row.appendChild(point);
-
-        tbody.appendChild(row);
-        i--;
-    }
-}
-//this function displays the standings for every team in the league
-function getFullStandings() {
-    const teams = [];
-    var standingsURL = "https://statsapi.web.nhl.com/api/v1/standings";
-    var points = 0;
-    var teamName = "";
-    var counter = 0;
-    var counterTwo = 0;
-    var wins = 0;
-    var loss = 0;
-    var otl = 0;
-    var gp = 0;
-    var counterThree = 0;
-
-    $.ajax({
-        url: standingsURL,
-        async: false,
-        method: "GET",
-    }).done(function (standingsData) {
-        for (var i = 0; i < 8; i++) {
-            teamName = standingsData.records[0].teamRecords[i].team.name;
-            points = standingsData.records[0].teamRecords[i].leagueRecord.wins * 2;
-            points += standingsData.records[0].teamRecords[i].leagueRecord.ot;
-            wins = standingsData.records[0].teamRecords[i].leagueRecord.wins;
-            loss = standingsData.records[0].teamRecords[i].leagueRecord.losses;
-            otl = standingsData.records[0].teamRecords[i].leagueRecord.ot;
-            gp = wins + loss + otl;
-            teams[i] = new team(teamName, points, wins, loss, otl, gp);
-            points = 0;
-        }
-        for (var i = 8; i < 16; i++) {
-            teamName = standingsData.records[1].teamRecords[counter].team.name;
-            points = standingsData.records[1].teamRecords[counter].leagueRecord.wins * 2;
-            points += standingsData.records[1].teamRecords[counter].leagueRecord.ot;
-            wins = standingsData.records[1].teamRecords[counter].leagueRecord.wins;
-            loss = standingsData.records[1].teamRecords[counter].leagueRecord.losses;
-            otl = standingsData.records[1].teamRecords[counter].leagueRecord.ot;
-            gp = wins + loss + otl;
-            teams[i] = new team(teamName, points, wins, loss, otl, gp);
-            points = 0;
-            counter++;
-        }
-        for (var i = 16; i < 24; i++) {
-            teamName = standingsData.records[2].teamRecords[counterTwo].team.name;
-            points = standingsData.records[2].teamRecords[counterTwo].leagueRecord.wins * 2;
-            points += standingsData.records[2].teamRecords[counterTwo].leagueRecord.ot;
-            wins = standingsData.records[2].teamRecords[counterTwo].leagueRecord.wins;
-            loss = standingsData.records[2].teamRecords[counterTwo].leagueRecord.losses;
-            otl = standingsData.records[2].teamRecords[counterTwo].leagueRecord.ot;
-            gp = wins + loss + otl;
-            teams[i] = new team(teamName, points, wins, loss, otl, gp);
-            points = 0;
-            counterTwo++;
-        }
-        for (var i = 24; i < 32; i++) {
-            teamName = standingsData.records[3].teamRecords[counterThree].team.name;
-            points = standingsData.records[3].teamRecords[counterThree].leagueRecord.wins * 2;
-            points += standingsData.records[3].teamRecords[counterThree].leagueRecord.ot;
-            wins = standingsData.records[3].teamRecords[counterThree].leagueRecord.wins;
-            loss = standingsData.records[3].teamRecords[counterThree].leagueRecord.losses;
-            otl = standingsData.records[3].teamRecords[counterThree].leagueRecord.ot;
-            gp = wins + loss + otl;
-            teams[i] = new team(teamName, points, wins, loss, otl, gp);
-            points = 0;
-            counterThree++;
-        }
-    });
-    //call the function to sort the teams based on points
-    sortByKey(teams);
-
-    let table = document.createElement("table");
-    let thead = document.createElement("thead");
-    let tbody = document.createElement("tbody");
-
-    table.appendChild(thead);
-    table.appendChild(tbody);
-
-    // Adding the entire table to the body tag
-    document.getElementById("body").appendChild(table);
-    let row_1 = document.createElement("tr");
-    let heading_1 = document.createElement("th");
-    heading_1.innerHTML = "Team";
-    let heading_2 = document.createElement("th");
-    heading_2.innerHTML = "GP";
-    let heading_3 = document.createElement("th");
-    heading_3.innerHTML = "Wins";
-    let heading_4 = document.createElement("th");
-    heading_4.innerHTML = "Losses";
-    let heading_5 = document.createElement("th");
-    heading_5.innerHTML = "OTL";
-    let heading_6 = document.createElement("th");
-    heading_6.innerHTML = "Points";
-
-    row_1.appendChild(heading_1);
-    row_1.appendChild(heading_2);
-    row_1.appendChild(heading_3);
-    row_1.appendChild(heading_4);
-    row_1.appendChild(heading_5);
-    row_1.appendChild(heading_6);
-    thead.appendChild(row_1);
-
-    var i = 31;
-
-    while (i >= 0) {
-        let row = document.createElement("tr");
-        let team = document.createElement("td");
-        let gp = document.createElement("td");
-        let wins = document.createElement("td");
-        let loss = document.createElement("td");
-        let ot = document.createElement("td");
-        let point = document.createElement("td");
-
-        team.innerHTML += "<img src='Logos/" + teams[i].name + ".png' width=30>" + teams[i].name;
-
-        //team.innerHTML = teams[i].name;
-        gp.innerHTML = teams[i].gp;
-        wins.innerHTML = teams[i].wins;
-        loss.innerHTML = teams[i].losses;
-        ot.innerHTML = teams[i].ot;
-        point.innerHTML = teams[i].points;
-
-        row.appendChild(team);
-        row.appendChild(gp);
-        row.appendChild(wins);
-        row.appendChild(loss);
-        row.appendChild(ot);
-        row.appendChild(point);
-
-        tbody.appendChild(row);
-        i--;
-    }
-}
 //this function uses arrays.sort with a small modification
 //to sort the teams based on points
 function sortByKey(array) {
@@ -896,6 +667,10 @@ function getOverallStandings () {
     heading_5.innerHTML = "Losses";
     let heading_6 = document.createElement("th");
     heading_6.innerHTML = "OTL";
+    let heading_7 = document.createElement("th");
+    heading_7.innerHTML = "Goals For";
+    let heading_8 = document.createElement("th");
+    heading_8.innerHTML = "Goals Against"
 
     row_1.appendChild(heading_1);
     row_1.appendChild(heading_2);
@@ -903,6 +678,8 @@ function getOverallStandings () {
     row_1.appendChild(heading_4);
     row_1.appendChild(heading_5);
     row_1.appendChild(heading_6);
+    row_1.appendChild(heading_7);
+    row_1.appendChild(heading_8);
     thead.appendChild(row_1);
 
     var overall = "https://statsapi.web.nhl.com/api/v1/standings/byLeague/";
@@ -922,6 +699,8 @@ function getOverallStandings () {
             let loss = document.createElement("td");
             let ot = document.createElement("td");
             let point = document.createElement("td");
+            let goalsfor = document.createElement("td");
+            let goalsagainst = document.createElement("td");
 
             team.innerHTML += "<img src='Logos/" + standings.records[0].teamRecords[i].team.name + ".png' width=30>" + standings.records[0].teamRecords[i].team.name;
             point.innerHTML += standings.records[0].teamRecords[i].points;
@@ -929,13 +708,17 @@ function getOverallStandings () {
             wins.innerHTML += standings.records[0].teamRecords[i].leagueRecord.wins;
             loss.innerHTML += standings.records[0].teamRecords[i].leagueRecord.losses;
             ot.innerHTML += standings.records[0].teamRecords[i].leagueRecord.ot;
-            
+            goalsfor.innerHTML += standings.records[0].teamRecords[i].goalsScored; 
+            goalsagainst.innerHTML += standings.records[0].teamRecords[i].goalsAgainst;
+
             row.appendChild(team);
             row.appendChild(point);
             row.appendChild(gp);
             row.appendChild(wins);
             row.appendChild(loss);
             row.appendChild(ot);
+            row.appendChild(goalsfor);
+            row.appendChild(goalsagainst);
             tbody.appendChild(row);
 
         }
@@ -950,10 +733,43 @@ function getWildCardStandings () {
         method: "GET",
     }).done(function (standings) {
         console.log(standings);
+
+        let metrotable = document.createElement("table");
+        let metrohead = document.createElement("thead");
+        let metrobody = document.createElement("tobody");
+        metrotable.appendChild(metrohead);
+        metrotable.appendChild(metrobody);
+
+        document.getElementById("body").appendChild(metrotable);
+        
+        let row_1 = document.createElement("tr");
+        let heading_1 = document.createElement("th");
+        heading_1.innerHTML = "Team";
+        let heading_2 = document.createElement("th");
+        heading_2.innerHTML = "GP";
+        let heading_3 = document.createElement("th");
+        heading_3.innerHTML = "Wins";
+        let heading_4 = document.createElement("th");
+        heading_4.innerHTML = "Losses";
+        let heading_5 = document.createElement("th");
+        heading_5.innerHTML = "OTL";
+        let heading_6 = document.createElement("th");
+        heading_6.innerHTML = "Points";
+
+        row_1.appendChild(heading_1);
+        row_1.appendChild(heading_2);
+        row_1.appendChild(heading_3);
+        row_1.appendChild(heading_4);
+        row_1.appendChild(heading_5);
+        row_1.appendChild(heading_6);
+
+        metrohead.appendChild(row_1);
+
+        let atlantictable = document.createElement("table");
         
         for (var i = 0; i < 3; i++) {
             document.getElementById("metroseeds").innerHTML += "<img src='Logos/" + standings.records[2].teamRecords[i].team.name + ".png' width=30>"
-            document.getElementById("metroseeds").innerHTML += standings.records[2].teamRecords[i].team.name + "\t\t\t\tHello";
+            document.getElementById("metroseeds").innerHTML += standings.records[2].teamRecords[i].team.name + " ";
             document.getElementById("metroseeds").innerHTML += standings.records[2].teamRecords[i].points + "<br>";
         }
         for (var i = 0; i < 3; i++) {
