@@ -89,8 +89,17 @@ function getRoster() {
         url: rosterURL,
         method: "GET",
     }).done(function (rosterData) {
-        for (var i = 0; i < 35; i++) {
-            document.getElementById("rosterdata").innerHTML += "<br>" + "#" + rosterData.roster[i].jerseyNumber + " " + rosterData.roster[i].person.fullName + ", " + rosterData.roster[i].position.name;
+
+        // determine how many players the team has 
+        var teamSize = Object.keys(rosterData.roster).length;
+
+        for (var i = 0; i < teamSize; i++) {
+            if (rosterData.roster[i].jerseyNumber === undefined) {
+                document.getElementById("rosterdata").innerHTML += "<br>" + "No NHL # " + rosterData.roster[i].person.fullName + ", " + rosterData.roster[i].position.name;
+            } else {
+                document.getElementById("rosterdata").innerHTML += "<br>" + "#" + rosterData.roster[i].jerseyNumber + " " + rosterData.roster[i].person.fullName + ", " + rosterData.roster[i].position.name;
+            }
+            console.log(rosterData);
         }
     });
 }
