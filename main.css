@@ -29,7 +29,7 @@ th {
     color: white;
     position: sticky;
     top: 0;
-	z-index: 9999;
+    z-index: 9999;
 }
 td{
 	height: 10px;
@@ -41,7 +41,20 @@ td{
     max-height: 500px;
     overflow: auto;
 }
+/* grid functions */
 
+.grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+}
+
+.grid > span {
+    padding: 8px 4px;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+}
 input[type=submit] {
     background-color: #326fa8;
     color: white;

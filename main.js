@@ -533,13 +533,16 @@ function draft() {
     var round = document.getElementById("roundin").value;
     var year = document.getElementById("yearin").value;
 
+    var currentTime = new Date();
+    var currentYear = currentTime.getFullYear();
+
     //error checking to make sure the round number is valid
     if (round > 7 || round < 1 || isNaN(round)) {
         document.getElementById("draftdata").innerHTML = "Invalid round number.";
         return;
     }
     //error checking to make sure the year is valid
-    if (year > 2022 || year < 1970 || isNaN(year)) {
+    if (year > currentYear || year < 1970 || isNaN(year)) {
         document.getElementById("draftdata").innerHTML = "Invalid year.";
         return;
     }
@@ -576,6 +579,8 @@ function draft() {
         method: "GET",
     }).done(function (draftData) {
         var pickHolder = 1;
+        var pickNumber = pickHolder * round;
+        console.log(pickNumber);
         //the api uses 0-6 for round numbers instead of 1-7 so subtract one
         round--;
 
@@ -598,14 +603,14 @@ function draft() {
             player.innerHTML = draftData.drafts[0].rounds[round].picks[i].prospect.fullName;
 
             var teamName = draftData.drafts[0].rounds[round].picks[i].team.name;
-            team.innerHTML = draftData.drafts[0].rounds[round].picks[i].team.name;
 
             //now append it to the table
             row.appendChild(pickNum);
             row.appendChild(player);
 
             //add the team logo
-            row.innerHTML += "<img src='Logos/" + teamName + ".png' width=30>" + teamName;
+            team.innerHTML = "<img src='Logos/" + teamName + ".png' width=30>" + teamName;
+            row.appendChild(team);
             tbody.appendChild(row);
 
             //increment counter and the pick number
@@ -734,39 +739,6 @@ function getWildCardStandings () {
     }).done(function (standings) {
         console.log(standings);
 
-        let metrotable = document.createElement("table");
-        let metrohead = document.createElement("thead");
-        let metrobody = document.createElement("tobody");
-        metrotable.appendChild(metrohead);
-        metrotable.appendChild(metrobody);
-
-        document.getElementById("body").appendChild(metrotable);
-        
-        let row_1 = document.createElement("tr");
-        let heading_1 = document.createElement("th");
-        heading_1.innerHTML = "Team";
-        let heading_2 = document.createElement("th");
-        heading_2.innerHTML = "GP";
-        let heading_3 = document.createElement("th");
-        heading_3.innerHTML = "Wins";
-        let heading_4 = document.createElement("th");
-        heading_4.innerHTML = "Losses";
-        let heading_5 = document.createElement("th");
-        heading_5.innerHTML = "OTL";
-        let heading_6 = document.createElement("th");
-        heading_6.innerHTML = "Points";
-
-        row_1.appendChild(heading_1);
-        row_1.appendChild(heading_2);
-        row_1.appendChild(heading_3);
-        row_1.appendChild(heading_4);
-        row_1.appendChild(heading_5);
-        row_1.appendChild(heading_6);
-
-        metrohead.appendChild(row_1);
-
-        let atlantictable = document.createElement("table");
-        
         for (var i = 0; i < 3; i++) {
             document.getElementById("metroseeds").innerHTML += "<img src='Logos/" + standings.records[2].teamRecords[i].team.name + ".png' width=30>"
             document.getElementById("metroseeds").innerHTML += standings.records[2].teamRecords[i].team.name + " ";
