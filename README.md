@@ -1,4 +1,4 @@
-# NHL Stats Website
+# NHL Sports Network
 
 A TSN like website for NHL scores, schedules, player information and more.
 
