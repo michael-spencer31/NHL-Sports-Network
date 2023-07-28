@@ -17,7 +17,17 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector(".header").style.height = window.innerHeight + "px";
     });
 });
+var text;
 
+$(document).click(function(event) {
+    text = $(event.target).text();
+    console.log(text);
+})
+function player(name, number, age) {
+    this.name = name;
+    this.number = number;
+    this.age = age;
+}
 /**
  * this function uses the jQuery ajax method to get information
  * about a teams roster.
@@ -42,7 +52,8 @@ function getRoster() {
     //map each team to the team id
     const TeamID = new Map([
         ["New Jersey Devils", 1],
-        ["New York Rangers", 2],
+        ["New York Rangers", 3],
+        ["New York Islanders", 2],
         ["Philadelphia Flyers", 4],
         ["Pittsburgh Penguins", 5],
         ["Boston Bruins", 6],
@@ -83,26 +94,71 @@ function getRoster() {
 
     //build the api url
     var rosterURL = "https://statsapi.web.nhl.com/api/v1/teams/" + teamID + "/roster/";
+    const player_ids = [];
+    const player_names = [];
+    const player_ages = [];
+    const player_numbers = [];
 
     //start the ajax call
+    // this call just collects information to use later
     $.ajax({
         url: rosterURL,
         method: "GET",
+        async: false
     }).done(function (rosterData) {
 
         // determine how many players the team has 
         var teamSize = Object.keys(rosterData.roster).length;
 
         for (var i = 0; i < teamSize; i++) {
-            if (rosterData.roster[i].jerseyNumber === undefined) {
-                document.getElementById("rosterdata").innerHTML += "<br>" + "No NHL # " + rosterData.roster[i].person.fullName + ", " + rosterData.roster[i].position.name;
-            } else {
-                document.getElementById("rosterdata").innerHTML += "<br>" + "#" + rosterData.roster[i].jerseyNumber + " " + rosterData.roster[i].person.fullName + ", " + rosterData.roster[i].position.name;
-            }
-            console.log(rosterData);
+
+            player_ids[i] = rosterData.roster[i].person.id;
+            player_names[i] = rosterData.roster[i].person.fullName;
+            player_ages[i] = rosterData.roster[i].person.currentAge;
+            player_numbers[i] = rosterData.roster[i].primaryNumber;
         }
     });
+
+    var player_objects = [];
+    var name, age, number;
+
+    for (var i = 0; i < player_ids.length; i++) {
+
+        player_objects[i] = new player(player_names[i], player_numbers[i], player_numbers[i]);
+    }
+    for (var i = 0; i < player_objects.length; i++) {
+        // console.log(player_objects[i].name);
+    }
+
+
+
+    var player_url = "https://statsapi.web.nhl.com/api/v1/people/";
+    const base_url = "https://statsapi.web.nhl.com/api/v1/people/";
+
+    var player_links = [];
+
+    for (var i = 0; i < player_ids.length; i++) {
+        player_links[i] = base_url + player_ids[i];
+    }
+    var link = "playerinfo.html";
+
+    for (var i = 0; i < player_ids.length; i++) {
+        $.ajax({
+            method: "GET",
+            url: player_links[i],
+            async: false
+        }).done(function (playerInfo) {
+            // console.log(playerInfo);
+        });
+    }
+    var result = "";
+    for (var i = 0; i < player_ids.length; i++) {
+        result = result + " <a href='" + link + "'>"+  player_names[i] + "</a><br>";
+    }
+    document.getElementById("rosterdata").innerHTML = result;
+    document.getElementById("testlabel").innerHTML = text;
 }
+
 
 
 //this function uses the ajax jquery method to get data about the playoffs
