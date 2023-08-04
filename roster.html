@@ -56,7 +56,9 @@
 		<div class="background">
 			<div class="container team">
 				<h1>NHL Rosters</h1>
-				<label>Enter a team to see their roster. Start typing a few characters to autofill the box.</label>
+				<label>Enter a team to see their roster. Start typing a few characters to autofill the box.
+					Click on a player's name to see more information.
+				</label>
 				<input type="text" id="rosterin" list="teamList" placeholder="Enter team">
 
 				<datalist id="teamList">
@@ -70,7 +72,7 @@
 					<option value="Washington Capitals"/>
 					<option value="Boston Bruins"/>
 					<option value="Buffalo Sabres"/>
-					<option value="Detriot Red Wings"/>
+					<option value="Detroit Red Wings"/>
 					<option value="Florida Panthers"/>
 					<option value="Montreal Canadiens"/>
 					<option value="Ottawa Senators"/>
@@ -94,10 +96,10 @@
 					<option value="Vegas Golden Knights"/>
 				</datalist>
 
-				<input type ="submit" value="Get Roster" id="getroster"onclick="getRoster()"><br>
-				<label id="rosterdata"></label>	
+				<input type ="submit" value="Get Roster" id="getroster"onclick="getRoster()"><br><br>
+				<label id="rosterdata"></label><br>
+				<hr>
 				<label id="playerinfo"></label>
-				<label id="mylabel">This is a label!</label>
 			</div>
 		</div>
 	

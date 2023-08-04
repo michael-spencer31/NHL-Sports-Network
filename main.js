@@ -1,11 +1,8 @@
-// const playerdata = require('./index.js')
 // resize header to size of browser window
-
 var ready = (callback) => {
     if (document.readyState != "loading") callback();
     else document.addEventListener("DOMContentLoaded", callback);
 };
-
 
 // set modal time delay before loading
 setTimeout(function () {
@@ -17,17 +14,52 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector(".header").style.height = window.innerHeight + "px";
     });
 });
+
 var text;
 
-$(document).click(function(event) {
+// jquery method to wait for a click
+$("#rosterdata").click(function(event) {
     text = $(event.target).text();
-    console.log(text);
+    getPlayerData(text);
 })
 function player(name, number, age) {
     this.name = name;
     this.number = number;
     this.age = age;
 }
+
+function getPlayerData(player) {
+    var id = getPlayedID(player);
+
+    if (id === undefined) {
+        document.getElementById("playerinfo").innerHTML = "Player not found";
+        return;
+    }
+
+    var playerURL = "https://statsapi.web.nhl.com/api/v1/people/" + id + "?hydrate=stats(splits=statsSingleSeason)/";
+
+    $.ajax({
+        url: playerURL,
+        method: "GET",
+        async: false
+    }).done(function (player_data) {
+        console.log(player_data);
+
+        document.getElementById("playerinfo").innerHTML =  "#" + player_data.people[0].primaryNumber + " ";
+        document.getElementById("playerinfo").innerHTML += player + " | ";
+        document.getElementById("playerinfo").innerHTML += "Birthplace: " + player_data.people[0].birthCity + ", "
+        var country = getCountry(player_data.people[0].birthCountry);
+        document.getElementById("playerinfo").innerHTML += country + " ";
+        document.getElementById("playerinfo").innerHTML += "<img src='Flags/" + country + ".png' width=30><br>"; 
+        document.getElementById("playerinfo").innerHTML += "GP: " + player_data.people[0].stats[0].splits[0].stat.games + " ";
+        document.getElementById("playerinfo").innerHTML += "Goals: " + player_data.people[0].stats[0].splits[0].stat.goals + " ";
+        document.getElementById("playerinfo").innerHTML += "Assists: " + player_data.people[0].stats[0].splits[0].stat.assists + " ";
+
+
+
+    });
+}
+
 /**
  * this function uses the jQuery ajax method to get information
  * about a teams roster.
@@ -36,6 +68,7 @@ function player(name, number, age) {
 function getRoster() {
     //get the team name from the html document
     document.getElementById("rosterdata").innerHTML = "";
+    document.getElementById("playerinfo").innerHTML = "";
 
     //get the team name in from the html fourm
     var team = document.getElementById("rosterin").value;
@@ -120,19 +153,11 @@ function getRoster() {
     });
 
     var player_objects = [];
-    var name, age, number;
 
     for (var i = 0; i < player_ids.length; i++) {
 
         player_objects[i] = new player(player_names[i], player_numbers[i], player_numbers[i]);
     }
-    for (var i = 0; i < player_objects.length; i++) {
-        // console.log(player_objects[i].name);
-    }
-
-
-
-    var player_url = "https://statsapi.web.nhl.com/api/v1/people/";
     const base_url = "https://statsapi.web.nhl.com/api/v1/people/";
 
     var player_links = [];
@@ -140,26 +165,12 @@ function getRoster() {
     for (var i = 0; i < player_ids.length; i++) {
         player_links[i] = base_url + player_ids[i];
     }
-    var link = "playerinfo.html";
-
-    for (var i = 0; i < player_ids.length; i++) {
-        $.ajax({
-            method: "GET",
-            url: player_links[i],
-            async: false
-        }).done(function (playerInfo) {
-            // console.log(playerInfo);
-        });
-    }
     var result = "";
     for (var i = 0; i < player_ids.length; i++) {
-        result = result + " <a href='" + link + "'>"+  player_names[i] + "</a><br>";
+        result = result + "<label>" + player_names[i] + "</label> | ";
     }
     document.getElementById("rosterdata").innerHTML = result;
-    document.getElementById("testlabel").innerHTML = text;
 }
-
-
 
 //this function uses the ajax jquery method to get data about the playoffs
 function getPlayoffs() {
@@ -866,6 +877,130 @@ function getPlayer() {
     } else {
         input_string = input;
     }
+    var playerIDNum = getPlayedID(input_string);
+    
+    document.getElementById("playerrecords").innerHTML = "";
+
+    //check if the player ID does not exist
+    if (playerIDNum == undefined) {
+        document.getElementById("playernotfound").innerHTML = "Player not found - please try again";
+        document.getElementById("personalinfo").innerHTML = "";
+        document.getElementById("playerrecords").innerHTML = "";
+        document.getElementById("careerrecords").innerHTML = "";
+        return;
+    } else {
+        document.getElementById("playernotfound").innerHTML = "";
+    }
+    var playerURL = "https://statsapi.web.nhl.com/api/v1/people/" + playerIDNum + "?hydrate=stats(splits=statsSingleSeason)/";
+
+    $.ajax({
+        url: playerURL,
+        method: "GET",
+    }).done(function (playerData) {
+
+        document.getElementById("personalinfo").innerHTML = playerData.people[0].fullName + " #" + playerData.people[0].primaryNumber  + "<br>";
+
+        var age = playerData.people[0].currentAge;
+
+        if (age === undefined) {
+            document.getElementById("personalinfo").innerHTML += "Age: " + playerData.people[0].birthDate + "<br>";
+        } else{
+            document.getElementById("personalinfo").innerHTML += "Age: " + playerData.people[0].currentAge + "<br>";
+        }
+        var country = getCountry(playerData.people[0].birthCountry);
+
+        document.getElementById("personalinfo").innerHTML += "Birthplace: " + playerData.people[0].birthCity + ", " +  country + " ";
+        personalinfo.innerHTML += "<img src='Flags/" + country + ".png' width=30> <br>"; 
+
+        document.getElementById("personalinfo").innerHTML += "Height: " + playerData.people[0].height + "<br>";
+        document.getElementById("personalinfo").innerHTML += "Weight: " + playerData.people[0].weight + "lbs" + "<br>";
+
+        // check if the player is still active in the nhl
+        if (playerData.people[0].rosterStatus === 'Y' || playerData.people[0].rosterStatus === 'I') {
+            document.getElementById("personalinfo").innerHTML += "Team: " + playerData.people[0].currentTeam.name;
+            personalinfo.innerHTML += "<img src='Logos/" + playerData.people[0].currentTeam.name + ".png' width=30><br>";
+
+            if (playerData.people[0].shootsCatches === 'L') {
+                document.getElementById("personalinfo").innerHTML += "Shoots: Left" + "<br>";
+            } else {
+                document.getElementById("personalinfo").innerHTML += "Shoots: Right" + "<br>";
+            }
+            document.getElementById("personalinfo").innerHTML += "Position: " + playerData.people[0].primaryPosition.name + "<br>";
+           
+            document.getElementById("playerrecords").innerHTML = "Goals: " + playerData.people[0].stats[0].splits[0].stat.goals + "<br>";
+    
+            document.getElementById("playerrecords").innerHTML += "Power Play Goals: " + playerData.people[0].stats[0].splits[0].stat.powerPlayGoals + "<br>";
+            
+            document.getElementById("playerrecords").innerHTML += "Assists: " + playerData.people[0].stats[0].splits[0].stat.assists + "<br>";
+           
+            document.getElementById("playerrecords").innerHTML +="Penalty Minutes: " +playerData.people[0].stats[0].splits[0].stat.pim + "<br>";
+            
+            document.getElementById("playerrecords").innerHTML += "Games Played: " +  playerData.people[0].stats[0].splits[0].stat.games + "<br>";
+            
+            document.getElementById("playerrecords").innerHTML += "Plus/Minus: " + playerData.people[0].stats[0].splits[0].stat.plusMinus + "<br>";
+            
+            document.getElementById("playerrecords").innerHTML += "Hits: " + playerData.people[0].stats[0].splits[0].stat.hits + "<br>";
+    
+            document.getElementById("playerrecords").innerHTML += "Average Time on Ice: " + playerData.people[0].stats[0].splits[0].stat.timeOnIcePerGame + "<br>";
+        } else {
+            document.getElementById("personalinfo").innerHTML += "Team: Retired<br>";
+        }
+    });
+
+    var careerPlayer ="https://statsapi.web.nhl.com/api/v1/people/" + playerIDNum + "/stats?stats=statsSingleSeason&season=20052006";
+
+    var startYear = 1900;
+    var endYear = 1901;
+
+    var careerGoals = 0;
+    var careerAssists = 0;
+
+    var year = startYear + "" + endYear;
+
+    var currentYear = new Date().getFullYear() - 1;
+
+    $.ajax({
+        url: careerPlayer,
+        method: "GET",
+    }).done(function (careerData) {
+        if (careerData.stats[0].splits[0] != null) {
+            careerGoals = careerData.stats[0].splits[0].stat.goals;
+            careerAssists = careerData.stats[0].splits[0].stat.assists;
+        }
+        while (startYear != currentYear) {
+            startYear++;
+            endYear++;
+
+            year = startYear + "" + endYear;
+
+            careerPlayer = "https://statsapi.web.nhl.com/api/v1/people/" + playerIDNum + "/stats?stats=statsSingleSeason&season=" + year;
+
+            $.ajax({
+                url: careerPlayer,
+                method: "GET",
+            }).done(function (newCareerData) {
+                if (newCareerData.stats[0].splits[0] != null) {
+                    careerGoals += newCareerData.stats[0].splits[0].stat.goals;
+                    careerAssists += newCareerData.stats[0].splits[0].stat.assists;
+                }
+               
+                if (startYear == currentYear) {
+                    document.getElementById("careerrecords").innerHTML = "<br>" + "Career Goals: " + careerGoals + "<br>";
+                    document.getElementById("careerrecords").innerHTML += "Career Assists: " + careerAssists + "<br>";
+                    document.getElementById("careerrecords").innerHTML += "Career Points: " + (careerGoals + careerAssists) + "<br>";
+                }
+            });
+        }
+    });
+}
+function getSeasonStats(link) {
+
+}
+function getCareerStats(link) {
+
+}
+// this function uses a map to convert a player name to their ID number
+function getPlayedID(player_name) {
 
     //create a (very) long map to map player names to player id
     const PlayerMap = new Map([
@@ -2132,138 +2267,31 @@ function getPlayer() {
         ["Simon Edvinsson", 8482762],
         ["Pontus Andreasson", 8483608],
     ]);
-    var playerIDNum = PlayerMap.get(input_string);
-    document.getElementById("playerrecords").innerHTML = "";
 
-    //check if the player ID does not exist
-    if (playerIDNum == undefined) {
-        document.getElementById("playernotfound").innerHTML = "Player not found - please try again";
-        document.getElementById("personalinfo").innerHTML = "";
-        document.getElementById("playerrecords").innerHTML = "";
-        document.getElementById("careerrecords").innerHTML = "";
-        return;
+    var id = PlayerMap.get(player_name);
+    return id;
+}
+// this function converts a country code (e.g. DEU)
+// to the full country name (e.g. Germany)
+function getCountry(country_code) {
+
+    const countries_names = new Map([
+        ["CAN", "Canada"],
+        ["FIN", "Finland"],
+        ["SWE", "Sweden"],
+        ["USA", "United States of America"],
+        ["CZE", "Czechia"],
+        ["DEU", "Germany"],
+        ["SVK", "Slovakia"]
+    ]);
+
+    var country_name = countries_names.get(country_code);
+
+    var countries = ["Canada", "Sweden", "Finland", "United States of America", "Czechia", "Germany", "Slovakia"];
+
+    if (countries.includes(country_name)) {
+        return country_name;
     } else {
-        document.getElementById("playernotfound").innerHTML = "";
+        return "EARTH";
     }
-    var playerURL = "https://statsapi.web.nhl.com/api/v1/people/" + playerIDNum + "?hydrate=stats(splits=statsSingleSeason)/";
-
-    $.ajax({
-        url: playerURL,
-        method: "GET",
-    }).done(function (playerData) {
-
-        console.log(playerData);
-
-        const countries_names = new Map([
-            ["CAN", "Canada"],
-            ["FIN", "Finland"],
-            ["SWE", "Sweden"],
-            ["USA", "United States of America"],
-            ["CZE", "Czechia"],
-            ["DEU", "Germany"],
-            ["SVK", "Slovakia"]
-        ]);
-        document.getElementById("personalinfo").innerHTML = playerData.people[0].fullName + " #" + playerData.people[0].primaryNumber  + "<br>";
-
-        var age = playerData.people[0].currentAge;
-
-        if (age === undefined) {
-            document.getElementById("personalinfo").innerHTML += "Age: " + playerData.people[0].birthDate + "<br>";
-        } else{
-            document.getElementById("personalinfo").innerHTML += "Age: " + playerData.people[0].currentAge + "<br>";
-        }
-        var nationality = playerData.people[0].birthCountry;
-
-        var countries = ["CAN", "SWE", "FIN", "USA", "CZE", "DEU", "SVK"];
-
-        if (countries.includes(nationality)) {
-
-            document.getElementById("personalinfo").innerHTML += "Birthplace: " + playerData.people[0].birthCity + ", " +  countries_names.get(nationality) + " ";
-            personalinfo.innerHTML += "<img src='Flags/" + nationality + ".png' width=30> <br>"; 
-        } else {
-
-            document.getElementById("personalinfo").innerHTML += "Birthplace: " + playerData.people[0].birthCity +  " ";
-            // if the player is from a country we don't have a flag for put a generic "Earth" flag
-            personalinfo.innerHTML += "<img src='Flags/EARTH.png' width=30> <br>"; 
-        }
-        document.getElementById("personalinfo").innerHTML += "Height: " + playerData.people[0].height + "<br>";
-        document.getElementById("personalinfo").innerHTML += "Weight: " + playerData.people[0].weight + "lbs" + "<br>";
-
-        // check if the player is still active in the nhl
-        if (playerData.people[0].rosterStatus === 'Y' || playerData.people[0].rosterStatus === 'I') {
-            document.getElementById("personalinfo").innerHTML += "Team: " + playerData.people[0].currentTeam.name;
-            personalinfo.innerHTML += "<img src='Logos/" + playerData.people[0].currentTeam.name + ".png' width=30><br>";
-
-            if (playerData.people[0].shootsCatches === 'L') {
-                document.getElementById("personalinfo").innerHTML += "Shoots: Left" + "<br>";
-            } else {
-                document.getElementById("personalinfo").innerHTML += "Shoots: Right" + "<br>";
-            }
-            document.getElementById("personalinfo").innerHTML += "Position: " + playerData.people[0].primaryPosition.name + "<br>";
-           
-            document.getElementById("playerrecords").innerHTML = "Goals: " + playerData.people[0].stats[0].splits[0].stat.goals + "<br>";
-    
-            document.getElementById("playerrecords").innerHTML += "Power Play Goals: " + playerData.people[0].stats[0].splits[0].stat.powerPlayGoals + "<br>";
-            
-            document.getElementById("playerrecords").innerHTML += "Assists: " + playerData.people[0].stats[0].splits[0].stat.assists + "<br>";
-           
-            document.getElementById("playerrecords").innerHTML +="Penalty Minutes: " +playerData.people[0].stats[0].splits[0].stat.pim + "<br>";
-            
-            document.getElementById("playerrecords").innerHTML += "Games Played: " +  playerData.people[0].stats[0].splits[0].stat.games + "<br>";
-            
-            document.getElementById("playerrecords").innerHTML += "Plus/Minus: " + playerData.people[0].stats[0].splits[0].stat.plusMinus + "<br>";
-            
-            document.getElementById("playerrecords").innerHTML += "Hits: " + playerData.people[0].stats[0].splits[0].stat.hits + "<br>";
-    
-            document.getElementById("playerrecords").innerHTML += "Average Time on Ice: " + playerData.people[0].stats[0].splits[0].stat.timeOnIcePerGame + "<br>";
-        } else {
-            document.getElementById("personalinfo").innerHTML += "Team: Retired<br>";
-        }
-    });
-
-    var careerPlayer ="https://statsapi.web.nhl.com/api/v1/people/" + playerIDNum + "/stats?stats=statsSingleSeason&season=20052006";
-
-    var startYear = 1900;
-    var endYear = 1901;
-
-    var careerGoals = 0;
-    var careerAssists = 0;
-
-    var year = startYear + "" + endYear;
-
-    var currentYear = new Date().getFullYear() - 1;
-
-    $.ajax({
-        url: careerPlayer,
-        method: "GET",
-    }).done(function (careerData) {
-        if (careerData.stats[0].splits[0] != null) {
-            careerGoals = careerData.stats[0].splits[0].stat.goals;
-            careerAssists = careerData.stats[0].splits[0].stat.assists;
-        }
-        while (startYear != currentYear) {
-            startYear++;
-            endYear++;
-
-            year = startYear + "" + endYear;
-
-            careerPlayer = "https://statsapi.web.nhl.com/api/v1/people/" + playerIDNum + "/stats?stats=statsSingleSeason&season=" + year;
-
-            $.ajax({
-                url: careerPlayer,
-                method: "GET",
-            }).done(function (newCareerData) {
-                if (newCareerData.stats[0].splits[0] != null) {
-                    careerGoals += newCareerData.stats[0].splits[0].stat.goals;
-                    careerAssists += newCareerData.stats[0].splits[0].stat.assists;
-                }
-               
-                if (startYear == currentYear) {
-                    document.getElementById("careerrecords").innerHTML = "<br>" + "Career Goals: " + careerGoals + "<br>";
-                    document.getElementById("careerrecords").innerHTML += "Career Assists: " + careerAssists + "<br>";
-                    document.getElementById("careerrecords").innerHTML += "Career Points: " + (careerGoals + careerAssists) + "<br>";
-                }
-            });
-        }
-    });
 }

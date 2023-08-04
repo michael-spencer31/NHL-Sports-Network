@@ -41,6 +41,18 @@ td{
     max-height: 500px;
     overflow: auto;
 }
+
+.button {
+    background-color: #326fa8; /* Green */
+    border: none;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
+
 /* grid functions */
 
 .grid {
