@@ -54,9 +54,6 @@ function getPlayerData(player) {
         document.getElementById("playerinfo").innerHTML += "GP: " + player_data.people[0].stats[0].splits[0].stat.games + " ";
         document.getElementById("playerinfo").innerHTML += "Goals: " + player_data.people[0].stats[0].splits[0].stat.goals + " ";
         document.getElementById("playerinfo").innerHTML += "Assists: " + player_data.people[0].stats[0].splits[0].stat.assists + " ";
-
-
-
     });
 }
 
@@ -549,7 +546,7 @@ function getSchedule(year, month, day) {
             let homeot = 0;
 
             // fixes games (mostly playoff) that showed overtime records as 'undefined'
-            if(scheduleData.dates[0].games[i].teams.away.leagueRecord.ot != undefined) {
+            if (scheduleData.dates[0].games[i].teams.away.leagueRecord.ot != undefined) {
                 awayot = scheduleData.dates[0].games[i].teams.away.leagueRecord.ot;
 
             } else if(scheduleData.dates[0].games[i].teams.home.leagueRecord.ot != undefined) {
@@ -2282,12 +2279,17 @@ function getCountry(country_code) {
         ["USA", "United States of America"],
         ["CZE", "Czechia"],
         ["DEU", "Germany"],
-        ["SVK", "Slovakia"]
+        ["SVK", "Slovakia"],
+        ["CHE", "Switzerland"],
+        ["AUT", "Austria"],
+        ["RUS", "Russia"],
+        ["LVA", "Latvia"]
     ]);
 
     var country_name = countries_names.get(country_code);
 
-    var countries = ["Canada", "Sweden", "Finland", "United States of America", "Czechia", "Germany", "Slovakia"];
+    var countries = ["Canada", "Sweden", "Finland", "United States of America", "Czechia", 
+    "Germany", "Slovakia", "Switzerland", "Austria", "Latvia", "Russia"];
 
     if (countries.includes(country_name)) {
         return country_name;
