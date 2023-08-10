@@ -10,7 +10,7 @@ Hosted on Microsoft Azure at https://brave-flower-001b1dd10.1.azurestaticapps.ne
 
 Sample output of Nick Suzuki's stats.
 
-![Sample screenshot showing Nick Suzuki's stats.](/splashscreen.PNG?raw=true)
+![Sample screenshot showing Nick Suzuki's stats.](/splash/splashscreen.PNG?raw=true)
 
 
 
