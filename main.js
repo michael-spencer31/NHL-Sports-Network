@@ -54,9 +54,8 @@ function getPlayerData(player) {
         var goals = player_data.people[0].stats[0].splits[0].stat.goals;
         var assists = player_data.people[0].stats[0].splits[0].stat.assists;
 
-        if (goals === undefined || assists === undefined) {
+        if (goals !== undefined || assists !== undefined) {
 
-        } else {
             document.getElementById("playerinfo").innerHTML += "Goals: " + goals + " ";
             document.getElementById("playerinfo").innerHTML += "Assists: " + assists + " ";
         }
