@@ -43,8 +43,6 @@ function getPlayerData(player) {
         method: "GET",
         async: false
     }).done(function (player_data) {
-        console.log(player_data);
-
         document.getElementById("playerinfo").innerHTML =  "#" + player_data.people[0].primaryNumber + " ";
         document.getElementById("playerinfo").innerHTML += player + " | ";
         document.getElementById("playerinfo").innerHTML += "Birthplace: " + player_data.people[0].birthCity + ", "
@@ -52,8 +50,16 @@ function getPlayerData(player) {
         document.getElementById("playerinfo").innerHTML += country + " ";
         document.getElementById("playerinfo").innerHTML += "<img src='Flags/" + country + ".png' width=30><br>"; 
         document.getElementById("playerinfo").innerHTML += "GP: " + player_data.people[0].stats[0].splits[0].stat.games + " ";
-        document.getElementById("playerinfo").innerHTML += "Goals: " + player_data.people[0].stats[0].splits[0].stat.goals + " ";
-        document.getElementById("playerinfo").innerHTML += "Assists: " + player_data.people[0].stats[0].splits[0].stat.assists + " ";
+
+        var goals = player_data.people[0].stats[0].splits[0].stat.goals;
+        var assists = player_data.people[0].stats[0].splits[0].stat.assists;
+
+        if (goals === undefined || assists === undefined) {
+
+        } else {
+            document.getElementById("playerinfo").innerHTML += "Goals: " + goals + " ";
+            document.getElementById("playerinfo").innerHTML += "Assists: " + assists + " ";
+        }
     });
 }
 
