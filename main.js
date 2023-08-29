@@ -15,18 +15,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-var text;
+
 
 // jquery method to wait for a click
 $("#rosterdata").click(function(event) {
+    var text;
     text = $(event.target).text();
     getPlayerData(text);
 })
-function player(name, number, age) {
-    this.name = name;
-    this.number = number;
-    this.age = age;
-}
 
 function getPlayerData(player) {
     var id = getPlayedID(player);
@@ -94,12 +90,8 @@ function getRoster() {
         ["Boston Bruins", 6],
         ["Buffalo Sabres", 7],
         ["Montreal Canadiens", 8],
-        ["Habs", 8],
-        ["Montreal", 8],
-        ["Canadiens", 8],
         ["Ottawa Senators", 9],
         ["Toronto Maple Leafs", 10],
-        ["Leafs", 10],
         ["Carolina Hurricanes", 12],
         ["Florida Panthers", 13],
         ["Tampa Bay Lightning", 14],
@@ -153,20 +145,7 @@ function getRoster() {
             player_numbers[i] = rosterData.roster[i].primaryNumber;
         }
     });
-
-    var player_objects = [];
-
-    for (var i = 0; i < player_ids.length; i++) {
-
-        player_objects[i] = new player(player_names[i], player_numbers[i], player_numbers[i]);
-    }
-    const base_url = "https://statsapi.web.nhl.com/api/v1/people/";
-
-    var player_links = [];
-
-    for (var i = 0; i < player_ids.length; i++) {
-        player_links[i] = base_url + player_ids[i];
-    }
+    
     var result = "";
     for (var i = 0; i < player_ids.length; i++) {
         result = result + "<label>" + player_names[i] + "</label> | ";
@@ -174,54 +153,6 @@ function getRoster() {
     document.getElementById("rosterdata").innerHTML = result;
 }
 
-//this function uses the ajax jquery method to get data about the playoffs
-function getPlayoffs() {
-    //each time the button is pressed, reset the html element to be empty
-    document.getElementById("playoffrecords").innerHTML = " ";
-
-    //get the year the user wants to search for from the html page
-    var playoffYear = document.getElementById("playoffin").value;
-
-    //check if valid playoff year, or if the user enters something that is not a number
-    if (playoffYear >= 2023 || playoffYear <= 1930 || isNaN(playoffYear)) {
-        document.getElementById("playoffrecords").innerHTML = "Please enter a valid year";
-        return;
-    }
-    //set up the values for the api call
-    var endYear = playoffYear;
-    playoffYear--;
-    var year = playoffYear + "" + endYear;
-    var playoffURL = "https://statsapi.web.nhl.com/api/v1/tournaments/playoffs?expand=round.series,schedule.game.seriesSummary&season=" + year;
-
-    //call the api with the url using the GET method
-    $.ajax({
-        url: playoffURL,
-        method: "GET",
-    }).done(function (playoffData) {
-        document.getElementById("playoffrecords").innerHTML += "<b>Quarter Finals" + "<br><br>";
-
-        //loop through each round (quarters, semi, confrence final, finals)
-        //and then display the returned content
-        for (var i = 0; i < 8; i++) {
-            document.getElementById("playoffrecords").innerHTML += playoffData.rounds[0].series[i].names.matchupName;
-            document.getElementById("playoffrecords").innerHTML += "=>" + playoffData.rounds[0].series[i].currentGame.seriesSummary.seriesStatus +"<br>";
-        }
-        document.getElementById("playoffrecords").innerHTML += "<br><b>Semi Finals" + "<br><br>";
-        for (var i = 0; i < 4; i++) {
-            document.getElementById("playoffrecords").innerHTML +=playoffData.rounds[1].series[i].names.matchupName;
-            document.getElementById("playoffrecords").innerHTML +="=>" +playoffData.rounds[1].series[i].currentGame.seriesSummary.seriesStatus +"<br>";
-        }
-        document.getElementById("playoffrecords").innerHTML +="<br><b>Conference Finals" + "<br><br>";
-        for (var i = 0; i < 2; i++) {
-            document.getElementById("playoffrecords").innerHTML += playoffData.rounds[2].series[i].names.matchupName;
-            document.getElementById("playoffrecords").innerHTML +="=>" +playoffData.rounds[2].series[i].currentGame.seriesSummary.seriesStatus +"<br>";
-        }
-        document.getElementById("playoffrecords").innerHTML += "<br><b>Stanley Cup Finals" + "<br><br>";
-        //since the last round only has 2 teams we don't need a loop
-        document.getElementById("playoffrecords").innerHTML +=playoffData.rounds[3].series[0].names.matchupName;
-        document.getElementById("playoffrecords").innerHTML +="=>" +playoffData.rounds[3].series[0].currentGame.seriesSummary.seriesStatus +"<br>";
-    });
-}
 //check the console for date click event
 //Fixed day highlight
 //Added previous month and next month view
@@ -995,16 +926,13 @@ function getPlayer() {
         }
     });
 }
-function getSeasonStats(link) {
 
-}
-function getCareerStats(link) {
-
-}
 // this function uses a map to convert a player name to their ID number
 function getPlayedID(player_name) {
 
     //create a (very) long map to map player names to player id
+    //this map mostly includes active NHL players and may not have ids for very new retired players
+    //this is a limitation with the api itself. looking for a workaroud.
     const PlayerMap = new Map([
         ["Wayne Gretzky", 8447400],
         ["Jonathan Bernier", 8473541],
