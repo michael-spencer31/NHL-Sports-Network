@@ -39,7 +39,14 @@ function getPlayerData(player) {
         method: "GET",
         async: false
     }).done(function (player_data) {
-        document.getElementById("playerinfo").innerHTML =  "#" + player_data.people[0].primaryNumber + " ";
+
+        document.getElementById("playerinfo").innerHTML = "";
+
+        var number = player_data.people[0].primaryNumber;
+
+        if (number !== undefined) {
+            document.getElementById("playerinfo").innerHTML = "#" + number + " ";
+        }
         document.getElementById("playerinfo").innerHTML += player + " | ";
         document.getElementById("playerinfo").innerHTML += "Birthplace: " + player_data.people[0].birthCity + ", "
         var country = getCountry(player_data.people[0].birthCountry);
@@ -54,7 +61,7 @@ function getPlayerData(player) {
 
             document.getElementById("playerinfo").innerHTML += "Goals: " + goals + " ";
             document.getElementById("playerinfo").innerHTML += "Assists: " + assists + " ";
-        }
+        } 
     });
 }
 
@@ -145,7 +152,7 @@ function getRoster() {
             player_numbers[i] = rosterData.roster[i].primaryNumber;
         }
     });
-    
+
     var result = "";
     for (var i = 0; i < player_ids.length; i++) {
         result = result + "<label>" + player_names[i] + "</label> | ";
@@ -2205,6 +2212,8 @@ function getPlayedID(player_name) {
 // to the full country name (e.g. Germany)
 function getCountry(country_code) {
 
+    // this list includes all countries that have active players. 
+    // it will need to be updated if a player from a different country makes the NHL
     const countries_names = new Map([
         ["CAN", "Canada"],
         ["FIN", "Finland"],
@@ -2216,13 +2225,22 @@ function getCountry(country_code) {
         ["CHE", "Switzerland"],
         ["AUT", "Austria"],
         ["RUS", "Russia"],
-        ["LVA", "Latvia"]
+        ["LVA", "Latvia"],
+        ["GBR", "United Kingdom"],
+        ["BEL", "Belgium"],
+        ["NOR", "Norway"],
+        ["SVN", "Slovenia"],
+        ["DNK", "Denmark"],
+        ["FRA", "France"],
+        ["NLD", "Netherlands"],
+        ["AUS", "Australia"]
     ]);
 
     var country_name = countries_names.get(country_code);
 
     var countries = ["Canada", "Sweden", "Finland", "United States of America", "Czechia", 
-    "Germany", "Slovakia", "Switzerland", "Austria", "Latvia", "Russia"];
+    "Germany", "Slovakia", "Switzerland", "Austria", "Latvia", "Russia", "United Kingdom", "Belgium",
+    "Norway", "Slovenia", "Denmark", "France", "Netherlands", "Australia"];
 
     if (countries.includes(country_name)) {
         return country_name;
