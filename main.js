@@ -395,6 +395,7 @@ const calendarControl = new CalendarControl();
 /**
  * this function uses the functions above to get the schedule
  * for any given day the user clicks on
+ * games can be in one of three states - final, live or preview
  */
 function getSchedule(year, month, day) {
     //reset the page each time the function is called
@@ -440,51 +441,6 @@ function getSchedule(year, month, day) {
             var loosingGoals = "";
             var gameStatus = scheduleData.dates[0].games[i].status.abstractGameState;
 
-            //determine which team won the game (i.e. score more goals)
-            if (
-                scheduleData.dates[0].games[i].teams.away.score >
-                scheduleData.dates[0].games[i].teams.home.score
-            ) {
-                //if the game is not tied and the away team is winning
-                winningTeam = scheduleData.dates[0].games[i].teams.away.team.name;
-                winningGoals = scheduleData.dates[0].games[i].teams.away.score;
-                loosingGoals = scheduleData.dates[0].games[i].teams.home.score;
-            } else if (
-                scheduleData.dates[0].games[i].teams.away.score == 0 &&
-                scheduleData.dates[0].games[i].teams.home.score == 0
-            ) {
-                //this checks if the game is live and is tied 0-0
-                if (gameStatus == "Live") {
-                    //in this case the goals are the same so both are set to 0
-                    winningGoals = 0;
-                    loosingGoals = 0;
-                    winningTeam = "Tie game";
-                }
-            } else if (
-                scheduleData.dates[0].games[i].teams.away.score ==
-                scheduleData.dates[0].games[i].teams.home.score
-            ) {
-                //this checks if the game is tied, but not a 0-0 tie
-                winningTeam = "Tie game";
-                winningGoals = scheduleData.dates[0].games[i].teams.home.score;
-                loosingGoals = scheduleData.dates[0].games[i].teams.home.score;
-            } else {
-                //if the game is not tied and the home team is winning
-                winningTeam = scheduleData.dates[0].games[i].teams.home.team.name;
-                loosingGoals = scheduleData.dates[0].games[i].teams.away.score;
-                winningGoals = scheduleData.dates[0].games[i].teams.home.score;
-            }
-            //display the obtained data on the html page
-            
-            // this block bolds the score of the team that won the game
-            if (scheduleData.dates[0].games[i].teams.away.score > scheduleData.dates[0].games[i].teams.home.score) {
-                datedisplay.innerHTML += `<b> ${scheduleData.dates[0].games[i].teams.away.score} </b>`;
-            } else {
-                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.score;
-            }
-
-            datedisplay.innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.away.team.name + ".png' width=30>";
-
             let awayot = 0;
             let homeot = 0;
 
@@ -495,23 +451,62 @@ function getSchedule(year, month, day) {
             } else if(scheduleData.dates[0].games[i].teams.home.leagueRecord.ot != undefined) {
                 homeot = scheduleData.dates[0].games[i].teams.home.leagueRecord.ot
             }
-    
-            document.getElementById("datedisplay").innerHTML +=scheduleData.dates[0].games[i].teams.away.team.name + "(" + scheduleData.dates[0].games[i].teams.away.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.losses + "," + awayot + ")" + "<br>";
-            
-            // this block bolds the score of the team that won the game
-            if (scheduleData.dates[0].games[i].teams.away.score < scheduleData.dates[0].games[i].teams.home.score) {
-                datedisplay.innerHTML += `<b> ${scheduleData.dates[0].games[i].teams.home.score} </b>`;
-            } else {
-                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.home.score;
-            }
 
-            document.getElementById("datedisplay").innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.home.team.name + ".png' width=30>" + "" + scheduleData.dates[0].games[i].teams.home.team.name + "(" + scheduleData.dates[0].games[i].teams.home.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.losses + "," + homeot + ")" + ""  + "<br>";
+            if (gameStatus == "Final") {
 
-            var gameTime = "";
-            document.getElementById("datedisplay").innerHTML += winningGoals + "-" + loosingGoals + " " + winningTeam + " " + "(" + gameStatus + ") <br>";
+                //determine which team won the game (i.e. score more goals)
+                if (
+                    scheduleData.dates[0].games[i].teams.away.score >
+                    scheduleData.dates[0].games[i].teams.home.score
+                ) {
+                    winningTeam = scheduleData.dates[0].games[i].teams.away.team.name;
+                    winningGoals = scheduleData.dates[0].games[i].teams.away.score;
+                    loosingGoals = scheduleData.dates[0].games[i].teams.home.score;
+                } else {
+                    winningTeam = scheduleData.dates[0].games[i].teams.home.team.name;
+                    winningGoals = scheduleData.dates[0].games[i].teams.home.score;
+                    loosingGoals = scheduleData.dates[0].games[i].teams.away.score;
+                }
+                
+                // this block bolds the score of the team that won the game
+                if (scheduleData.dates[0].games[i].teams.away.score > scheduleData.dates[0].games[i].teams.home.score) {
+                    datedisplay.innerHTML += `<b> ${scheduleData.dates[0].games[i].teams.away.score} </b>`;
+                } else {
+                    datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.score;
+                }
 
-            //if the game hasn't started yet it will be in a preview state
-            if (gameStatus == "Preview") {
+                datedisplay.innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.away.team.name + ".png' width=30>";
+                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.team.name + "(" + scheduleData.dates[0].games[i].teams.away.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.losses + "," + awayot + ")" + "<br>";
+
+                if (scheduleData.dates[0].games[i].teams.home.score > scheduleData.dates[0].games[i].teams.away.score) {
+                    datedisplay.innerHTML += `<b> ${scheduleData.dates[0].games[i].teams.home.score} </b>`;
+                } else {
+                    datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.home.score;
+                }
+
+                datedisplay.innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.home.team.name + ".png' width=30>";
+                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.home.team.name + "(" + scheduleData.dates[0].games[i].teams.home.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.losses + "," + homeot + ")" + "<br>";
+                datedisplay.innerHTML += winningGoals + "-" + loosingGoals + " " + winningTeam + " (Final)<br><br>";
+            } else if (gameStatus == "Live"){
+
+                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.score + "<br>";
+                datedisplay.innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.away.team.name + ".png' width=30>";
+                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.team.name + "<br>";
+
+                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.home.score + "<br>";
+                datedisplay.innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.home.team.name + ".png' width=30>";
+                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.home.team.name + "<br>";
+
+                document.getElementById("datedisplay").innerHTML += "(Live)" + "<br><br>";
+
+            } else if (gameStatus == "Preview") {
+
+                datedisplay.innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.away.team.name + ".png' width=30>";
+                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.team.name + "(" + scheduleData.dates[0].games[i].teams.away.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.losses + "," + awayot + ")" + "<br>";
+
+                datedisplay.innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.home.team.name + ".png' width=30>";
+                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.home.team.name + "(" + scheduleData.dates[0].games[i].teams.home.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.losses + "," + homeot + ")" + "<br>";
+
                 //get the time the game starts at from the api
                 gameTime = scheduleData.dates[0].games[i].gameDate;
 
@@ -530,7 +525,7 @@ function getSchedule(year, month, day) {
                 });
 
                 //finally display the results on the html page
-                document.getElementById("datedisplay").innerHTML += " " + timeString12hr + "<br>";
+                document.getElementById("datedisplay").innerHTML += " " + timeString12hr + " (Preview)" + "<br><br>";
             } else {
                 //if the game has already started, just print out a blank line
                 document.getElementById("datedisplay").innerHTML += "<br>";
@@ -746,6 +741,8 @@ function getOverallStandings () {
     });
 }
 function getWildCardStandings () {
+
+    // A2 A3 M2 M3 max(A1, M1) WC2 min(A1, M1) WC1
 
     var wildcard = "https://statsapi.web.nhl.com/api/v1/standings/wildCardWithLeaders/";
 
