@@ -233,11 +233,7 @@ function CalendarControl() {
             monthLabel.innerHTML = calendarControl.calMonthName[calendar.getMonth()];
         },
         selectDate: function (e) {
-            console.log(
-                `${e.target.textContent} ${
-                    calendarControl.calMonthName[calendar.getMonth()]
-                } ${calendar.getFullYear()}`
-            );
+            
             getSchedule(
                 calendar.getFullYear(),
                 calendarControl.calMonthName[calendar.getMonth()],
@@ -396,6 +392,15 @@ const calendarControl = new CalendarControl();
  * this function uses the functions above to get the schedule
  * for any given day the user clicks on
  * games can be in one of three states - final, live or preview
+ * 
+ * toronto
+ * tampa 
+ * florida
+ * ottawa
+ * boston
+ * detriot
+ * buffalo
+ * montreal
  */
 function getSchedule(year, month, day) {
     //reset the page each time the function is called
@@ -432,6 +437,7 @@ function getSchedule(year, month, day) {
         //check if no games are scheduled for the given day
         if (games == 0) {
             document.getElementById("datedisplay").innerHTML += "No games scheduled for today.";
+            return;
         }
         //start to loop through all the games on the given day
         for (var i = 0; i < games; i++) {
@@ -447,8 +453,9 @@ function getSchedule(year, month, day) {
             // fixes games (mostly playoff) that showed overtime records as 'undefined'
             if (scheduleData.dates[0].games[i].teams.away.leagueRecord.ot != undefined) {
                 awayot = scheduleData.dates[0].games[i].teams.away.leagueRecord.ot;
-
-            } else if(scheduleData.dates[0].games[i].teams.home.leagueRecord.ot != undefined) {
+            } 
+            
+            if (scheduleData.dates[0].games[i].teams.home.leagueRecord.ot != undefined) {
                 homeot = scheduleData.dates[0].games[i].teams.home.leagueRecord.ot
             }
 
@@ -486,8 +493,11 @@ function getSchedule(year, month, day) {
 
                 datedisplay.innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.home.team.name + ".png' width=30>";
                 datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.home.team.name + "(" + scheduleData.dates[0].games[i].teams.home.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.home.leagueRecord.losses + "," + homeot + ")" + "<br>";
-                datedisplay.innerHTML += winningGoals + "-" + loosingGoals + " " + winningTeam + " (Final)<br><br>";
-            } else if (gameStatus == "Live"){
+
+                var recap_link = getRecap(scheduleData.dates[0].games[i].gamePk);
+
+                datedisplay.innerHTML += winningGoals + "-" + loosingGoals + " " + winningTeam + " (Final) " + '<a href="' + recap_link + '"target=_blank">Video Recap</a><br><br>';
+            } else if (gameStatus == "Live") {
 
                 datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.score + "<br>";
                 datedisplay.innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.away.team.name + ".png' width=30>";
@@ -500,6 +510,8 @@ function getSchedule(year, month, day) {
                 document.getElementById("datedisplay").innerHTML += "(Live)" + "<br><br>";
 
             } else if (gameStatus == "Preview") {
+
+                console.log(scheduleData);
 
                 datedisplay.innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.away.team.name + ".png' width=30>";
                 datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.team.name + "(" + scheduleData.dates[0].games[i].teams.away.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.losses + "," + awayot + ")" + "<br>";
@@ -532,6 +544,25 @@ function getSchedule(year, month, day) {
             }
         }
     });
+}
+
+function getRecap (gameid) {
+
+    var url = "https://statsapi.web.nhl.com/api/v1/game/" + gameid + "/content";
+
+    var link;
+    $.ajax({
+        url: url,
+        method: "GET",
+        async: false
+    }).done(function(game_data) {
+
+        // console.log(game_data);
+        link = game_data.editorial.recap.items[0].media.playbacks[0].url;
+
+    });
+    return link;
+
 }
 /**
  * this function uses the ajax jQuery method to obtain data about a draft year
