@@ -15,7 +15,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-
+console.warn = () => {};
+console.clear();
 
 // jquery method to wait for a click
 $("#rosterdata").click(function(event) {
@@ -25,7 +26,8 @@ $("#rosterdata").click(function(event) {
 })
 
 function getPlayerData(player) {
-    var id = getPlayedID(player);
+
+    var id = getPlayedID(player.toUpperCase());
 
     if (id === undefined) {
         document.getElementById("playerinfo").innerHTML = "Player not found";
@@ -2272,3 +2274,4 @@ function getCountry(country_code) {
         return "EARTH";
     }
 }
+
