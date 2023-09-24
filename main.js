@@ -501,11 +501,11 @@ function getSchedule(year, month, day) {
                 datedisplay.innerHTML += winningGoals + "-" + loosingGoals + " " + winningTeam + " (Final) " + '<a href="' + recap_link + '"target=_blank">Video Recap</a><br><br>';
             } else if (gameStatus == "Live") {
 
-                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.score + "<br>";
+                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.score;
                 datedisplay.innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.away.team.name + ".png' width=30>";
                 datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.team.name + "<br>";
 
-                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.home.score + "<br>";
+                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.home.score;
                 datedisplay.innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.home.team.name + ".png' width=30>";
                 datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.home.team.name + "<br>";
 
