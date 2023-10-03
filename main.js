@@ -15,9 +15,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-console.warn = () => {};
-console.clear();
-
 // jquery method to wait for a click
 $("#rosterdata").click(function(event) {
     var text;
@@ -428,9 +425,14 @@ function getSchedule(year, month, day) {
     var monthNum = MonthNumber.get(month);
     var scheduleURL = "https://statsapi.web.nhl.com/api/v1/schedule?startDate=" + year + "-" + monthNum + "-" + day + "&endDate=" + year +"-" + monthNum + "-" + day;
 
+    getGames(scheduleURL);
+}
+
+function getGames (url) {
+
     //start the ajax call to the api
     $.ajax({
-        url: scheduleURL,
+        url: url,
         method: "GET",
     }).done(function (scheduleData) {
         //get the number of games that day
@@ -501,19 +503,17 @@ function getSchedule(year, month, day) {
                 datedisplay.innerHTML += winningGoals + "-" + loosingGoals + " " + winningTeam + " (Final) " + '<a href="' + recap_link + '"target=_blank">Video Recap</a><br><br>';
             } else if (gameStatus == "Live") {
 
-                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.score;
+                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.score + "<br>";
                 datedisplay.innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.away.team.name + ".png' width=30>";
                 datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.team.name + "<br>";
 
-                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.home.score;
+                datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.home.score + "<br>";
                 datedisplay.innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.home.team.name + ".png' width=30>";
                 datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.home.team.name + "<br>";
 
                 document.getElementById("datedisplay").innerHTML += "(Live)" + "<br><br>";
 
             } else if (gameStatus == "Preview") {
-
-                console.log(scheduleData);
 
                 datedisplay.innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.away.team.name + ".png' width=30>";
                 datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.team.name + "(" + scheduleData.dates[0].games[i].teams.away.leagueRecord.wins + "," + scheduleData.dates[0].games[i].teams.away.leagueRecord.losses + "," + awayot + ")" + "<br>";
@@ -559,7 +559,6 @@ function getRecap (gameid) {
         async: false
     }).done(function(game_data) {
 
-        // console.log(game_data);
         link = game_data.editorial.recap.items[0].media.playbacks[0].url;
 
     });
@@ -624,7 +623,6 @@ function draft() {
     }).done(function (draftData) {
         var pickHolder = 1;
         var pickNumber = pickHolder * round;
-        console.log(pickNumber);
         //the api uses 0-6 for round numbers instead of 1-7 so subtract one
         round--;
 
@@ -738,7 +736,6 @@ function getOverallStandings () {
         method: "GET",
     }).done(function (standings) {
 
-        console.log(standings);
         for (var i = 0; i < 31; i++) {
 
             let row = document.createElement("tr");
@@ -783,7 +780,6 @@ function getWildCardStandings () {
         url: wildcard,
         method: "GET",
     }).done(function (standings) {
-        console.log(standings);
 
         for (var i = 0; i < 3; i++) {
             document.getElementById("metroseeds").innerHTML += "<img src='Logos/" + standings.records[2].teamRecords[i].team.name + ".png' width=30>"
@@ -838,10 +834,12 @@ function getWildCardStandings () {
 function getPlayer() {
     //get the player name in from the html doc
     var input = document.getElementById("playerin").value;
+
+    // uppercase the entire name 
     input = input.toUpperCase();
     
     var playerIDNum = getPlayedID(input);
-    
+     
     document.getElementById("playerrecords").innerHTML = "";
 
     //check if the player ID does not exist
@@ -921,7 +919,6 @@ function getPlayer() {
     var year = startYear + "" + endYear;
 
     var currentYear = new Date().getFullYear();
-    console.log(currentYear);
 
     $.ajax({
         url: careerPlayer,

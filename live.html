@@ -4,8 +4,9 @@
 
 	<head>
 
-		<title>Schedule</title>
+		<title>Player Data</title>
 		<meta charset="utf-8">
+        <meta http-equiv="refresh" content="100">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="main.css">
@@ -15,6 +16,7 @@
 	<body>
 	
 		<nav class="navbar navbar-expand-md">
+		
 			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -35,9 +37,7 @@
 					<li class="nav-item">
 						<a class="nav-link" href="players.html">Player Data</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="playoffs.html">Playoffs</a>
-					</li>
+					
 					<li class="nav-item">
 						<a class="nav-link" href="schedule.html">Schedule</a>
 					</li>
@@ -47,17 +47,32 @@
 					<li class="nav-item">
 						<a class="nav-link href=" href="about.html">About</a>
 					</li>
-					<li class="nav-item">
+                    <li class="nav-item">
+						<a class="nav-link href=" href="live.html">Today's Games</a>
+					</li>
+                    <li class="nav-item">
 						<a class="nav-link href=" href="live.html">Today's Games</a>
 					</li>
 				</ul>
 			</div>
 		</nav>
 
-		<label id="testlabel"></label>
+        <label id="datedisplay"></label>
+        <script>
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+            today = yyyy + '-' + mm + '-' + dd;
+            var scheduleURL = "https://statsapi.web.nhl.com/api/v1/schedule?startDate=" +  today + "&endDate=" + today;
+
+            window.onload = function() {
+				getGames (scheduleURL);
+			}
+        </script>
+	
 		<script src="jquery-3.5.1.min.js"></script>
 		<script src="bootstrap/js/bootstrap.min.js"></script>
 		<script src="main.js"></script>
 	</body>
-	
 </html>
