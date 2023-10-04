@@ -402,10 +402,27 @@ const calendarControl = new CalendarControl();
  * montreal
  */
 function getSchedule(year, month, day) {
+
+    const MonthNames = new Map([
+        ["Jan", "January"],
+        ["Feb", "February"],
+        ["Mar", "March"],
+        ["Apr", "April"],
+        ["May", "May"],
+        ["Jun", "June"],
+        ["Jul", "July"],
+        ["Aug", "August"],
+        ["Sep","September"],
+        ["Oct", "October"],
+        ["Nov", "November"],
+        ["Dec", "December"],
+    ]);
+    console.log(month);
+    var monthName = MonthNames.get(month);
     //reset the page each time the function is called
     document.getElementById("datedisplay").innerHTML = "";
 
-    document.getElementById("datedisplay").innerHTML += "<b>Schedule for " + month + " " + day + ", " + year + "<br><br>";
+    document.getElementById("datedisplay").innerHTML += "<b>Schedule for " + monthName + " " + day + ", " + year + "<br><br>";
     //map to convert month to the numerical equivalent
     const MonthNumber = new Map([
         ["Jan", 1],
