@@ -4,7 +4,7 @@ A TSN like website for NHL scores, schedules, player information and more.
 
 Built with HTML and CSS Bootstrap. Uses the jQuery AJAX to call the public NHL API and retrieve data.
 
-Hosted on Microsoft Azure at https://brave-flower-001b1dd10.1.azurestaticapps.net/
+Hosted at https://michael-spencer31.github.io/NHL-Sports-Network/
 
 ## Screenshots
 
