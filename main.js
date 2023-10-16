@@ -69,6 +69,8 @@ function getPlayerData(player) {
  * about a teams roster.
  */
 
+
+
 function getRoster() {
     //get the team name from the html document
     document.getElementById("rosterdata").innerHTML = "";
@@ -401,6 +403,39 @@ const calendarControl = new CalendarControl();
  * buffalo
  * montreal
  */
+
+function getPeriod (pk) {
+
+    var period;
+    var url = "https://statsapi.web.nhl.com/api/v1/game/" + pk + "/feed/live/";
+    console.log(url);
+    $.ajax({
+        url: url,
+        method: "GET",
+        async: false
+    }).done(function (info) {
+
+        period = info.liveData.linescore.currentPeriodOrdinal;
+    });
+    return period;
+}
+
+function getTime (pk) {
+    
+    var time;
+    var url = "https://statsapi.web.nhl.com/api/v1/game/" + pk + "/feed/live/";
+    console.log(url);
+    $.ajax({
+        url: url,
+        method: "GET",
+        async: false
+    }).done(function (info) {
+
+        time = info.liveData.linescore.currentPeriodTimeRemaining;
+    });
+    return time;
+}
+
 function getSchedule(year, month, day) {
 
     const MonthNames = new Map([
@@ -451,6 +486,7 @@ function getGames (url) {
     $.ajax({
         url: url,
         method: "GET",
+        async: false
     }).done(function (scheduleData) {
         //get the number of games that day
         var games = scheduleData.totalGames;
@@ -461,7 +497,13 @@ function getGames (url) {
             return;
         }
         //start to loop through all the games on the given day
+
         for (var i = 0; i < games; i++) {
+
+            var pk = scheduleData.dates[0].games[i].gamePk;
+            var gameTime = getTime(pk);
+            var period = getPeriod(pk);
+            console.log("Game time: " + gameTime);
             //set up variables for the winning team and number of goals
             var winningTeam = "";
             var winningGoals = "";
@@ -528,7 +570,7 @@ function getGames (url) {
                 datedisplay.innerHTML += "<img src='Logos/" + scheduleData.dates[0].games[i].teams.home.team.name + ".png' width=30>";
                 datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.home.team.name + "<br>";
 
-                document.getElementById("datedisplay").innerHTML += "(Live)" + "<br><br>";
+                document.getElementById("datedisplay").innerHTML += "(Live) " + gameTime + " " + period + "<br><br>";
 
             } else if (gameStatus == "Preview") {
 
