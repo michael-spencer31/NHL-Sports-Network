@@ -559,7 +559,7 @@ function getGames (url) {
 
                 var recap_link = getRecap(scheduleData.dates[0].games[i].gamePk);
 
-                datedisplay.innerHTML += winningGoals + "-" + loosingGoals + " " + winningTeam + " (Final) " + '<a href="' + recap_link + '"target=_blank">Video Recap</a><br><br>';
+                datedisplay.innerHTML += winningGoals + "-" + loosingGoals + " " + winningTeam + " (Final) <br><br>";
             } else if (gameStatus == "Live") {
 
                 datedisplay.innerHTML += scheduleData.dates[0].games[i].teams.away.score + " ";
@@ -624,6 +624,7 @@ function getRecap (gameid) {
     return link;
 
 }
+
 /**
  * this function uses the ajax jQuery method to obtain data about a draft year
  */
