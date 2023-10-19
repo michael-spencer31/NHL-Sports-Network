@@ -796,7 +796,7 @@ function getOverallStandings () {
         method: "GET",
     }).done(function (standings) {
 
-        for (var i = 0; i < 31; i++) {
+        for (var i = 0; i < 32; i++) {
 
             let row = document.createElement("tr");
             let team = document.createElement("td");
