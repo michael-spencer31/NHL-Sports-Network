@@ -38,8 +38,8 @@
 							<div class="dropdown-content">
 							<a href="overall.html">Overall</a>
 							<a href="wildcard.html">Wildcard</a>
-							<a href="division.html">Divisions</a>
-							<a href="conference.html">Conference</a>
+                            <a href="division.html">Divisions</a>
+                            <a href="conference.html">Conference</a>
 							</div>
 						</div>
 					  </li>
@@ -52,34 +52,22 @@
 
 		<div class="background">
 			<div class="container team">
-				<h1>Wild Card Standings</Str></h1>
-				<label>
-					In each conference, the top 3 teams per division and the top 2 wild cards from either division will make the playoffs.		
-					This makes for a total of 8 teams per conference who then compete in a bracket style tournament.
-				</label>
+				<h1>Division Standings</Str></h1>
+				
                 <script>
 					window.onload = function() {
-						getWildCardStandings ();
+						getDivisionStandings ();
 					}
 				</script>
+                <h5>Atlantic</h5><br>
+                <label id="atlantic"></label><br>
+                <h5>Metro</h5><br>
+                <label id="metro"></label><br>
+                <h5>Central</h5><br>
+                <label id="central"></label><br>
+                <h5>Pacific</h5><br>
+                <label id="pacific"></label><br>
 
-                <h3>Eastern Conference</h3>
-
-                <h5>Atlantic Division</h5>
-                <label id="atlanticseeds"></label>
-                <h5>Metropolitan Division</h5>
-                <label id="metroseeds"></label>
-                <h5>East Wild Cards</h5>
-                <label id="eastwildcard"></label>
-
-                <h3>Western Conference</h3>
-
-                <h5>Central Division</h5>
-                <label id="centralseeds"></label>
-                <h5>Pacific Division</h5>
-                <label id="pacificseeds"></label>
-                <h5>West Wild Cards</h5>
-                <label id="westwildcard"></label>
 			</div>
 		</div>
 

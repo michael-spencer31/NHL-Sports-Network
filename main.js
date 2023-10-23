@@ -607,6 +607,57 @@ function getGames (url) {
     });
 }
 
+function getDivisionStandings () {
+
+    var url = "https://statsapi.web.nhl.com/api/v1/standings/byDivision";
+
+    $.ajax({
+        url: url,
+        method: "GET",
+        async: false 
+    }).done(function(divisions) {
+
+        for(var i = 0; i < 8; i++) {
+            document.getElementById("atlantic").innerHTML += "<img src='Logos/" + divisions.records[1].teamRecords[i].team.name + ".png' width=30>";
+            document.getElementById("atlantic").innerHTML += divisions.records[1].teamRecords[i].team.name + " " + divisions.records[1].teamRecords[i].points + "<br>";
+        }
+        for(var i = 0; i < 8; i++) {
+            document.getElementById("metro").innerHTML += "<img src='Logos/" + divisions.records[0].teamRecords[i].team.name + ".png' width=30>";
+            document.getElementById("metro").innerHTML += divisions.records[0].teamRecords[i].team.name + " " + divisions.records[0].teamRecords[i].points + "<br>";
+        }
+        for(var i = 0; i < 8; i++) {
+            document.getElementById("central").innerHTML += "<img src='Logos/" + divisions.records[2].teamRecords[i].team.name + ".png' width=30>";
+            document.getElementById("central").innerHTML += divisions.records[2].teamRecords[i].team.name + " " + divisions.records[2].teamRecords[i].points + "<br>";
+        }
+        for(var i = 0; i < 8; i++) {
+            document.getElementById("pacific").innerHTML += "<img src='Logos/" + divisions.records[3].teamRecords[i].team.name + ".png' width=30>";
+            document.getElementById("pacific").innerHTML += divisions.records[3].teamRecords[i].team.name + " " + divisions.records[3].teamRecords[i].points + "<br>";
+        }
+    });
+}
+
+function getConferenceStandings () {
+
+    var url = "https://statsapi.web.nhl.com/api/v1/standings/byConference";
+
+    $.ajax({
+        url: url,
+        method: "GET",
+        async: false
+    }).done(function(conference) {
+
+        for(var i = 0; i < 16; i++){
+            document.getElementById("eastern").innerHTML += "<img src='Logos/" + conference.records[0].teamRecords[i].team.name + ".png' width=30>";
+            document.getElementById("eastern").innerHTML += conference.records[0].teamRecords[i].team.name + " " + conference.records[0].teamRecords[i].points + "<br>";
+        }
+
+        for(var i = 0; i < 16; i++){
+            document.getElementById("western").innerHTML += "<img src='Logos/" + conference.records[1].teamRecords[i].team.name + ".png' width=30>";
+            document.getElementById("western").innerHTML += conference.records[1].teamRecords[i].team.name + " " + conference.records[1].teamRecords[i].points + "<br>";
+        }
+    });
+}
+
 function getRecap (gameid) {
 
     var url = "https://statsapi.web.nhl.com/api/v1/game/" + gameid + "/content";
@@ -625,6 +676,18 @@ function getRecap (gameid) {
 
 }
 
+function getGoalLeaders () {
+
+    var url = "https://statsapi.web.nhl.com/api/v1/statTypes";
+
+    $.ajax({
+        url: url,
+        method: "GET",
+        async: true,
+    }).done (function(goal_leaders) {
+        document.getElementById("goalleaders").innerHTML = goal_leaders;
+    })
+};
 /**
  * this function uses the ajax jQuery method to obtain data about a draft year
  */
