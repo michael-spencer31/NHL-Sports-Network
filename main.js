@@ -1,3 +1,4 @@
+
 // resize header to size of browser window
 var ready = (callback) => {
     if (document.readyState != "loading") callback();
@@ -408,7 +409,6 @@ function getPeriod (pk) {
 
     var period;
     var url = "https://statsapi.web.nhl.com/api/v1/game/" + pk + "/feed/live/";
-    console.log(url);
     $.ajax({
         url: url,
         method: "GET",
@@ -424,7 +424,6 @@ function getTime (pk) {
     
     var time;
     var url = "https://statsapi.web.nhl.com/api/v1/game/" + pk + "/feed/live/";
-    console.log(url);
     $.ajax({
         url: url,
         method: "GET",
@@ -452,12 +451,27 @@ function getSchedule(year, month, day) {
         ["Nov", "November"],
         ["Dec", "December"],
     ]);
-    console.log(month);
+
+    const DayOfWeek = new Map([
+        [0, "Sunday"],
+        [1, "Monday"],
+        [2, "Tuesday"],
+        [3, "Wednesday"],
+        [4, "Thursday"],
+        [5, "Friday"],
+        [6, "Saturday"],
+    ]);
+
     var monthName = MonthNames.get(month);
+
+    var date = new Date(monthName + day + ", " + year + " 01:15:000");
+    let day1 = date.getDay();
+    var weekDay = DayOfWeek.get(day1);
+
     //reset the page each time the function is called
     document.getElementById("datedisplay").innerHTML = "";
 
-    document.getElementById("datedisplay").innerHTML += "<b>Schedule for " + monthName + " " + day + ", " + year + "<br><br>";
+    document.getElementById("datedisplay").innerHTML += "<b>Schedule for " + weekDay + " " + monthName + " " + day + ", " + year + "<br><br>";
     //map to convert month to the numerical equivalent
     const MonthNumber = new Map([
         ["Jan", 1],
@@ -503,7 +517,7 @@ function getGames (url) {
             var pk = scheduleData.dates[0].games[i].gamePk;
             var gameTime = getTime(pk);
             var period = getPeriod(pk);
-            console.log("Game time: " + gameTime);
+            //console.log("Game time: " + gameTime);
             //set up variables for the winning team and number of goals
             var winningTeam = "";
             var winningGoals = "";

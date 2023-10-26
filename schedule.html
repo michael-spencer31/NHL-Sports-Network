@@ -71,13 +71,29 @@
 				[11, "November"],
 				[12, "December"],
     		]);
+
+			const DayOfWeek = new Map([
+				[0, "Sunday"],
+				[1, "Monday"],
+				[2, "Tuesday"],
+				[3, "Wednesday"],
+				[4, "Thursday"],
+				[5, "Friday"],
+				[6, "Saturday"],
+    		]);
+
 			var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');
             var mm = String(today.getMonth() + 1).padStart(2, '0');
             var yyyy = today.getFullYear();
             today = yyyy + '-' + mm + '-' + dd;
 			var monthName = MonthNames.get(Number(mm));
-			document.getElementById("datedisplay").innerHTML += "<b>Schedule for " + monthName + " " + parseInt(dd) + ", " + yyyy + "<br><br>";
+
+			var date = new Date(monthName + dd + ", " + yyyy + " 01:15:000");
+			let day1 = date.getDay();
+   			var weekDay = DayOfWeek.get(day1);
+
+			document.getElementById("datedisplay").innerHTML += "<b>Schedule for " + weekDay + " " + monthName + " " + parseInt(dd) + ", " + yyyy + "<br><br>";
             var scheduleURL = "https://statsapi.web.nhl.com/api/v1/schedule?startDate=" +  today + "&endDate=" + today;
 
             window.onload = function() {
