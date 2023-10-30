@@ -136,7 +136,7 @@ input[type=text], select {
 .dropbtn {
     background-color: #326fa8;
     color: white;
-    padding: 7px;
+    padding: 0px;
     font-size: 16px;
     border: none;
 }
