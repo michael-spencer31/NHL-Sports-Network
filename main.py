@@ -1,9 +1,16 @@
-from urllib.request import urlopen
+import requests
+from time import sleep
 
-def main():
-    url = "http://olympus.realpython.org/profiles/aphrodite"
-    page = urlopen(url, timeout=20)
-    html_bytes = page.read()
-    html = html_bytes.decode("utf-8")
-    dispaly(html)
-main()
+def make_request():
+	try:
+		url='https://google.com'
+		headers = {
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36'
+        }
+		response = requests.get(url, headers=headers, verify=False, timeout=30)
+		parsed = response.json()
+		print(parsed)
+	except Exception as e:
+		print(e)
+
+make_request()
