@@ -4,8 +4,6 @@
 
 <head>
     <title>Leaders</title>
-    <link rel="stylesheet" href="https://pyscript.net/releases/2022.12.1/pyscript.css" />
-    <script defer src="https://pyscript.net/releases/2022.12.1/pyscript.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
@@ -53,7 +51,7 @@
                         <div class="dropdown">
                             <button class="dropbtn">Leaders</button>
                             <div class="dropdown-content">
-                                <a href="overall.html">Goals</a>
+                                <a href="leaders.html">Goals</a>
                                 <a href="wildcard.html">Assists</a>
                                 <a href="wildcard.html">Points</a>
                             </div>
@@ -63,8 +61,102 @@
             </div>
         </nav>
 
-        <py-script src="./main.py"></py-script>
+		<body>
+			<label id="goals"></label>
+			<script>
+				console.log("Hello, World!");
+				const PlayerMap = new Map([
+					["AUSTON MATTHEWS", 8479318],
+					["ALEX DEBRINCAT", 8479337],
+					["TRAVIS KONECNY", 8478439],
+					["MATTHEW SAVOIE", 8483512],
 
+					["FRANK VATRANO", 8478366],
+					["DAVID PASTRNAK", 8477956],
+					["CHRIS KREIDER", 8475184],
+					["TEUVO TERAVAINEN", 8476882],
+					["BRADY TKACHUK", 8480801],
+					["SAM REINHART", 8477933],
+					["BROCK BOESER", 8478444],
+					["NIKITA KUCHEROV", 8476453],
+					["RYAN O'REILLY", 8475158],
+					["SEAN MONAHAN", 8477497],
+					["EVGENI MALKIN", 8471215],
+					["DREW O'CONNOR", 8482055],
+					["BRAD MARCHAND", 8473419],
+					["CONNOR MCDAVID", 8478402],
+					["COLE CAUFIELD", 8481540],
+					["JUSTIN BARRON", 8482111],
+					["EMIL HEINEMAN", 8482476],
+					["FILIP MESAR", 8483488],
+					["JURAJ SLAFKOVSKY", 8483515],
+					["LUCAS CONDOTTA", 8483549],
+					["SHANE PINTO", 8481596],
+					["CLAUDE GIROUX", 8473512],
+					["NICK HOLDEN", 8474207],
+					["TRAVIS HAMONIC", 8474612],
+					["CAM TALBOT", 8475660],
+					["AUSTIN WATSON", 8475766],
+					["ANTON FORSBERG", 8476341],
+					["ANTOINE BIBEAU", 8477312],
+					["DILLON HEATHERINGTON", 8477471],
+					["DYLAN COZENS", 8481528],
+				
+					["OWEN POWER", 8482671],
+					
+				]);
+
+				const GoalMap = new Map([
+
+				]);
+				var id = "";
+				var url = "";
+				var goals = "";
+
+				for (let [key, value] of PlayerMap) {
+
+					id = PlayerMap.get(key);
+					url = "https://statsapi.web.nhl.com/api/v1/people/" + id + "?hydrate=stats(splits=statsSingleSeason)/";
+
+					$.ajax({
+						url: url,
+						method: "GET",
+						async: false
+					}).done (function (players){
+						console.log(players)
+						if (players.people[0].stats[0].splits[0] === undefined) {
+							return;
+						} else {
+							goals =  players.people[0].stats[0].splits[0].stat.goals;
+							GoalMap.set(key, goals);
+						}
+					});
+				}
+				const GoalLeaders = new Map([...GoalMap.entries()].sort((a, b) => b[1] - a[1]));
+
+				const LIMIT = 20;
+				let counter = 0;
+
+				for (let [key, value] of GoalLeaders) {
+
+					if (counter == LIMIT) {
+						break;
+					}
+					key = key.toLowerCase();
+					key = key.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
+					document.getElementById("goals").innerHTML += key + " " + value + "<br>"
+					counter++;
+				}
+				
+			</script>
+			<!---
+			<div class="myself">
+				<div class="property">Nick Suzuki:</div><div class="value">8</div> 
+				<div class="property">LongName McLongFace:</div><div class="value">5</div> 
+
+			</div>
+			--->
+		</body>
         <script src="jquery-3.5.1.min.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
         <script src="main.js"></script>
