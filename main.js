@@ -597,6 +597,10 @@ function getGames (url) {
                 //get the time the game starts at from the api
                 gameTime = scheduleData.dates[0].games[i].gameDate;
 
+                const currentLocalDate = new Date();
+                const laborDay2016at0324GMTminus2 = new Date("2016-05-01T03:24:00-02:00");
+
+                console.log(currentLocalDate.getTimezoneOffset() === laborDay2016at0324GMTminus2.getTimezoneOffset());
                 //uses the JavaScript split method to remove the date portion of the date
                 const timeArray = gameTime.split("T");
                 //now use split to remove the Z at the end of the string
@@ -692,7 +696,7 @@ function getRecap (gameid) {
 
 function getGoalLeaders () {
 
-    var url = "https://statsapi.web.nhl.com/api/v1/statTypes";
+    var url = "https://api.nhle.com/stats/rest/en/leaders/skaters/assists?cayenneExp=season=20212022";
 
     $.ajax({
         url: url,
@@ -995,6 +999,10 @@ function getPlayer() {
         url: playerURL,
         method: "GET",
     }).done(function (playerData) {
+
+        document.getElementById("playerinfo").innerHTML = "<b>Player Information</b>" + "<br>";
+        document.getElementById("seasonstats").innerHTML = "<b>Season Stats</b>" + "<br>";
+        document.getElementById("careerstats").innerHTML = "<b>Career Stats</b>" + "<br>";
 
         document.getElementById("personalinfo").innerHTML = playerData.people[0].fullName + " #" + playerData.people[0].primaryNumber  + "<br>";
 
