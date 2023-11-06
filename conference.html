@@ -1,68 +1,86 @@
 <!DOCTYPE html>
+
 <html lang="en">
-  <head>
-    <title>Conference</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="main.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="icon" href="https://icons.iconarchive.com/icons/martz90/circle/512/nhl-icon.png">
-  </head>
-  <body id="body">
-    <body>
-      <nav class="navbar navbar-expand-md">
-        <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="main-navigation">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="index.html">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="schedule.html">Schedule</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="players.html">Player Data</a>
-            </li>
-            <li class="nav-item">
-              <div class="dropdown">
-                <button class="dropbtn">Standings</button>
-                <div class="dropdown-content">
-                  <a href="overall.html">Overall</a>
-                  <a href="wildcard.html">Wildcard</a>
-                  <a href="division.html">Divisions</a>
-                  <a href="conference.html">Conference</a>
-                </div>
-              </div>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="roster.html">Roster</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-      <div class="background">
-        <div class="container team">
-          <h1>Division Standings </Str>
-          </h1>
-          <script>
-            window.onload = function() {
-              getConferenceStandings();
-            }
-          </script>
-          <h3>Eastern Conference</h3>
-          <br>
-          <label id="eastern"></label>
-          <br>
-          <h3>Western Conference</h3>
-          <br>
-          <label id="western"></label>
-        </div>
-      </div>
-      <script src="jquery-3.5.1.min.js"></script>
-      <script src="bootstrap/js/bootstrap.min.js"></script>
-      <script src="main.js"></script>
-    </body>
+
+	<head>
+		<title>Conference</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="main.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link rel="icon" href="https://icons.iconarchive.com/icons/martz90/circle/512/nhl-icon.png">
+	</head>
+	<body id="body">
+	<body>
+	
+		<nav class="navbar navbar-expand-md">
+			
+			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="main-navigation">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" href="index.html">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="schedule.html">Schedule</a>
+					</li>
+					
+					
+					<li class="nav-item">
+						<a class="nav-link" href="players.html">Player Data</a>
+					</li>
+					<li class="nav-item">
+						<div class="dropdown">
+							<button class="dropbtn">Standings</button>
+							<div class="dropdown-content">
+							<a href="overall.html">Overall</a>
+							<a href="wildcard.html">Wildcard</a>
+                            <a href="division.html">Divisions</a>
+                            <a href="conference.html">Conference</a>
+							</div>
+						</div>
+					  </li>
+					<li class="nav-item">
+						<a class="nav-link" href="roster.html">Roster</a>
+					</li>
+					<li class="nav-item">
+                        <div class="dropdown">
+                            <button class="dropbtn">Leaders</button>
+                            <div class="dropdown-content">
+                                <a href="leaders.html">Goals</a>
+                                <a href="assists.html">Assists</a>
+                                <a href="wildcard.html">Points</a>
+                            </div>
+                        </div>
+                    </li>
+				</ul>
+			</div>
+		</nav>
+
+		<div class="background">
+			<div class="container team">
+				<h1>Division Standings</Str></h1>
+				
+                <script>
+					window.onload = function() {
+						getConferenceStandings ();
+					}
+				</script>
+                <h3>Eastern Conference</h3><br>
+                <label id="eastern"></label><br>
+                <h3>Western Conference</h3><br>
+                <label id="western"></label>
+
+			</div>
+		</div>
+
+		
+		<script src="jquery-3.5.1.min.js"></script>
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<script src="main.js"></script>
+	</body>
+	
 </html>

@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Leaders</title>
+    <title>Assists</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
@@ -124,7 +124,7 @@
 					["FILIP HRONEK", 8479425],
 					["FILIP FORSBERG", 8476887],
 					["MORITZ SEIDER", 8481542],
-					["BRAYDEN POINT", 8478010],
+                    ["BRAYDEN POINT", 8478010],
 
 					["OWEN POWER", 8482671],
 					
@@ -135,7 +135,7 @@
 				]);
 				var id = "";
 				var url = "";
-				var goals = "";
+				var assists = "";
 
 				for (let [key, value] of PlayerMap) {
 
@@ -151,8 +151,8 @@
 						if (players.people[0].stats[0].splits[0] === undefined) {
 							return;
 						} else {
-							goals =  players.people[0].stats[0].splits[0].stat.goals;
-							GoalMap.set(key, goals);
+							assists =  players.people[0].stats[0].splits[0].stat.assists;
+							GoalMap.set(key, assists);
 						}
 					});
 				}
