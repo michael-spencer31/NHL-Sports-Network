@@ -62,7 +62,7 @@
         </nav>
 
 		<body>
-			<label id="assists"></label>
+			<label id="points"></label>
 			<script>
 				const PlayerMap = new Map([
 					["AUSTON MATTHEWS", 8479318],
@@ -129,12 +129,14 @@
 					
 				]);
 
-				const AssistMap = new Map([
+				const PointsMap = new Map([
 
 				]);
 				var id = "";
 				var url = "";
+                var goals = "";
 				var assists = "";
+                var points = "";
 
 				for (let [key, value] of PlayerMap) {
 
@@ -150,24 +152,26 @@
 						if (players.people[0].stats[0].splits[0] === undefined) {
 							return;
 						} else {
+                            goals =  players.people[0].stats[0].splits[0].stat.goals;
 							assists =  players.people[0].stats[0].splits[0].stat.assists;
-							AssistMap.set(key, assists);
+                            points = goals + assists;
+							PointsMap.set(key, points);
 						}
 					});
 				}
-				const AssistLeaders = new Map([...AssistMap.entries()].sort((a, b) => b[1] - a[1]));
+				const GoalLeaders = new Map([...PointsMap.entries()].sort((a, b) => b[1] - a[1]));
 
 				const LIMIT = 20;
 				let counter = 0;
 
-				for (let [key, value] of AssistLeaders) {
+				for (let [key, value] of GoalLeaders) {
 
 					if (counter == LIMIT) {
 						break;
 					}
 					key = key.toLowerCase();
 					key = key.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
-					document.getElementById("assists").innerHTML += key + " " + value + "<br>"
+					document.getElementById("points").innerHTML += key + " " + value + "<br>"
 					counter++;
 				}
 				
