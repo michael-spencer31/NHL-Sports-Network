@@ -69,6 +69,7 @@
 					["ALEX DEBRINCAT", 8479337],
 					["TRAVIS KONECNY", 8478439],
 					["MATTHEW SAVOIE", 8483512],
+					["J.T. MILLER", 8476468],
 
 					["FRANK VATRANO", 8478366],
 					["DAVID PASTRNAK", 8477956],
@@ -165,9 +166,16 @@
 					if (counter == LIMIT) {
 						break;
 					}
-					key = key.toLowerCase();
-					key = key.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
-					document.getElementById("assists").innerHTML += key + " " + value + "<br>"
+
+					id = PlayerMap.get(key);
+
+					$.ajax({
+						url: "https://statsapi.web.nhl.com/api/v1/people/" + id + "?hydrate=stats(splits=statsSingleSeason)/",
+						method: "GET",
+						async: false
+					}).done (function (top) {
+						document.getElementById("assists").innerHTML += "<img src='Logos/" + top.people[0].currentTeam.name + ".png' width=25>" + " " + top.people[0].fullName +  " " + top.people[0].stats[0].splits[0].stat.assists + "<br>";
+					});
 					counter++;
 				}
 				

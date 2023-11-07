@@ -124,6 +124,7 @@
 					["FILIP FORSBERG", 8476887],
 					["MORITZ SEIDER", 8481542],
 					["BRAYDEN POINT", 8478010],
+					["J.T. MILLER", 8476468],
 
 					["OWEN POWER", 8482671],
 					
@@ -146,7 +147,7 @@
 						method: "GET",
 						async: false
 					}).done (function (players){
-						console.log(players)
+
 						if (players.people[0].stats[0].splits[0] === undefined) {
 							return;
 						} else {
@@ -165,20 +166,30 @@
 					if (counter == LIMIT) {
 						break;
 					}
-					key = key.toLowerCase();
-					key = key.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
-					document.getElementById("goals").innerHTML += key + " " + value + "<br>"
+
+					id = PlayerMap.get(key);
+
+					$.ajax({
+						url: "https://statsapi.web.nhl.com/api/v1/people/" + id + "?hydrate=stats(splits=statsSingleSeason)/",
+						method: "GET",
+						async: false
+					}).done (function (top) {
+						document.getElementById("goals").innerHTML += "<img src='Logos/" + top.people[0].currentTeam.name + ".png' width=25>" + " " + top.people[0].fullName +  " " + top.people[0].stats[0].splits[0].stat.goals + "<br>";
+					});
 					counter++;
 				}
 				
 			</script>
+			
 			<!---
 			<div class="myself">
 				<div class="property">Nick Suzuki:</div><div class="value">8</div> 
 				<div class="property">LongName McLongFace:</div><div class="value">5</div> 
+				<div class="property">Frank Vatrano:</div><div class="value">2</div> 
 
 			</div>
 			--->
+			
 		</body>
         <script src="jquery-3.5.1.min.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
