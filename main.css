@@ -45,6 +45,7 @@ td{
     overflow: auto;
 }
 
+
 .button {
     background-color: #326fa8; /* Green */
     border: none;
@@ -56,6 +57,22 @@ td{
     font-size: 16px;
 }
 
+  
+  .column {
+    display: grid;
+    grid-template-columns: minmax(1rem, 2rem) minmax(3rem, 10rem) auto;
+    justify-content: flex-start;
+  }
+  
+  p:nth-of-type(3),
+  p:nth-of-type(4),
+  p:nth-of-type(2) {
+    text-align: right;
+  }
+  
+  p + p {
+    margin-left: 1rem;
+  }
 .search {
     width: 100%;
     position: relative;
@@ -96,6 +113,23 @@ td{
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+.myself .property {
+    width: 20%;
+    display: inline-block;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.myself .value {
+    text-align: left;
+    padding-left: 10px;
+    width: 70%;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.myself .second 
 /* grid functions */
 
 .grid {
