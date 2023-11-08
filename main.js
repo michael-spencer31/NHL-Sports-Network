@@ -65,13 +65,145 @@ function getPlayerData(player) {
     });
 }
 
+function getLeaderType (type) {
+
+    switch (type) {
+        case "goals":
+            getLeaders (type);
+            break;
+        case "assists":
+            getLeaders (type);
+            break;
+        case "points":
+            getLeaders (type);
+            break;
+        default:
+            console.log("An error occurred.");
+    }
+}
+
+function getLeaders (type) {
+
+    const PlayerMap = new Map([
+        ["AUSTON MATTHEWS", 8479318],
+        ["ALEX DEBRINCAT", 8479337],
+        ["TRAVIS KONECNY", 8478439],
+        ["MATTHEW SAVOIE", 8483512],
+
+        ["FRANK VATRANO", 8478366],
+        ["DAVID PASTRNAK", 8477956],
+        ["CHRIS KREIDER", 8475184],
+        ["TEUVO TERAVAINEN", 8476882],
+        ["BRADY TKACHUK", 8480801],
+        ["SAM REINHART", 8477933],
+        ["BROCK BOESER", 8478444],
+        ["NIKITA KUCHEROV", 8476453],
+        ["RYAN O'REILLY", 8475158],
+        ["SEAN MONAHAN", 8477497],
+        ["EVGENI MALKIN", 8471215],
+        ["DREW O'CONNOR", 8482055],
+        ["CONNOR MCDAVID", 8478402],
+        ["COLE CAUFIELD", 8481540],
+        ["JUSTIN BARRON", 8482111],
+        ["EMIL HEINEMAN", 8482476],
+        ["FILIP MESAR", 8483488],
+        ["JURAJ SLAFKOVSKY", 8483515],
+        ["LUCAS CONDOTTA", 8483549],
+        ["SHANE PINTO", 8481596],
+        ["CLAUDE GIROUX", 8473512],
+        ["NICK HOLDEN", 8474207],
+        ["TRAVIS HAMONIC", 8474612],
+        ["CAM TALBOT", 8475660],
+        ["AUSTIN WATSON", 8475766],
+        ["ANTON FORSBERG", 8476341],
+        ["ANTOINE BIBEAU", 8477312],
+        ["DILLON HEATHERINGTON", 8477471],
+        ["DYLAN COZENS", 8481528],
+        ["SIDNEY CROSBY", 8471675],
+        ["BRAD MARCHAND", 8473419],
+        ["TIM STÜTZLE", 8482116],
+        ["WILLIAM NYLANDER", 8477939],
+        ["LEON DRAISAITL", 8477934],
+        ["ELIAS PETTERSSON", 8480012],
+        ["QUINN HUGHES", 8480800],
+        ["KYLE CONNOR", 8478398],
+        ["MARK SCHEIFELE", 8476460],
+        ["TYLER TOFFOLI", 8475726],
+        ["JESPER BRATT", 8479407],
+        ["RYAN HARTMAN", 8477451],
+        ["BRANDON HAGEL", 8479542],
+        ["ARTEMI PANARIN", 8478550],
+        ["ANZE KOPITAR", 8471685],
+        ["TREVOR MOORE", 8479675],
+        ["THOMAS NOVAK", 8478438],
+        ["CAM ATKINSON", 8474715],
+        ["JACK HUGHES", 8481559],
+        ["DYLAN LARKIN", 8477946],
+        ["KEVIN FIALA", 8477942],
+        ["FILIP HRONEK", 8479425],
+        ["FILIP FORSBERG", 8476887],
+        ["MORITZ SEIDER", 8481542],
+        ["BRAYDEN POINT", 8478010],
+        ["J.T. MILLER", 8476468],
+
+        ["OWEN POWER", 8482671],
+        
+    ]);
+    const LeaderMap = new Map([]);
+
+    var id = "";
+    var url = "";
+    var goals = "";
+
+    var getter =  "players.people[0].stats[0].splits[0].stat." + type;
+     
+    for (let [key, value] of PlayerMap) {
+
+        id = PlayerMap.get(key);
+        url = "https://statsapi.web.nhl.com/api/v1/people/" + id + "?hydrate=stats(splits=statsSingleSeason)/";
+
+        $.ajax({
+            url: url,
+            method: "GET",
+            async: false
+        }).done (function (players){
+
+            if (players.people[0].stats[0].splits[0] === undefined) {
+                return;
+            } else {
+                goals = getter;
+                LeaderMap.set(key, goals);
+            }
+        });
+    }
+    const GoalLeaders = new Map([...LeaderMap.entries()].sort((a, b) => b[1] - a[1]));
+
+    const LIMIT = 20;
+    let counter = 0;
+
+    for (let [key, value] of GoalLeaders) {
+
+        if (counter == LIMIT) {
+            break;
+        }
+
+        id = PlayerMap.get(key);
+
+        $.ajax({
+            url: "https://statsapi.web.nhl.com/api/v1/people/" + id + "?hydrate=stats(splits=statsSingleSeason)/",
+            method: "GET",
+            async: false
+        }).done (function (top) {
+            document.getElementById(type).innerHTML += `<div class=column-wrapper> <div class=column><img src=Logos/` + top.people[0].currentTeam.name + `.png width=25>` + `<p>` + top.people[0].fullName + `</p><p>` + top.people[0].stats[0].splits[0].stat + "." + "type" + `</p></div> </div>`;
+        });
+        counter++;
+    }
+}
+
 /**
  * this function uses the jQuery ajax method to get information
  * about a teams roster.
  */
-
-
-
 function getRoster() {
     //get the team name from the html document
     document.getElementById("rosterdata").innerHTML = "";
@@ -1098,6 +1230,11 @@ function getPlayer() {
             });
         }
     });
+}
+
+function getTopPlayers (player_name) {
+
+    
 }
 //Temp123!
 // this function uses a map to convert a player name to their ID number
