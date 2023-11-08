@@ -1,8 +1,8 @@
 # NHL Sports Network
 
-A TSN like website for NHL scores, schedules, player information and more.
+A TSN like website for all your hockey needs. Get's data using the NHL API and the AJAX request method. 
 
-Built with HTML and CSS Bootstrap. Uses the jQuery AJAX to call the public NHL API and retrieve data.
+Built with NodeJS
 
 Hosted at https://michael-spencer31.github.io/NHL-Sports-Network/
 
